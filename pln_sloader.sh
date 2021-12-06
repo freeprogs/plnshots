@@ -73,6 +73,7 @@ loader_convert_data()
     local ofname="$2"
 
     echo "loader_convert_data $ifname $ofname"
+    cp converted.temp.template $ofname
     return 0
 }
 
