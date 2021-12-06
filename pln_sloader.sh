@@ -39,6 +39,11 @@ load_screenshots()
     loader_convert_data "$fname_parsed" "$fname_converted"
     loader_make_run "$fname_converted" "$fname_run"
     loader_run "$fname_run"
+    loader_clean_all \
+        "$fname_topic" \
+        "$fname_parsed" \
+        "$fname_converted" \
+        "$fname_run"
 }
 
 loader_load_topic_page()
@@ -80,6 +85,15 @@ loader_run()
     return 0
 }
 
+loader_clean_all()
+{
+    local fname_topic="$1"
+    local fname_parsed="$2"
+    local fname_converted="$3"
+    local fname_run="$4"
+
+    return 0
+}
 
 main()
 {
