@@ -92,6 +92,7 @@ loader_run()
     local ifname="$1"
 
     echo "loader_run $ifname"
+    echo "Loaded files"
     return 0
 }
 
