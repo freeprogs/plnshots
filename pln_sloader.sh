@@ -23,6 +23,13 @@ msg()
 # usage()
 usage()
 {
+    echo "Try \`$progname --help' for more information." >&2
+}
+
+# Print program help info to stderr
+# help_info()
+help_info()
+{
     echo "usage: $progname url [ outdir=. ]" >&2
 }
 
@@ -118,12 +125,28 @@ loader_clean_all()
 main()
 {
     case $# in
-      0) usage; return 1;;
-      1) load_screenshots "$1" && return 0;;
-      2) load_screenshots "$1" "$2" && return 0;;
-      *) error "unknown arglist: \"$*\""; return 1;;
+      0)
+        usage
+        return 1
+        ;;
+      1)
+        [ "$1" = "--help" ] && {
+            help_info
+            return 1
+        }
+        usage
+        load_screenshots "$1" || return 1
+        ;;
+      2)
+        usage
+        load_screenshots "$1" "$2" || return 1
+        ;;
+      *)
+        error "unknown arglist: \"$*\""
+        return 1
+        ;;
     esac
-    return 1
+    return 0
 }
 
 main "$@" || exit 1
