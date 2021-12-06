@@ -53,6 +53,7 @@ loader_load_topic_page()
     local ofname="$2"
 
     echo "loader_load_topic_page $url $ofname"
+    cp topic.temp.template $ofname
     return 0
 }
 
