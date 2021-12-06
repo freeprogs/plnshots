@@ -46,10 +46,6 @@ loader_load_topic_page()
     local url="$1"
     local ofname="$2"
 
-    curl --preproxy socks4://localhost:9050 "$url" -o "$ofname" || {
-        error "Can't load topic page: $url"
-        return 1
-    }
     return 0
 }
 
