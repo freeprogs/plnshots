@@ -87,7 +87,7 @@ main()
       0) usage; return 1;;
       1) load_screenshots "$1" && return 0;;
       2) load_screenshots "$1" "$2" && return 0;;
-      *) error "unknown arglist: "$*""; return 1;;
+      *) error "unknown arglist: \"$*\""; return 1;;
     esac
     return 1
 }
