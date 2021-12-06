@@ -63,6 +63,7 @@ loader_parse_topic_page()
     local ofname="$2"
 
     echo "loader_parse_topic_page $ifname $ofname"
+    cp parsed.temp.template $ofname
     return 0
 }
 
