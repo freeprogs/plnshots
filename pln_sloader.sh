@@ -29,21 +29,28 @@ usage()
 load_screenshots()
 {
     local url="$1"
+    local odir
     local fname_topic=topic.temp
     local fname_parsed=parsed.temp
     local fname_converted=converted.temp
     local fname_run=run.temp
 
-    loader_load_topic_page "$url" "$fname_topic"
-    loader_parse_topic_page "$fname_topic" "$fname_parsed"
-    loader_convert_data "$fname_parsed" "$fname_converted"
-    loader_make_run "$fname_converted" "$fname_run"
-    loader_run "$fname_run"
+    if [ -z "$2" ]; then
+        odir="."
+    else
+        odir="$2"
+        [ -d "$odir" ] || mkdir "$odir"
+    fi
+    loader_load_topic_page "$url" "$odir/$fname_topic"
+    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed"
+    loader_convert_data "$odir/$fname_parsed" "$odir/$fname_converted"
+    loader_make_run "$odir/$fname_converted" "$odir/$fname_run"
+    loader_run "$odir/$fname_run"
     loader_clean_all \
-        "$fname_topic" \
-        "$fname_parsed" \
-        "$fname_converted" \
-        "$fname_run"
+        "$odir/$fname_topic" \
+        "$odir/$fname_parsed" \
+        "$odir/$fname_converted" \
+        "$odir/$fname_run"
     return 0
 }
 
