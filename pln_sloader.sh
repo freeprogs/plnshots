@@ -41,6 +41,46 @@ load_screenshots()
     loader_run "$fname_run"
 }
 
+loader_load_topic_page()
+{
+    local url="$1"
+    local ofname="$2"
+
+    return 0
+}
+
+loader_parse_topic_page()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    return 0
+}
+
+loader_convert_data()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    return 0
+}
+
+loader_make_run()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    return 0
+}
+
+loader_run()
+{
+    local ifname="$1"
+
+    return 0
+}
+
+
 main()
 {
     case $# in
