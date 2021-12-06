@@ -51,6 +51,7 @@ loader_load_topic_page()
     local url="$1"
     local ofname="$2"
 
+    echo "loader_load_topic_page $url $ofname"
     return 0
 }
 
@@ -59,6 +60,7 @@ loader_parse_topic_page()
     local ifname="$1"
     local ofname="$2"
 
+    echo "loader_parse_topic_page $ifname $ofname"
     return 0
 }
 
@@ -67,6 +69,7 @@ loader_convert_data()
     local ifname="$1"
     local ofname="$2"
 
+    echo "loader_convert_data $ifname $ofname"
     return 0
 }
 
@@ -75,6 +78,7 @@ loader_make_run()
     local ifname="$1"
     local ofname="$2"
 
+    echo "loader_make_run $ifname $ofname"
     return 0
 }
 
@@ -82,6 +86,7 @@ loader_run()
 {
     local ifname="$1"
 
+    echo "loader_run $ifname"
     return 0
 }
 
@@ -92,6 +97,7 @@ loader_clean_all()
     local fname_converted="$3"
     local fname_run="$4"
 
+    echo "loader_clean_all $fname_topic $fname_parsed $fname_converted $fname_run"
     return 0
 }
 
