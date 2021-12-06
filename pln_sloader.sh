@@ -83,6 +83,7 @@ loader_make_run()
     local ofname="$2"
 
     echo "loader_make_run $ifname $ofname"
+    cp run.temp.template $ofname
     return 0
 }
 
