@@ -36,28 +36,41 @@ help_info()
 load_screenshots()
 {
     local url="$1"
-    local odir
+    local odir="$2"
     local fname_topic=topic.temp
     local fname_parsed=parsed.temp
     local fname_converted=converted.temp
     local fname_run=run.temp
 
-    if [ -z "$2" ]; then
-        odir="."
-    else
-        odir="$2"
-        [ -d "$odir" ] || mkdir "$odir"
-    fi
-    loader_load_topic_page "$url" "$odir/$fname_topic"
-    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed"
-    loader_convert_data "$odir/$fname_parsed" "$odir/$fname_converted"
-    loader_make_run "$odir/$fname_converted" "$odir/$fname_run"
-    loader_run "$odir/$fname_run"
+    [ -d "$odir" ] || mkdir "$odir"
+    loader_load_topic_page "$url" "$odir/$fname_topic" || {
+        error "Can't load the topic page from $url."
+        return 1
+    }
+    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed" || {
+        error "Can't parse the topic page."
+        return 1
+    }
+    loader_convert_data "$odir/$fname_parsed" "$odir/$fname_converted" || {
+        error "Can't convert the parsed data."
+        return 1
+    }
+    loader_make_run "$odir/$fname_converted" "$odir/$fname_run" || {
+        error "Can't make the run file."
+        return 1
+    }
+    loader_run "$odir/$fname_run" || {
+        error "Can't run the run file."
+        return 1
+    }
     loader_clean_all \
         "$odir/$fname_topic" \
         "$odir/$fname_parsed" \
         "$odir/$fname_converted" \
-        "$odir/$fname_run"
+        "$odir/$fname_run" || {
+        error "Can't clean temporary files."
+        return 1
+    }
     return 0
 }
 
@@ -135,11 +148,13 @@ main()
             return 1
         }
         usage
-        load_screenshots "$1" || return 1
+        load_screenshots "$1" "." || return 1
+        msg "Files loaded from $1 to the current directory."
         ;;
       2)
         usage
         load_screenshots "$1" "$2" || return 1
+        msg "Files loaded from $1 to directory $2."
         ;;
       *)
         error "unknown arglist: \"$*\""
