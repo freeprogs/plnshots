@@ -23,15 +23,29 @@ msg()
 # usage()
 usage()
 {
-    echo "usage: $progname " >&2
+    echo "usage: $progname url" >&2
+}
+
+load_screenshots()
+{
+    local url="$1"
+    local fname_topic=topic.temp
+    local fname_parsed=parsed.temp
+    local fname_converted=converted.temp
+    local fname_run=run.temp
+
+    loader_load_topic_page "$url" "$fname_topic"
+    loader_parse_topic_page "$fname_topic" "$fname_parsed"
+    loader_convert_data "$fname_parsed" "$fname_converted"
+    loader_make_run "$fname_converted" "$fname_run"
+    loader_run "$fname_run"
 }
 
 main()
 {
     case $# in
       0) usage; return 1;;
-      1)  "$1" && return 0;;
-      2)  "$1" "$2" && return 0;;
+      1) load_screenshots "$1" && return 0;;
       *) error "unknown arglist: "$*""; return 1;;
     esac
 }
