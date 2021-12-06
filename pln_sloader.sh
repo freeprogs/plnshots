@@ -104,6 +104,7 @@ loader_clean_all()
     local fname_run="$4"
 
     echo "loader_clean_all $fname_topic $fname_parsed $fname_converted $fname_run"
+    echo "Removed temporary files"
     return 0
 }
 
