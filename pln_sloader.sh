@@ -44,6 +44,7 @@ load_screenshots()
         "$fname_parsed" \
         "$fname_converted" \
         "$fname_run"
+    return 0
 }
 
 loader_load_topic_page()
