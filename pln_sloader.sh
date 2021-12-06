@@ -23,7 +23,7 @@ msg()
 # usage()
 usage()
 {
-    echo "usage: $progname url" >&2
+    echo "usage: $progname url [ outdir=. ]" >&2
 }
 
 load_screenshots()
@@ -86,8 +86,10 @@ main()
     case $# in
       0) usage; return 1;;
       1) load_screenshots "$1" && return 0;;
+      2) load_screenshots "$1" "$2" && return 0;;
       *) error "unknown arglist: "$*""; return 1;;
     esac
+    return 1
 }
 
 main "$@" || exit 1
