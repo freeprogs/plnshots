@@ -114,7 +114,7 @@ loader_convert_data()
 
 converter_convert_url()
 {
-    sed 's/$/_urlconverted/'
+    cat
 }
 
 converter_convert_name()
