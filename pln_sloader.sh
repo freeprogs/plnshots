@@ -55,7 +55,7 @@ load_screenshots()
         error "Can't convert the parsed data."
         return 1
     }
-    loader_make_run "$odir/$fname_converted" "$odir/$fname_run" || {
+    loader_make_run "$odir/$fname_converted" "$odir/$fname_run" "$odir" || {
         error "Can't make the run file."
         return 1
     }
@@ -108,9 +108,14 @@ loader_make_run()
 {
     local ifname="$1"
     local ofname="$2"
+    local odir="$3"
 
-    echo "loader_make_run $ifname $ofname"
-    cp run.temp.template $ofname
+    awk -v odir="$odir" '
+{
+    printf "echo wget -c %s %s/%03d_%03d_%s\n",
+        $3, odir, $1, $2, $4
+}
+    ' "$ifname" >"$ofname" || return 1
     return 0
 }
 
