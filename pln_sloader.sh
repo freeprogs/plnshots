@@ -119,7 +119,7 @@ converter_convert_url()
 
 converter_convert_name()
 {
-    sed 's/$/_nameconverted/'
+    sed 's/[^[:alnum:]]/_/g'
 }
 
 loader_make_run()
