@@ -98,10 +98,28 @@ loader_convert_data()
 {
     local ifname="$1"
     local ofname="$2"
+    local fields field1 field2 field3 field4
 
-    echo "loader_convert_data $ifname $ofname"
-    cp converted.temp.template $ofname
+    [ -e "$ofname" ] && rm -f "$ofname"
+    cat "$ifname" | while read line; do
+        fields=($line)
+        field1=${fields[0]}
+        field2=${fields[1]}
+        field3=$(echo "${fields[2]}" | converter_convert_url)
+        field4=$(echo "${fields[3]}" | converter_convert_name)
+        echo "$field1 $field2 $field3 $field4" >>"$ofname"
+    done || return 1
     return 0
+}
+
+converter_convert_url()
+{
+    sed 's/$/_urlconverted/'
+}
+
+converter_convert_name()
+{
+    sed 's/$/_nameconverted/'
 }
 
 loader_make_run()
