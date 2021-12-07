@@ -102,7 +102,11 @@ loader_convert_data()
 
     [ -e "$ofname" ] && rm -f "$ofname"
     cat "$ifname" | while read line; do
-        fields=($line)
+        fields=()
+        fields[0]=$(echo "$line" | liner_getfield "1")
+        fields[1]=$(echo "$line" | liner_getfield "2")
+        fields[2]=$(echo "$line" | liner_getfield "3")
+        fields[3]=$(echo "$line" | liner_getfield "4")
         field1=${fields[0]}
         field2=${fields[1]}
         field3=$(echo "${fields[2]}" | converter_convert_url)
@@ -110,6 +114,33 @@ loader_convert_data()
         echo "$field1 $field2 $field3 $field4" >>"$ofname"
     done || return 1
     return 0
+}
+
+liner_getfield()
+{
+    local fieldnum="$1"
+    local text="$(cat)"
+    local out
+
+    if [ "$fieldnum" = "1" ]; then
+        out=$(echo "$text" | awk '{print $1}')
+    elif [ "$fieldnum" = "2" ]; then
+        out=$(echo "$text" | awk '{print $2}')
+    elif [ "$fieldnum" = "3" ]; then
+        out=$(echo "$text" | awk '{print $3}')
+    elif [ "$fieldnum" = "4" ]; then
+        out=$(echo "$text" | awk '
+{
+    for (i = 4; i <= NF; i++) {
+        out = out $i (i < NF ? " " : "")
+    }
+    print out
+}
+        ')
+    else
+        out=""
+    fi
+    echo -n "$out"
 }
 
 converter_convert_url()
