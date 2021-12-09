@@ -183,9 +183,11 @@ urlhand_get_url_core()
 urlhand_translate_fpo()
 {
     sed '
-/fastpic\.org\/view/ {
-    s%^https://fastpic\.org/view/\([^/]*\)/%https://i\1.fastpic.org/big/%
-    s%^\(https://.*/big/[^/]*/[^/]*/\)\(.*\(..\)\.jpg\)\.html$%\1\3/\2%
+/^https\?:\/\/fastpic\.org\/view\// {
+    s%^\([^:]*://\)\(fastpic\.org/view/\)\([^/]*\)/%\1i\3.\2%
+    s%/view/%/big/%
+    s%^\(.*/\)\([^/]*\)\(..\)\(\.jpg\.html\)$%\1\3/\2\3\4%
+    s%\.html$%%
 }
     '
 }
