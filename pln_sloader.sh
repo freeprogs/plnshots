@@ -145,7 +145,49 @@ liner_getfield()
 
 converter_convert_url()
 {
-    cat
+    local url="$(cat)"
+    local urltype
+    local UT_FPO=0 UT_UNDEF=1
+    local out
+
+    urltype=`urls_detect_type "$url"`
+    case $urltype in
+      $UT_FPO)
+        out=`echo $url | urls_translate_fpo`;;
+      $UT_UNDEF)
+        out="$url";;
+      *) error "Unknown url type: \"$urltype\"";;
+    esac
+    echo -n "$out"
+}
+
+urls_detect_type()
+{
+    local url="$1"
+    local UT_FPO=0 UT_UNDEF=1
+    local urlcore
+
+    urlcore=`echo "$url" | urls_get_url_core`
+    if [ "$urlcore" = "fastpic.org" ]; then
+        echo "$UT_FPO"
+    else
+        echo "$UT_UNDEF"
+    fi
+}
+
+urls_get_url_core()
+{
+    sed 's%^https\?://\([^/]*\)/.*$%\1%'
+}
+
+urls_translate_fpo()
+{
+    sed '
+/fastpic\.org\/view/ {
+    s%^https://fastpic\.org/view/\([^/]*\)/%http://i\1.fastpic.org/big/%
+    s%^\(http://.*/big/[^/]*/[^/]*/\)\(.*\(..\)\.jpg\)\.html$%\1\3/\2%
+}
+    '
 }
 
 converter_convert_name()
