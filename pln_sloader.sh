@@ -184,8 +184,8 @@ urlhand_translate_fpo()
 {
     sed '
 /fastpic\.org\/view/ {
-    s%^https://fastpic\.org/view/\([^/]*\)/%http://i\1.fastpic.org/big/%
-    s%^\(http://.*/big/[^/]*/[^/]*/\)\(.*\(..\)\.jpg\)\.html$%\1\3/\2%
+    s%^https://fastpic\.org/view/\([^/]*\)/%https://i\1.fastpic.org/big/%
+    s%^\(https://.*/big/[^/]*/[^/]*/\)\(.*\(..\)\.jpg\)\.html$%\1\3/\2%
 }
     '
 }
