@@ -150,10 +150,10 @@ converter_convert_url()
     local UT_FPO=0 UT_UNDEF=1
     local out
 
-    urltype=`urls_detect_type "$url"`
+    urltype=`urlhand_detect_type "$url"`
     case $urltype in
       $UT_FPO)
-        out=`echo $url | urls_translate_fpo`;;
+        out=`echo $url | urlhand_translate_fpo`;;
       $UT_UNDEF)
         out="$url";;
       *) error "Unknown url type: \"$urltype\"";;
@@ -161,13 +161,13 @@ converter_convert_url()
     echo -n "$out"
 }
 
-urls_detect_type()
+urlhand_detect_type()
 {
     local url="$1"
     local UT_FPO=0 UT_UNDEF=1
     local urlcore
 
-    urlcore=`echo "$url" | urls_get_url_core`
+    urlcore=`echo "$url" | urlhand_get_url_core`
     if [ "$urlcore" = "fastpic.org" ]; then
         echo "$UT_FPO"
     else
@@ -175,12 +175,12 @@ urls_detect_type()
     fi
 }
 
-urls_get_url_core()
+urlhand_get_url_core()
 {
     sed 's%^https\?://\([^/]*\)/.*$%\1%'
 }
 
-urls_translate_fpo()
+urlhand_translate_fpo()
 {
     sed '
 /fastpic\.org\/view/ {
