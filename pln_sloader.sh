@@ -103,10 +103,10 @@ loader_convert_data()
     [ -e "$ofname" ] && rm -f "$ofname"
     cat "$ifname" | while read line; do
         fields=()
-        fields[0]=$(echo "$line" | liner_getfield "1")
-        fields[1]=$(echo "$line" | liner_getfield "2")
-        fields[2]=$(echo "$line" | liner_getfield "3")
-        fields[3]=$(echo "$line" | liner_getfield "4")
+        fields[0]=$(echo "$line" | linehand_getfield "1")
+        fields[1]=$(echo "$line" | linehand_getfield "2")
+        fields[2]=$(echo "$line" | linehand_getfield "3")
+        fields[3]=$(echo "$line" | linehand_getfield "4")
         field1=${fields[0]}
         field2=${fields[1]}
         field3=$(echo "${fields[2]}" | converter_convert_url)
@@ -116,7 +116,7 @@ loader_convert_data()
     return 0
 }
 
-liner_getfield()
+linehand_getfield()
 {
     local fieldnum="$1"
     local text="$(cat)"
