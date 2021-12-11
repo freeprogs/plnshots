@@ -37,10 +37,10 @@ load_screenshots()
 {
     local url="$1"
     local odir="$2"
-    local fname_topic=topic.temp
-    local fname_parsed=parsed.temp
-    local fname_converted=converted.temp
-    local fname_run=run.temp
+    local fname_topic="topic.temp"
+    local fname_parsed="parsed.temp"
+    local fname_converted="converted.temp"
+    local fname_run="run.temp"
 
     [ -d "$odir" ] || mkdir "$odir"
     loader_load_topic_page "$url" "$odir/$fname_topic" || {
