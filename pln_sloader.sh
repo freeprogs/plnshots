@@ -47,7 +47,7 @@ load_screenshots()
         error "Can't load the topic page from $url."
         return 1
     }
-    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed" || {
+    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed" "$odir" || {
         error "Can't parse the topic page."
         return 1
     }
@@ -88,9 +88,96 @@ loader_parse_topic_page()
 {
     local ifname="$1"
     local ofname="$2"
+    local odir="$3"
+    local tr_ofname="$odir/ctrees.temp"
+    local tfi_ofname="$odir/ctrees_fi.temp"
+    local tfico_ofname="$odir/ctrees_fico.temp"
+    local ra_ofname="$odir/rawdata.temp"
 
-    echo "loader_parse_topic_page $ifname $ofname"
+    topichand_extract_cuttrees "$ifname" "$tr_ofname" || {
+        error "Can't extract cut trees from topic."
+        return 1
+    }
+    topichand_filter_cuttrees "$tr_ofname" "$tfi_ofname" || {
+        error "Can't filter extracted cut trees."
+        return 1
+    }
+    topichand_convert_cuttrees "$tfi_ofname" "$tfico_ofname" || {
+        error "Can't convert filtered cut trees."
+        return 1
+    }
+    topichand_convert_cuttrees_to_rawdata "$tfico_ofname" "$ra_ofname" || {
+        error "Can't convert converted cut trees to raw data."
+        return 1
+    }
+    topichand_convert_rawdata_to_parsedata "$ra_ofname" "$ofname" || {
+        error "Can't convert raw data to parsed data."
+        return 1
+    }
+    topichand_clean_all \
+        "$tr_ofname" \
+        "$tfi_ofname" \
+        "$tfico_ofname" \
+        "$ra_ofname" || {
+        error "Can't clean files after building parsed data from topic."
+        return 1
+    }
+    return 0
+}
+
+topichand_extract_cuttrees()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "topichand_extract_cuttrees() $ifname $ofname"
+    cp ctrees.temp.template $ofname
+}
+
+topichand_filter_cuttrees()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "topichand_filter_cuttrees() $ifname $ofname"
+    cp ctrees_fi.temp.template $ofname
+}
+
+topichand_convert_cuttrees()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "topichand_convert_cuttrees() $ifname $ofname"
+    cp ctrees_fico.temp.template $ofname
+}
+
+topichand_convert_cuttrees_to_rawdata()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "topichand_convert_cuttrees_to_rawdata() $ifname $ofname"
+    cp rawdata.temp.template $ofname
+}
+
+topichand_convert_rawdata_to_parsedata()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "topichand_convert_rawdata_to_parsedata() $ifname $ofname"
     cp parsed.temp.template $ofname
+}
+
+topichand_clean_all()
+{
+    local tr_ofname="$1"
+    local tfi_ofname="$2"
+    local tfico_ofname="$3"
+    local ra_ofname="$4"
+
+    echo "topichand_clean_all() $tr_ofname $tfi_ofname $tfico_ofname $ra_ofname"
     return 0
 }
 
