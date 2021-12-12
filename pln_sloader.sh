@@ -89,16 +89,17 @@ loader_parse_topic_page()
     local ifname="$1"
     local ofname="$2"
     local odir="$3"
+    local ifname_recoded="${ifname}.recoded.temp"
     local tr_ofname="$odir/ctrees.temp"
     local tfi_ofname="$odir/ctrees_fi.temp"
     local tfico_ofname="$odir/ctrees_fico.temp"
     local ra_ofname="$odir/rawdata.temp"
 
-    pagehand_reencode_cp1251_utf8 "$ifname" "$ifname" || {
+    pagehand_reencode_cp1251_utf8 "$ifname" "$ifname_recoded" || {
         error "Can't reencode topic page from cp1251 to utf-8."
         return 1
     }
-    topichand_extract_cuttrees "$ifname" "$tr_ofname" || {
+    topichand_extract_cuttrees "$ifname_recoded" "$tr_ofname" || {
         error "Can't extract cut trees from topic."
         return 1
     }
@@ -119,6 +120,7 @@ loader_parse_topic_page()
         return 1
     }
     topichand_clean_all \
+        "$ifname_recoded" \
         "$tr_ofname" \
         "$tfi_ofname" \
         "$tfico_ofname" \
@@ -254,12 +256,14 @@ topichand_convert_rawdata_to_parsedata()
 
 topichand_clean_all()
 {
-    local tr_ofname="$1"
-    local tfi_ofname="$2"
-    local tfico_ofname="$3"
-    local ra_ofname="$4"
+    local ifname_recoded="$1"
+    local tr_ofname="$2"
+    local tfi_ofname="$3"
+    local tfico_ofname="$4"
+    local ra_ofname="$5"
 
-    echo "topichand_clean_all() $tr_ofname $tfi_ofname $tfico_ofname $ra_ofname"
+    echo "topichand_clean_all() $ifname_recoded"\
+         " $tr_ofname $tfi_ofname $tfico_ofname $ra_ofname"
     return 0
 }
 
