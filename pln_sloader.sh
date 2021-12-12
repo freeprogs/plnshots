@@ -183,9 +183,46 @@ topichand_filter_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local xpathreq1 xpathreq2
 
-    echo "topichand_filter_cuttrees() $ifname $ofname"
-    cp ctrees_fi.temp.template $ofname
+    xpathreq1='./div'
+    xpathreq2='.//var[@class="postImg"]'
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    if inner_nodes:
+        text = lxml.html.tostring(
+            i, encoding="unicode", pretty_print=True)
+        print(text)
+'   >"$ofname"
+
+    mv "$ofname" "$ifname"
+
+    xpathreq1='./div'
+    xpathreq2='.//var[contains(@title, "fastpic.org")]'
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    if inner_nodes:
+        text = lxml.html.tostring(
+            i, encoding="unicode", pretty_print=True)
+        print(text)
+'   >"$ofname"
+
+    [ -n "$(cat $ofname)" ] && return 0
+    return 1
 }
 
 topichand_convert_cuttrees()
