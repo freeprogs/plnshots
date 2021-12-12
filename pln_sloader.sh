@@ -129,9 +129,40 @@ topichand_extract_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local topictext
+    local xpathreq
 
-    echo "topichand_extract_cuttrees() $ifname $ofname"
-    cp ctrees.temp.template $ofname
+    topictext="$(iconv -f cp1251 -t utf-8 $ifname)"
+
+    xpathreq='..//div[@class="post-user-message"]'\
+'/div[@class="sp-wrap"]'
+    echo -n >"$ofname"
+    echo "$topictext"| python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+nodes = doc.xpath(r"""'"$xpathreq"'""")
+for i in nodes:
+    print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+'   >"$ofname"
+    [ -n "$(cat $ofname)" ] && return 0
+
+    xpathreq='..//div[@class="post-user-message"]'\
+'/div[@class="post-align"]/div[@class="sp-wrap"]'
+    echo -n >"$ofname"
+    echo "$topictext"| python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+nodes = doc.xpath(r"""'"$xpathreq"'""")
+for i in nodes:
+    print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+'   >"$ofname"
+    [ -n "$(cat $ofname)" ] && return 0
+
+    return 1
 }
 
 topichand_filter_cuttrees()
