@@ -146,15 +146,12 @@ topichand_extract_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
-    local topictext
     local xpathreq
-
-    topictext="$(cat $ifname)"
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="sp-wrap"]'
     echo -n >"$ofname"
-    echo "$topictext"| python3 -c '
+    cat "$ifname" | python3 -c '
 import sys
 import lxml.html
 
@@ -168,7 +165,7 @@ for i in nodes:
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="post-align"]/div[@class="sp-wrap"]'
     echo -n >"$ofname"
-    echo "$topictext"| python3 -c '
+    cat "$ifname" | python3 -c '
 import sys
 import lxml.html
 
