@@ -94,6 +94,10 @@ loader_parse_topic_page()
     local tfico_ofname="$odir/ctrees_fico.temp"
     local ra_ofname="$odir/rawdata.temp"
 
+    pagehand_reencode_cp1251_utf8 "$ifname" "$ifname" || {
+        error "Can't reencode topic page from cp1251 to utf-8."
+        return 1
+    }
     topichand_extract_cuttrees "$ifname" "$tr_ofname" || {
         error "Can't extract cut trees from topic."
         return 1
@@ -125,6 +129,19 @@ loader_parse_topic_page()
     return 0
 }
 
+pagehand_reencode_cp1251_utf8()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local tmpfname="${ifname}.reencode_cp1251_utf8.tmp"
+    local ienc="cp1251"
+    local oenc="utf-8"
+
+    iconv -f "$ienc" -t "$oenc" "$ifname" -o "$tmpfname" && \
+        mv "$tmpfname" "$ofname" || return 1
+    return 0
+}
+
 topichand_extract_cuttrees()
 {
     local ifname="$1"
@@ -132,7 +149,7 @@ topichand_extract_cuttrees()
     local topictext
     local xpathreq
 
-    topictext="$(iconv -f cp1251 -t utf-8 $ifname)"
+    topictext="$(cat $ifname)"
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="sp-wrap"]'
