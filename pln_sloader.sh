@@ -191,7 +191,7 @@ topichand_filter_cuttrees()
     local ofname="$2"
     local xpathreq1 xpathreq2
 
-    xpathreq1='./div'
+    xpathreq1='./body/div'
     xpathreq2='.//var[@class="postImg"]'
     echo -n >"$ofname"
     cat "$ifname" | python3 -c '
@@ -199,6 +199,7 @@ import sys
 import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
 outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
 for i in outer_nodes:
     inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
@@ -206,11 +207,12 @@ for i in outer_nodes:
         text = lxml.html.tostring(
             i, encoding="unicode", pretty_print=True)
         print(text)
+print("</body>\n</html>")
 '   >"$ofname"
 
     mv "$ofname" "$ifname"
 
-    xpathreq1='./div'
+    xpathreq1='./body/div'
     xpathreq2='.//var[contains(@title, "fastpic.org")]'
     echo -n >"$ofname"
     cat "$ifname" | python3 -c '
@@ -218,6 +220,7 @@ import sys
 import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
 outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
 for i in outer_nodes:
     inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
@@ -225,9 +228,10 @@ for i in outer_nodes:
         text = lxml.html.tostring(
             i, encoding="unicode", pretty_print=True)
         print(text)
+print("</body>\n</html>")
 '   >"$ofname"
 
-    [ -n "$(cat $ofname)" ] && return 0
+    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
     return 1
 }
 
