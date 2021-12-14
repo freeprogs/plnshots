@@ -239,9 +239,97 @@ topichand_convert_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local xpathreq1 xpathreq2
+    local urlname_default urltext_default
 
-    echo "topichand_convert_cuttrees() $ifname $ofname"
-    cp ctrees_fico.temp.template $ofname
+    xpathreq1='./body/div'
+    xpathreq2='./div/h3/following-sibling::*/var[@class="postImg"]'
+    urlname_default="screenshot"
+    urltext_default="description"
+
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    if inner_nodes:
+        new_item = lxml.html.Element("div")
+        new_item.attrib["class"] = "sp-wrap"
+        new_item.text = "\n"
+        new_item_sub1 = lxml.etree.SubElement(new_item, "div")
+        new_item_sub1.attrib["class"] = "sp-body"
+        new_item_sub1.attrib["title"] = i[0].attrib["title"]
+        new_item_sub1.text = "\n"
+        new_item_sub1_sub1 = lxml.etree.SubElement(new_item_sub1, "h3")
+        new_item_sub1_sub1.attrib["class"] = "sp-title"
+        new_item_sub1_sub1.text = i[0][0].text
+        for item in inner_nodes:
+            new_item_w = lxml.html.Element("div")
+            new_item_w.attrib["class"] = "sp-wrap"
+            new_item_w.text = "\n"
+            new_item_w_sub1 = lxml.etree.SubElement(new_item_w, "div")
+            new_item_w_sub1.attrib["class"] = "sp-body"
+            new_item_w_sub1.attrib["title"] = "'"$urlname_default"'"
+            new_item_w_sub1.text = "\n"
+            new_item_w_sub1_sub1 = lxml.etree.SubElement(new_item_w_sub1, "h3")
+            new_item_w_sub1_sub1.attrib["class"] = "sp-title"
+            new_item_w_sub1_sub1.text = "'"$urlname_default"'"
+            new_item_w_sub1_sub2 = lxml.etree.SubElement(new_item_w_sub1, "span")
+            new_item_w_sub1_sub2.attrib["class"] = "post-b"
+            new_item_w_sub1_sub2.text = "'"$urltext_default"'"
+            new_item_w_sub1.append(item)
+            new_item_sub1.append(new_item_w)
+        text = lxml.html.tostring(new_item, encoding="unicode", pretty_print=True)
+        print(text)
+    else:
+        text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
+        print(text)
+print("</body>\n</html>")
+'   >"$ofname"
+
+    mv "$ofname" "$ifname"
+
+    xpathreq1='./body/div'
+    xpathreq2='./div/div//div/div//var[@class="postImg"]/..'
+
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    if inner_nodes:
+        new_item = lxml.html.Element("div")
+        new_item.attrib["class"] = "sp-wrap"
+        new_item.text = "\n"
+        new_item_sub1 = lxml.etree.SubElement(new_item, "div")
+        new_item_sub1.attrib["class"] = "sp-body"
+        new_item_sub1.attrib["title"] = i[0].attrib["title"]
+        new_item_sub1.text = "\n"
+        new_item_sub1_sub1 = lxml.etree.SubElement(new_item_sub1, "h3")
+        new_item_sub1_sub1.attrib["class"] = "sp-title"
+        new_item_sub1_sub1.text = i[0][0].text
+        for item in inner_nodes:
+            new_item_sub1.append(item)
+        text = lxml.html.tostring(new_item, encoding="unicode", pretty_print=True)
+        print(text)
+    else:
+        text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
+        print(text)
+print("</body>\n</html>")
+'   >"$ofname"
+
+    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
+    return 1
 }
 
 topichand_convert_cuttrees_to_rawdata()
