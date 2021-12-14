@@ -158,11 +158,13 @@ import sys
 import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
 nodes = doc.xpath(r"""'"$xpathreq"'""")
 for i in nodes:
     print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+print("</body>\n</html>")
 '   >"$ofname"
-    [ -n "$(cat $ofname)" ] && return 0
+    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="post-align"]/div[@class="sp-wrap"]'
@@ -172,11 +174,13 @@ import sys
 import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
 nodes = doc.xpath(r"""'"$xpathreq"'""")
 for i in nodes:
     print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+print("</body>\n</html>")
 '   >"$ofname"
-    [ -n "$(cat $ofname)" ] && return 0
+    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
 
     return 1
 }
