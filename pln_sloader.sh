@@ -360,9 +360,32 @@ topichand_convert_cuttrees_to_rawdata()
 {
     local ifname="$1"
     local ofname="$2"
+    local xpathreq1 xpathreq2
 
-    echo "topichand_convert_cuttrees_to_rawdata() $ifname $ofname"
-    cp ctrees_ficora.temp.template $ofname
+    xpathreq1='./body/div'
+    xpathreq2='.//div/var[@class="postImg"]'
+
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    outer_name = i[0].attrib["title"]
+    outer_otext = "\n{}".format(outer_name)
+    print(outer_otext)
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    for j in inner_nodes:
+        inner_name = j.getparent().attrib["title"]
+        inner_url = j.attrib["title"]
+        inner_otext = "{} {}".format(inner_url, inner_name)
+        print(inner_otext)
+'   >"$ofname"
+
+    [ -n "$(cat $ofname)" ] && return 0
+    return 1
 }
 
 topichand_convert_rawdata_to_parsedata()
