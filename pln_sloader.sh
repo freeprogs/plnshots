@@ -295,7 +295,7 @@ print("</body>\n</html>")
     mv "$ofname" "$ifname"
 
     xpathreq1='./body/div'
-    xpathreq2='./div/div//div/div//var[@class="postImg"]/..'
+    xpathreq2='./div/div//div/div/var[@class="postImg"]/../..'
 
     echo -n >"$ofname"
     cat "$ifname" | python3 -c '
