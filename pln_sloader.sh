@@ -243,7 +243,31 @@ topichand_convert_cuttrees()
     local urlname_default urltext_default
 
     xpathreq1='./body/div'
-    xpathreq2='./div/h3/following-sibling::*/var[@class="postImg"]'
+    xpathreq2='.//div/a/var[@class="postImg"]'
+
+    echo -n >"$ofname"
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    for j in inner_nodes:
+        vara = j.getparent()
+        vara.addprevious(j)
+        vara.text = "var"
+    text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
+    print(text)
+print("</body>\n</html>")
+'   >"$ofname"
+
+    mv "$ofname" "$ifname"
+
+    xpathreq1='./body/div'
+    xpathreq2='./div/var[@class="postImg"]'
     urlname_default="screenshot"
     urltext_default="description"
 
