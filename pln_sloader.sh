@@ -90,20 +90,20 @@ loader_parse_topic_page()
     local ofname="$2"
     local odir="$3"
     local ifname_recoded="${ifname}.recoded.temp"
-    local tr_ofname="$odir/ctrees.temp"
+    local t_ofname="$odir/ctrees.temp"
     local tfi_ofname="$odir/ctrees_fi.temp"
     local tfico_ofname="$odir/ctrees_fico.temp"
-    local ra_ofname="$odir/rawdata.temp"
+    local tficora_ofname="$odir/ctrees_ficora.temp"
 
     pagehand_reencode_cp1251_utf8 "$ifname" "$ifname_recoded" || {
         error "Can't reencode topic page from cp1251 to utf-8."
         return 1
     }
-    topichand_extract_cuttrees "$ifname_recoded" "$tr_ofname" || {
+    topichand_extract_cuttrees "$ifname_recoded" "$t_ofname" || {
         error "Can't extract cut trees from topic."
         return 1
     }
-    topichand_filter_cuttrees "$tr_ofname" "$tfi_ofname" || {
+    topichand_filter_cuttrees "$t_ofname" "$tfi_ofname" || {
         error "Can't filter extracted cut trees."
         return 1
     }
@@ -111,20 +111,20 @@ loader_parse_topic_page()
         error "Can't convert filtered cut trees."
         return 1
     }
-    topichand_convert_cuttrees_to_rawdata "$tfico_ofname" "$ra_ofname" || {
+    topichand_convert_cuttrees_to_rawdata "$tfico_ofname" "$tficora_ofname" || {
         error "Can't convert converted cut trees to raw data."
         return 1
     }
-    topichand_convert_rawdata_to_parsedata "$ra_ofname" "$ofname" || {
+    topichand_convert_rawdata_to_parsedata "$tficora_ofname" "$ofname" || {
         error "Can't convert raw data to parsed data."
         return 1
     }
     topichand_clean_all \
         "$ifname_recoded" \
-        "$tr_ofname" \
+        "$t_ofname" \
         "$tfi_ofname" \
         "$tfico_ofname" \
-        "$ra_ofname" || {
+        "$tficora_ofname" || {
         error "Can't clean files after building parsed data from topic."
         return 1
     }
@@ -338,7 +338,7 @@ topichand_convert_cuttrees_to_rawdata()
     local ofname="$2"
 
     echo "topichand_convert_cuttrees_to_rawdata() $ifname $ofname"
-    cp rawdata.temp.template $ofname
+    cp ctrees_ficora.temp.template $ofname
 }
 
 topichand_convert_rawdata_to_parsedata()
@@ -353,13 +353,13 @@ topichand_convert_rawdata_to_parsedata()
 topichand_clean_all()
 {
     local ifname_recoded="$1"
-    local tr_ofname="$2"
+    local t_ofname="$2"
     local tfi_ofname="$3"
     local tfico_ofname="$4"
-    local ra_ofname="$5"
+    local tficora_ofname="$5"
 
     echo "topichand_clean_all() $ifname_recoded"\
-         " $tr_ofname $tfi_ofname $tfico_ofname $ra_ofname"
+         " $t_ofname $tfi_ofname $tfico_ofname $tficora_ofname"
     return 0
 }
 
