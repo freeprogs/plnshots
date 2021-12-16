@@ -393,8 +393,32 @@ topichand_convert_rawdata_to_parsedata()
     local ifname="$1"
     local ofname="$2"
 
-    echo "topichand_convert_rawdata_to_parsedata() $ifname $ofname"
-    cp parsed.temp.template $ofname
+    cat "$ifname" | awk '
+{
+    if(state == 0) {
+        if(/^$/)
+            state = 1
+    } else if (state == 1) {
+        nblock++
+        state = 2
+    } else if (state == 2) {
+        nurl++
+        if(/^$/) {
+            nurl = 0
+            state = 1
+        } else {
+            url = $1
+            urlname = ""
+            for (i = 2; i <= NF; i++) {
+                urlname = urlname $i (i < NF ? " " : "")
+            }
+            print nblock, nurl, url, urlname
+        }
+    }
+}
+'   >"$ofname"
+    [ -n "$(cat $ofname)" ] && return 0
+    return 1
 }
 
 topichand_clean_all()
