@@ -508,7 +508,7 @@ urlhand_detect_type()
     local urlcore
 
     urlcore=`echo "$url" | urlhand_get_url_core`
-    if [ "$urlcore" = "fastpic.org" ]; then
+    if echo "$urlcore" | grep -q '[/.]fastpic.org$'; then
         echo "$UT_FPO"
     else
         echo "$UT_UNDEF"
@@ -522,12 +522,66 @@ urlhand_get_url_core()
 
 urlhand_translate_fpo()
 {
+    local url="$(cat)"
+    local urltype
+    local UT_FPO_BIG=0 \
+          UT_FPO_VIEW=1 \
+          UT_FPO_THUMB=2 \
+          UT_UNDEF=3
+    local out
+
+    urltype=`fpositehand_detect_url_type "$url"`
+    case $urltype in
+      $UT_FPO_BIG)
+        out="$url";;
+      $UT_FPO_VIEW)
+        out=`echo $url | fpositehand_translate_view_to_big`;;
+      $UT_FPO_THUMB)
+        out=`echo $url | fpositehand_translate_thumb_to_big`;;
+      $UT_UNDEF)
+        out="$url";;
+      *) error "Unknown fastpic.org url type: \"$urltype\"";;
+    esac
+    echo -n "$out"
+}
+
+fpositehand_detect_url_type()
+{
+    local url="$1"
+    local UT_FPO_BIG=0 \
+          UT_FPO_VIEW=1 \
+          UT_FPO_THUMB=2 \
+          UT_UNDEF=3
+
+    if echo "$url" | grep -q 'fastpic\.org/big/'; then
+        echo "$UT_FPO_BIG"
+    elif echo "$url" | grep -q 'fastpic\.org/view/'; then
+        echo "$UT_FPO_VIEW"
+    elif echo "$url" | grep -q 'fastpic\.org/thumb/'; then
+        echo "$UT_FPO_THUMB"
+    else
+        echo "$UT_UNDEF"
+    fi
+}
+
+fpositehand_translate_view_to_big()
+{
     sed '
 /^https\?:\/\/fastpic\.org\/view\// {
     s%^\([^:]*://\)\(fastpic\.org/view/\)\([^/]*\)/%\1i\3.\2%
     s%/view/%/big/%
     s%^\(.*/\)\([^/]*\)\(..\)\(\.jpg\.html\)$%\1\3/\2\3\4%
     s%\.html$%%
+}
+    '
+}
+
+fpositehand_translate_thumb_to_big()
+{
+    sed '
+/^https\?:\/\/i[^./]*\.fastpic\.org\/thumb\// {
+    s%/thumb/%/big/%
+    s%jpeg$%jpg%
 }
     '
 }
