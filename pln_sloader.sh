@@ -80,7 +80,10 @@ loader_load_topic_page()
     local ofname="$2"
     local proxy="localhost:9050"
 
-    curl --preproxy "socks4://$proxy" "$url" -o "$ofname" || return 1
+    curl -s \
+         --preproxy "socks4://$proxy" \
+         "$url" \
+         -o "$ofname" || return 1
     return 0
 }
 
