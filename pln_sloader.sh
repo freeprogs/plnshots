@@ -429,8 +429,11 @@ topichand_clean_all()
     local tfico_ofname="$4"
     local tficora_ofname="$5"
 
-    echo "topichand_clean_all() $ifname_recoded"\
-         " $t_ofname $tfi_ofname $tfico_ofname $tficora_ofname"
+    rm -f "$ifname_recoded" \
+       "$t_ofname" \
+       "$tfi_ofname" \
+       "$tfico_ofname" \
+       "$tficora_ofname" || return 1
     return 0
 }
 
