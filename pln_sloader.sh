@@ -92,42 +92,42 @@ loader_parse_topic_page()
     local ifname="$1"
     local ofname="$2"
     local odir="$3"
-    local ifname_recoded="${ifname}.recoded.temp"
-    local t_ofname="$odir/ctrees.temp"
-    local tfi_ofname="$odir/ctrees_fi.temp"
-    local tfico_ofname="$odir/ctrees_fico.temp"
-    local tficora_ofname="$odir/ctrees_ficora.temp"
+    local fname_recoded="${ifname}.recoded.temp"
+    local fname_t="$odir/ctrees.temp"
+    local fname_tfi="$odir/ctrees_fi.temp"
+    local fname_tfico="$odir/ctrees_fico.temp"
+    local fname_tficora="$odir/ctrees_ficora.temp"
 
-    pagehand_reencode_cp1251_utf8 "$ifname" "$ifname_recoded" || {
+    pagehand_reencode_cp1251_utf8 "$ifname" "$fname_recoded" || {
         error "Can't reencode topic page from cp1251 to utf-8."
         return 1
     }
-    topichand_extract_cuttrees "$ifname_recoded" "$t_ofname" || {
+    topichand_extract_cuttrees "$fname_recoded" "$fname_t" || {
         error "Can't extract cut trees from topic."
         return 1
     }
-    topichand_filter_cuttrees "$t_ofname" "$tfi_ofname" || {
+    topichand_filter_cuttrees "$fname_t" "$fname_tfi" || {
         error "Can't filter extracted cut trees."
         return 1
     }
-    topichand_convert_cuttrees "$tfi_ofname" "$tfico_ofname" || {
+    topichand_convert_cuttrees "$fname_tfi" "$fname_tfico" || {
         error "Can't convert filtered cut trees."
         return 1
     }
-    topichand_convert_cuttrees_to_rawdata "$tfico_ofname" "$tficora_ofname" || {
+    topichand_convert_cuttrees_to_rawdata "$fname_tfico" "$fname_tficora" || {
         error "Can't convert converted cut trees to raw data."
         return 1
     }
-    topichand_convert_rawdata_to_parsedata "$tficora_ofname" "$ofname" || {
+    topichand_convert_rawdata_to_parsedata "$fname_tficora" "$ofname" || {
         error "Can't convert raw data to parsed data."
         return 1
     }
     topichand_clean_all \
-        "$ifname_recoded" \
-        "$t_ofname" \
-        "$tfi_ofname" \
-        "$tfico_ofname" \
-        "$tficora_ofname" || {
+        "$fname_recoded" \
+        "$fname_t" \
+        "$fname_tfi" \
+        "$fname_tfico" \
+        "$fname_tficora" || {
         error "Can't clean files after building parsed data from topic."
         return 1
     }
@@ -426,17 +426,17 @@ topichand_convert_rawdata_to_parsedata()
 
 topichand_clean_all()
 {
-    local ifname_recoded="$1"
-    local t_ofname="$2"
-    local tfi_ofname="$3"
-    local tfico_ofname="$4"
-    local tficora_ofname="$5"
+    local fname_recoded="$1"
+    local fname_t="$2"
+    local fname_tfi="$3"
+    local fname_tfico="$4"
+    local fname_tficora="$5"
 
-    rm -f "$ifname_recoded" \
-       "$t_ofname" \
-       "$tfi_ofname" \
-       "$tfico_ofname" \
-       "$tficora_ofname" || return 1
+    rm -f "$fname_recoded" \
+       "$fname_t" \
+       "$fname_tfi" \
+       "$fname_tfico" \
+       "$fname_tficora" || return 1
     return 0
 }
 
