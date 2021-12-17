@@ -78,9 +78,9 @@ loader_load_topic_page()
 {
     local url="$1"
     local ofname="$2"
+    local proxy="localhost:9050"
 
-    echo "loader_load_topic_page $url $ofname"
-    cp topic.temp.template $ofname
+    curl --preproxy "socks4://$proxy" "$url" -o "$ofname" || return 1
     return 0
 }
 
