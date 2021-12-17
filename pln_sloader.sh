@@ -603,7 +603,7 @@ loader_make_run()
     awk -v odir="$odir" '
 {
     ext = "jpg"
-    printf "echo wget -c %s -O %s/%03d_%03d_%s.%s\n",
+    printf "echo wget -q -c %s -O %s/%03d_%03d_%s.%s\n",
         $3, odir, $1, $2, $4, ext
 }
     ' "$ifname" >"$ofname" || return 1
