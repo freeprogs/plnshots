@@ -80,10 +80,12 @@ loader_load_topic_page()
     local ofname="$2"
     local proxy="localhost:9050"
 
+    msg "$(echo $url | reporter_wrap_curl_start)"
     curl -s \
          --preproxy "socks4://$proxy" \
          "$url" \
          -o "$ofname" || return 1
+    msg "$(echo $url | reporter_wrap_curl_end)"
     return 0
 }
 
@@ -616,8 +618,12 @@ loader_make_run()
 loader_run()
 {
     local ifname="$1"
+    local line
 
-    source "$ifname" || return 1
+    cat "$ifname" | while read line; do
+        msg "$(echo "$line" | reporter_wrap_wget_start)"
+        eval "$line" || return 1
+    done || return 1
     return 0
 }
 
@@ -633,6 +639,43 @@ loader_clean_all()
        "$fname_converted" \
        "$fname_run" || return 1
     return 0
+}
+
+reporter_wrap_curl_start()
+{
+    local url="$(cat)"
+
+    echo "Loading ${url} ..."
+}
+
+reporter_wrap_curl_end()
+{
+    local url="$(cat)"
+
+    echo "Ok $url loaded."
+}
+
+reporter_wrap_wget_start()
+{
+    local maxdname=15
+    local maxfname=40
+
+    awk -v maxdname="$maxdname" \
+        -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    dir = arr[1]
+    if (length(dir) > maxdname) {
+        dir = substr(arr[1], 1, maxdname - 2) ".."
+    }
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Loading", dir, file " ..."
+}
+'
 }
 
 main()
