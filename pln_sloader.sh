@@ -602,7 +602,10 @@ fpositehand_translate_thumb_to_big()
 
 converter_convert_name()
 {
-    sed 's/[^[:alnum:]]/_/g'
+    sed '
+s/[^[:alnum:]]/_/g
+s/___*/_/g
+'
 }
 
 loader_make_report()
