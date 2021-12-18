@@ -776,12 +776,12 @@ main()
         }
         usage
         load_screenshots "$1" "." || return 1
-        msg "Files loaded from $1 to the current directory."
+        msg "Ok Files have loaded to the current directory."
         ;;
       2)
         usage
         load_screenshots "$1" "$2" || return 1
-        msg "Files loaded from $1 to directory $2."
+        msg "Ok Files have loaded to directory $2."
         ;;
       *)
         error "unknown arglist: \"$*\""
