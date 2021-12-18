@@ -40,6 +40,7 @@ load_screenshots()
     local fname_topic="topic.temp"
     local fname_parsed="parsed.temp"
     local fname_converted="converted.temp"
+    local fname_report="report.temp"
     local fname_run="run.temp"
 
     [ -d "$odir" ] || mkdir "$odir"
@@ -55,11 +56,15 @@ load_screenshots()
         error "Can't convert the parsed data."
         return 1
     }
+    loader_make_report "$odir/$fname_converted" "$odir/$fname_report" || {
+        error "Can't make the report file."
+        return 1
+    }
     loader_make_run "$odir/$fname_converted" "$odir/$fname_run" "$odir" || {
         error "Can't make the run file."
         return 1
     }
-    loader_run "$odir/$fname_run" || {
+    loader_run "$odir/$fname_run" "$odir/$fname_report" || {
         error "Can't run the run file."
         return 1
     }
@@ -67,6 +72,7 @@ load_screenshots()
         "$odir/$fname_topic" \
         "$odir/$fname_parsed" \
         "$odir/$fname_converted" \
+        "$odir/$fname_report" \
         "$odir/$fname_run" || {
         error "Can't clean temporary files."
         return 1
@@ -599,6 +605,16 @@ converter_convert_name()
     sed 's/[^[:alnum:]]/_/g'
 }
 
+loader_make_report()
+{
+    local ifname="$1"
+    local ofname="$2"
+
+    echo "loader_make_report $ifname $ofname"
+    cp report.temp.template $ofname
+    return 0
+}
+
 loader_make_run()
 {
     local ifname="$1"
@@ -617,10 +633,16 @@ loader_make_run()
 
 loader_run()
 {
-    local ifname="$1"
+    local ifname_run="$1"
+    local ifname_report="$2"
     local line
 
-    cat "$ifname" | while read line; do
+    echo "loader_run $ifname_run $ifname_report"
+    echo "Report:"
+    cat "$ifname_report"
+    echo "Report End"
+
+    cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
         eval "$line" || return 1
     done || return 1
@@ -632,11 +654,13 @@ loader_clean_all()
     local fname_topic="$1"
     local fname_parsed="$2"
     local fname_converted="$3"
-    local fname_run="$4"
+    local fname_report="$4"
+    local fname_run="$5"
 
     rm -f "$fname_topic" \
        "$fname_parsed" \
        "$fname_converted" \
+       "$fname_report" \
        "$fname_run" || return 1
     return 0
 }
