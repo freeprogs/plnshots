@@ -647,17 +647,39 @@ loader_run()
     local ifname_run="$1"
     local ifname_report="$2"
     local line
+    local report_numoftrees
+    local report_treeurls
+    local report_totalurls
 
-    echo "loader_run $ifname_run $ifname_report"
-    echo "Report:"
-    cat "$ifname_report"
-    echo "Report End"
-
+    report_numoftrees="$(cat "$ifname_report" | reporthand_get_num_of_trees)"
+    report_totalurls="$(cat "$ifname_report" | reporthand_get_total_urls)"
+    msg "$(echo "$report_numoftrees $report_totalurls" | reporter_wrap_numoftrees_totalurls)"
+    for i in $(seq 1 "$report_numoftrees"); do
+        report_treeurls="$(cat "$ifname_report" | reporthand_get_tree_urls $i)"
+        msg "$(echo "$i $report_treeurls" | reporter_wrap_treenumber_treeurls)"
+    done
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
         eval "$line" || return 1
     done || return 1
     return 0
+}
+
+reporthand_get_num_of_trees()
+{
+    awk '$1 == "n" { print $2; }'
+}
+
+reporthand_get_tree_urls()
+{
+    local tree_number="$1"
+
+    awk -v tn="$tree_number" '$1 == tn { print $2; }'
+}
+
+reporthand_get_total_urls()
+{
+    awk '$1 == "t" { print $2; }'
 }
 
 loader_clean_all()
@@ -709,6 +731,33 @@ reporter_wrap_wget_start()
         file = substr(arr[2], 1, maxfname - 2) ".."
     }
     print "Loading", dir, file " ..."
+}
+'
+}
+
+reporter_wrap_numoftrees_totalurls()
+{
+    awk '
+{
+    print "Found",
+           $1,
+           "tree" ($1 != 1 ? "s" : ""),
+           "with total",
+           $2,
+           "url" ($2 != 1 ? "s" : "") "."
+}
+'
+}
+
+reporter_wrap_treenumber_treeurls()
+{
+    awk '
+{
+    print "Tree",
+          "#" $1,
+          "has",
+          $2,
+          "url" ($2 != 1 ? "s" : "") "."
 }
 '
 }
