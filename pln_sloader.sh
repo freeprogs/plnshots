@@ -610,8 +610,19 @@ loader_make_report()
     local ifname="$1"
     local ofname="$2"
 
-    echo "loader_make_report $ifname $ofname"
-    cp report.temp.template $ofname
+    cat "$ifname" | awk '
+{
+    arr[$1]++
+}
+END {
+    print "n", length(arr)
+    for (i in arr) {
+        print i, arr[i]
+        total += arr[i]
+    }
+    print "t", total
+}
+'   >"$ofname"
     return 0
 }
 
