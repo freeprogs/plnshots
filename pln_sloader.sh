@@ -159,6 +159,27 @@ topichand_extract_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local tfname="${ifname}.extracted.tmp"
+
+    if extractor_extract_cuttree_direct "$ifname" "$tfname" && \
+       extractor_test_extracted_cuttree "$tfname"; then
+        mv "$tfname" "$ofname" || return 1
+        return 0
+    fi
+    if extractor_extract_cuttree_wrapped "$ifname" "$tfname" && \
+       extractor_test_extracted_cuttree "$tfname"; then
+        mv "$tfname" "$ofname" || return 1
+        return 0
+    fi
+    error "Can't extract cuttree by the direct method."
+    error "Can't extract cuttree by the wrapped method."
+    return 1
+}
+
+extractor_extract_cuttree_direct()
+{
+    local ifname="$1"
+    local ofname="$2"
     local xpathreq
 
     xpathreq='..//div[@class="post-user-message"]'\
@@ -174,8 +195,15 @@ nodes = doc.xpath(r"""'"$xpathreq"'""")
 for i in nodes:
     print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
 print("</body>\n</html>")
-'   >"$ofname"
-    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
+'   >"$ofname" || return 1
+    return 0
+}
+
+extractor_extract_cuttree_wrapped()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="post-align"]/div[@class="sp-wrap"]'
@@ -190,9 +218,15 @@ nodes = doc.xpath(r"""'"$xpathreq"'""")
 for i in nodes:
     print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
 print("</body>\n</html>")
-'   >"$ofname"
-    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
+'   >"$ofname" || return 1
+    return 0
+}
 
+extractor_test_extracted_cuttree()
+{
+    local ifname="$1"
+
+    [ $(wc -l "$ifname" | cut -d' ' -f1) -gt 4 ] && return 0
     return 1
 }
 
