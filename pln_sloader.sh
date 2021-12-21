@@ -660,7 +660,7 @@ loader_run()
     for i in $(seq 1 "$report_numoftrees"); do
         report_treeurls="$(cat "$ifname_report" | reporthand_get_tree_urls $i)"
         msg "$(echo "$i $report_treeurls" | reporter_wrap_treenumber_treeurls)"
-    done
+    done || return 1
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
         eval "$line" || return 1
