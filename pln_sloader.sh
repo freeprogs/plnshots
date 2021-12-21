@@ -184,7 +184,9 @@ extractor_extract_cuttree_direct()
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="sp-wrap"]'
+
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -207,7 +209,9 @@ extractor_extract_cuttree_wrapped()
 
     xpathreq='..//div[@class="post-user-message"]'\
 '/div[@class="post-align"]/div[@class="sp-wrap"]'
+
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
