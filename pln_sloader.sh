@@ -146,12 +146,12 @@ pagehand_reencode_cp1251_utf8()
 {
     local ifname="$1"
     local ofname="$2"
-    local tmpfname="${ifname}.reencode_cp1251_utf8.tmp"
+    local tfname="${ifname}.reencode_cp1251_utf8.tmp"
     local ienc="cp1251"
     local oenc="utf-8"
 
-    iconv -f "$ienc" -t "$oenc" "$ifname" -o "$tmpfname" && \
-        mv "$tmpfname" "$ofname" || return 1
+    iconv -f "$ienc" -t "$oenc" "$ifname" -o "$tfname" && \
+        mv "$tfname" "$ofname" || return 1
     return 0
 }
 
