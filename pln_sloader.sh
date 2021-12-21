@@ -226,8 +226,18 @@ extractor_test_extracted_cuttree()
 {
     local ifname="$1"
 
-    [ $(wc -l "$ifname" | cut -d' ' -f1) -gt 4 ] && return 0
-    return 1
+    htmlpagehand_is_empty "$ifname" && return 1
+    return 0
+}
+
+htmlpagehand_is_empty()
+{
+    local ifname="$1"
+    local text
+
+    text=$(echo -e "<html>\n<body>\n</body>\n</html>")
+    [ "$(cat "$ifname")" = "$text" ] || return 1
+    return 0
 }
 
 topichand_filter_cuttrees()
