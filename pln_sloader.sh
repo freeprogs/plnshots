@@ -161,11 +161,13 @@ topichand_extract_cuttrees()
     local ofname="$2"
     local tfname="${ifname}.extracted.tmp"
 
+    echo -n >"$tfname"
     if extractor_extract_cuttree_direct "$ifname" "$tfname" && \
        extractor_test_extracted_cuttree "$tfname"; then
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
+    echo -n >"$tfname"
     if extractor_extract_cuttree_wrapped "$ifname" "$tfname" && \
        extractor_test_extracted_cuttree "$tfname"; then
         mv "$tfname" "$ofname" || return 1
