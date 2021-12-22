@@ -242,6 +242,7 @@ htmlpagehand_is_empty()
     local text
 
     text=$(echo -e "<html>\n<body>\n</body>\n</html>")
+    [ $(cat "$ifname" | wc -l) -eq 4 ] || return 1
     [ "$(cat "$ifname")" = "$text" ] || return 1
     return 0
 }
