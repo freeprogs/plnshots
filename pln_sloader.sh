@@ -250,11 +250,41 @@ topichand_filter_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local tfname_s1="${ifname}.filtered.stage1.tmp"
+    local tfname_s2="${ifname}.filtered.stage2.tmp"
+
+    echo -n >"$tfname_s1"
+    if selector_filter_cuttrees_varimg "$ifname" "$tfname_s1" && \
+       selector_test_filtered_cuttrees "$tfname_s1"; then
+        :
+    else
+        error "Can't filter cut trees by var with image."
+        return 1
+    fi
+    echo -n >"$tfname_s2"
+    if selector_filter_cuttrees_sitefpo "$tfname_s1" "$tfname_s2" && \
+       selector_test_filtered_cuttrees "$tfname_s2"; then
+        :
+    else
+        error "Can't filter cut trees by the fpo site."
+        return 1
+    fi
+    rm -f "$tfname_s1" || return 1
+    mv "$tfname_s2" "$ofname" || return 1
+    return 0
+}
+
+selector_filter_cuttrees_varimg()
+{
+    local ifname="$1"
+    local ofname="$2"
     local xpathreq1 xpathreq2
 
     xpathreq1='./body/div'
     xpathreq2='.//var[@class="postImg"]'
+
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -269,13 +299,21 @@ for i in outer_nodes:
             i, encoding="unicode", pretty_print=True)
         print(text)
 print("</body>\n</html>")
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    mv "$ofname" "$ifname"
+selector_filter_cuttrees_sitefpo()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq1 xpathreq2
 
     xpathreq1='./body/div'
     xpathreq2='.//var[contains(@title, "fastpic.org")]'
+
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -290,10 +328,16 @@ for i in outer_nodes:
             i, encoding="unicode", pretty_print=True)
         print(text)
 print("</body>\n</html>")
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
-    return 1
+selector_test_filtered_cuttrees()
+{
+    local ifname="$1"
+
+    htmlpagehand_is_empty "$ifname" && return 1
+    return 0
 }
 
 topichand_convert_cuttrees()
