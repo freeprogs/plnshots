@@ -345,13 +345,51 @@ topichand_convert_cuttrees()
 {
     local ifname="$1"
     local ofname="$2"
+    local tfname_s1="${ifname}.converted.stage1.tmp"
+    local tfname_s2="${ifname}.converted.stage2.tmp"
+    local tfname_s3="${ifname}.converted.stage3.tmp"
+
+    echo -n >"$tfname_s1"
+    if convertor_convert_ahref_to_var "$ifname" "$tfname_s1" && \
+       convertor_test_converted_cuttrees "$tfname_s1"; then
+        :
+    else
+        error "Can't convert cut trees from var in tag a to var."
+        return 1
+    fi
+    echo -n >"$tfname_s2"
+    if convertor_convert_deep0_to_deep1 "$tfname_s1" "$tfname_s2" && \
+       convertor_test_converted_cuttrees "$tfname_s2"; then
+        :
+    else
+        error "Can't convert cut trees from deep 0 to deep 1."
+        return 1
+    fi
+    echo -n >"$tfname_s3"
+    if convertor_convert_deepn_to_deep1 "$tfname_s2" "$tfname_s3" && \
+       convertor_test_converted_cuttrees "$tfname_s3"; then
+        :
+    else
+        error "Can't convert cut trees from deep N to deep 1."
+        return 1
+    fi
+    rm -f "$tfname_s1" || return 1
+    rm -f "$tfname_s2" || return 1
+    mv "$tfname_s3" "$ofname" || return 1
+    return 0
+}
+
+convertor_convert_ahref_to_var()
+{
+    local ifname="$1"
+    local ofname="$2"
     local xpathreq1 xpathreq2
-    local urlname_default urltext_default
 
     xpathreq1='./body/div'
     xpathreq2='.//div/a/var[@class="postImg"]'
 
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -368,9 +406,16 @@ for i in outer_nodes:
     text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
     print(text)
 print("</body>\n</html>")
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    mv "$ofname" "$ifname"
+convertor_convert_deep0_to_deep1()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq1 xpathreq2
+    local urlname_default urltext_default
 
     xpathreq1='./body/div'
     xpathreq2='./div/var[@class="postImg"]'
@@ -378,6 +423,7 @@ print("</body>\n</html>")
     urltext_default="description"
 
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -420,14 +466,21 @@ for i in outer_nodes:
         text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
         print(text)
 print("</body>\n</html>")
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    mv "$ofname" "$ifname"
+convertor_convert_deepn_to_deep1()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq1 xpathreq2
 
     xpathreq1='./body/div'
     xpathreq2='./div/div//div/div/var[@class="postImg"]/../..'
 
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -456,10 +509,16 @@ for i in outer_nodes:
         text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
         print(text)
 print("</body>\n</html>")
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    [ $(wc -l "$ofname" | cut -d' ' -f1) -gt 4 ] && return 0
-    return 1
+convertor_test_converted_cuttrees()
+{
+    local ifname="$1"
+
+    htmlpagehand_is_empty "$ifname" && return 1
+    return 0
 }
 
 topichand_convert_cuttrees_to_rawdata()
