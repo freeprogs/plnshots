@@ -1,4 +1,6 @@
 *.temp
 *.template
+*.patch
 tasks
 cmd.txt
+empty.html
