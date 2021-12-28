@@ -525,12 +525,31 @@ topichand_convert_cuttrees_to_rawdata()
 {
     local ifname="$1"
     local ofname="$2"
+    local tfname_s1="${ifname}.convertedrawdata.stage1.tmp"
+
+    echo -n >"$tfname_s1"
+    if convertor_convert_cuttrees_to_rawdata "$ifname" "$tfname_s1" && \
+       convertor_test_converted_rawdata "$tfname_s1"; then
+        :
+    else
+        error "Can't convert cut trees to raw data."
+        return 1
+    fi
+    mv "$tfname_s1" "$ofname" || return 1
+    return 0
+}
+
+convertor_convert_cuttrees_to_rawdata()
+{
+    local ifname="$1"
+    local ofname="$2"
     local xpathreq1 xpathreq2
 
     xpathreq1='./body/div'
     xpathreq2='.//div/var[@class="postImg"]'
 
     echo -n >"$ofname"
+
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
@@ -547,10 +566,24 @@ for i in outer_nodes:
         inner_url = j.attrib["title"]
         inner_otext = "{} {}".format(inner_url, inner_name)
         print(inner_otext)
-'   >"$ofname"
+'   >"$ofname" || return 1
+    return 0
+}
 
-    [ -n "$(cat $ofname)" ] && return 0
-    return 1
+convertor_test_converted_rawdata()
+{
+    local ifname="$1"
+
+    rawdatahand_is_empty "$ifname" && return 1
+    return 0
+}
+
+rawdatahand_is_empty()
+{
+    local ifname="$1"
+
+    [ -n "$(cat $ifname)" ] && return 1
+    return 0
 }
 
 topichand_convert_rawdata_to_parsedata()
