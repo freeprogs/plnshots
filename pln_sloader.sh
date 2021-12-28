@@ -162,14 +162,14 @@ topichand_extract_cuttrees()
     local tfname="${ifname}.extracted.tmp"
 
     echo -n >"$tfname"
-    if extractor_extract_cuttree_direct "$ifname" "$tfname" && \
-       extractor_test_extracted_cuttree "$tfname"; then
+    if extractor_extract_cuttrees_direct "$ifname" "$tfname" && \
+       extractor_test_extracted_cuttrees "$tfname"; then
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
     echo -n >"$tfname"
-    if extractor_extract_cuttree_wrapped "$ifname" "$tfname" && \
-       extractor_test_extracted_cuttree "$tfname"; then
+    if extractor_extract_cuttrees_wrapped "$ifname" "$tfname" && \
+       extractor_test_extracted_cuttrees "$tfname"; then
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
@@ -178,7 +178,7 @@ topichand_extract_cuttrees()
     return 1
 }
 
-extractor_extract_cuttree_direct()
+extractor_extract_cuttrees_direct()
 {
     local ifname="$1"
     local ofname="$2"
@@ -203,7 +203,7 @@ print("</body>\n</html>")
     return 0
 }
 
-extractor_extract_cuttree_wrapped()
+extractor_extract_cuttrees_wrapped()
 {
     local ifname="$1"
     local ofname="$2"
@@ -228,7 +228,7 @@ print("</body>\n</html>")
     return 0
 }
 
-extractor_test_extracted_cuttree()
+extractor_test_extracted_cuttrees()
 {
     local ifname="$1"
 
