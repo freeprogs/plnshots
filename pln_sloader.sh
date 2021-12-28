@@ -610,6 +610,24 @@ topichand_convert_rawdata_to_parsedata()
 {
     local ifname="$1"
     local ofname="$2"
+    local tfname_s1="${ifname}.convertedparsedata.stage1.tmp"
+
+    echo -n >"$tfname_s1"
+    if convertor_convert_rawdata_to_parsedata "$ifname" "$tfname_s1" && \
+       convertor_test_converted_parsedata "$tfname_s1"; then
+        :
+    else
+        error "Can't convert raw data to parse data."
+        return 1
+    fi
+    mv "$tfname_s1" "$ofname" || return 1
+    return 0
+}
+
+convertor_convert_rawdata_to_parsedata()
+{
+    local ifname="$1"
+    local ofname="$2"
 
     cat "$ifname" | awk '
 {
@@ -634,9 +652,24 @@ topichand_convert_rawdata_to_parsedata()
         }
     }
 }
-'   >"$ofname"
-    [ -n "$(cat $ofname)" ] && return 0
-    return 1
+'   >"$ofname" || return 1
+    return 0
+}
+
+convertor_test_converted_parsedata()
+{
+    local ifname="$1"
+
+    parsedatahand_is_empty "$ifname" && return 1
+    return 0
+}
+
+parsedatahand_is_empty()
+{
+    local ifname="$1"
+
+    [ -n "$(cat $ifname)" ] && return 1
+    return 0
 }
 
 topichand_clean_all()
