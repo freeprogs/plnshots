@@ -162,14 +162,14 @@ topichand_extract_cuttrees()
     local tfname="${ifname}.extracted.tmp"
 
     echo -n >"$tfname"
-    if extractor_extract_cuttrees_direct "$ifname" "$tfname" && \
-       extractor_test_extracted_cuttrees "$tfname"; then
+    if ctrees_extractor_extract_cuttrees_direct "$ifname" "$tfname" && \
+       ctrees_extractor_test_extracted_cuttrees "$tfname"; then
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
     echo -n >"$tfname"
-    if extractor_extract_cuttrees_wrapped "$ifname" "$tfname" && \
-       extractor_test_extracted_cuttrees "$tfname"; then
+    if ctrees_extractor_extract_cuttrees_wrapped "$ifname" "$tfname" && \
+       ctrees_extractor_test_extracted_cuttrees "$tfname"; then
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
@@ -178,7 +178,7 @@ topichand_extract_cuttrees()
     return 1
 }
 
-extractor_extract_cuttrees_direct()
+ctrees_extractor_extract_cuttrees_direct()
 {
     local ifname="$1"
     local ofname="$2"
@@ -203,7 +203,7 @@ print("</body>\n</html>")
     return 0
 }
 
-extractor_extract_cuttrees_wrapped()
+ctrees_extractor_extract_cuttrees_wrapped()
 {
     local ifname="$1"
     local ofname="$2"
@@ -228,7 +228,7 @@ print("</body>\n</html>")
     return 0
 }
 
-extractor_test_extracted_cuttrees()
+ctrees_extractor_test_extracted_cuttrees()
 {
     local ifname="$1"
 
@@ -255,16 +255,16 @@ topichand_filter_cuttrees()
     local tfname_s2="${ifname}.filtered.stage2.tmp"
 
     echo -n >"$tfname_s1"
-    if selector_filter_cuttrees_varimg "$ifname" "$tfname_s1" && \
-       selector_test_filtered_cuttrees "$tfname_s1"; then
+    if ctrees_selector_filter_cuttrees_varimg "$ifname" "$tfname_s1" && \
+       ctrees_selector_test_filtered_cuttrees "$tfname_s1"; then
         :
     else
         error "Can't filter cut trees by var with image."
         return 1
     fi
     echo -n >"$tfname_s2"
-    if selector_filter_cuttrees_sitefpo "$tfname_s1" "$tfname_s2" && \
-       selector_test_filtered_cuttrees "$tfname_s2"; then
+    if ctrees_selector_filter_cuttrees_sitefpo "$tfname_s1" "$tfname_s2" && \
+       ctrees_selector_test_filtered_cuttrees "$tfname_s2"; then
         :
     else
         error "Can't filter cut trees by the fpo site."
@@ -275,7 +275,7 @@ topichand_filter_cuttrees()
     return 0
 }
 
-selector_filter_cuttrees_varimg()
+ctrees_selector_filter_cuttrees_varimg()
 {
     local ifname="$1"
     local ofname="$2"
@@ -304,7 +304,7 @@ print("</body>\n</html>")
     return 0
 }
 
-selector_filter_cuttrees_sitefpo()
+ctrees_selector_filter_cuttrees_sitefpo()
 {
     local ifname="$1"
     local ofname="$2"
@@ -333,7 +333,7 @@ print("</body>\n</html>")
     return 0
 }
 
-selector_test_filtered_cuttrees()
+ctrees_selector_test_filtered_cuttrees()
 {
     local ifname="$1"
 
@@ -350,24 +350,24 @@ topichand_convert_cuttrees()
     local tfname_s3="${ifname}.converted.stage3.tmp"
 
     echo -n >"$tfname_s1"
-    if convertor_convert_ahref_to_var "$ifname" "$tfname_s1" && \
-       convertor_test_converted_cuttrees "$tfname_s1"; then
+    if ctrees_converter_convert_ahref_to_var "$ifname" "$tfname_s1" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s1"; then
         :
     else
         error "Can't convert cut trees from var in tag a to var."
         return 1
     fi
     echo -n >"$tfname_s2"
-    if convertor_convert_deep0_to_deep1 "$tfname_s1" "$tfname_s2" && \
-       convertor_test_converted_cuttrees "$tfname_s2"; then
+    if ctrees_converter_convert_deep0_to_deep1 "$tfname_s1" "$tfname_s2" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s2"; then
         :
     else
         error "Can't convert cut trees from deep 0 to deep 1."
         return 1
     fi
     echo -n >"$tfname_s3"
-    if convertor_convert_deepn_to_deep1 "$tfname_s2" "$tfname_s3" && \
-       convertor_test_converted_cuttrees "$tfname_s3"; then
+    if ctrees_converter_convert_deepn_to_deep1 "$tfname_s2" "$tfname_s3" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s3"; then
         :
     else
         error "Can't convert cut trees from deep N to deep 1."
@@ -379,7 +379,7 @@ topichand_convert_cuttrees()
     return 0
 }
 
-convertor_convert_ahref_to_var()
+ctrees_converter_convert_ahref_to_var()
 {
     local ifname="$1"
     local ofname="$2"
@@ -410,7 +410,7 @@ print("</body>\n</html>")
     return 0
 }
 
-convertor_convert_deep0_to_deep1()
+ctrees_converter_convert_deep0_to_deep1()
 {
     local ifname="$1"
     local ofname="$2"
@@ -470,7 +470,7 @@ print("</body>\n</html>")
     return 0
 }
 
-convertor_convert_deepn_to_deep1()
+ctrees_converter_convert_deepn_to_deep1()
 {
     local ifname="$1"
     local ofname="$2"
@@ -513,7 +513,7 @@ print("</body>\n</html>")
     return 0
 }
 
-convertor_test_converted_cuttrees()
+ctrees_converter_test_converted_cuttrees()
 {
     local ifname="$1"
 
@@ -528,8 +528,8 @@ topichand_convert_cuttrees_to_rawdata()
     local tfname_s1="${ifname}.convertedrawdata.stage1.tmp"
 
     echo -n >"$tfname_s1"
-    if convertor_convert_cuttrees_to_rawdata "$ifname" "$tfname_s1" && \
-       convertor_test_converted_rawdata "$tfname_s1"; then
+    if ctrees_converter_convert_cuttrees_to_rawdata "$ifname" "$tfname_s1" && \
+       ctrees_converter_test_converted_rawdata "$tfname_s1"; then
         :
     else
         error "Can't convert cut trees to raw data."
@@ -539,7 +539,7 @@ topichand_convert_cuttrees_to_rawdata()
     return 0
 }
 
-convertor_convert_cuttrees_to_rawdata()
+ctrees_converter_convert_cuttrees_to_rawdata()
 {
     local ifname="$1"
     local ofname="$2"
@@ -570,7 +570,7 @@ for i in outer_nodes:
     return 0
 }
 
-convertor_test_converted_rawdata()
+ctrees_converter_test_converted_rawdata()
 {
     local ifname="$1"
 
@@ -613,8 +613,8 @@ topichand_convert_rawdata_to_parsedata()
     local tfname_s1="${ifname}.convertedparsedata.stage1.tmp"
 
     echo -n >"$tfname_s1"
-    if convertor_convert_rawdata_to_parsedata "$ifname" "$tfname_s1" && \
-       convertor_test_converted_parsedata "$tfname_s1"; then
+    if rawdata_converter_convert_rawdata_to_parsedata "$ifname" "$tfname_s1" && \
+       rawdata_converter_test_converted_parsedata "$tfname_s1"; then
         :
     else
         error "Can't convert raw data to parse data."
@@ -624,7 +624,7 @@ topichand_convert_rawdata_to_parsedata()
     return 0
 }
 
-convertor_convert_rawdata_to_parsedata()
+rawdata_converter_convert_rawdata_to_parsedata()
 {
     local ifname="$1"
     local ofname="$2"
@@ -656,7 +656,7 @@ convertor_convert_rawdata_to_parsedata()
     return 0
 }
 
-convertor_test_converted_parsedata()
+rawdata_converter_test_converted_parsedata()
 {
     local ifname="$1"
 
