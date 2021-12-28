@@ -574,15 +574,35 @@ convertor_test_converted_rawdata()
 {
     local ifname="$1"
 
-    rawdatahand_is_empty "$ifname" && return 1
+    rawdatahand_has_one_record "$ifname" || return 1
     return 0
 }
 
-rawdatahand_is_empty()
+rawdatahand_has_one_record()
 {
     local ifname="$1"
 
-    [ -n "$(cat $ifname)" ] && return 1
+    awk '
+NR == 1 && !/^$/ {
+    f_exit = 1
+    exit 1
+}
+NR == 2 && !/./ {
+    f_exit = 1
+    exit 1
+}
+NR == 3 && (!/^https?:\/\// || NF < 2) {
+    f_exit = 1
+    exit 1
+}
+END {
+    if (f_exit) {
+        exit
+    } else {
+        exit (NR >= 3) ? 0 : 1
+    }
+}
+' "$ifname" || return 1
     return 0
 }
 
