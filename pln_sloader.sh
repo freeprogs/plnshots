@@ -660,15 +660,28 @@ convertor_test_converted_parsedata()
 {
     local ifname="$1"
 
-    parsedatahand_is_empty "$ifname" && return 1
+    parsedatahand_has_one_record "$ifname" || return 1
     return 0
 }
 
-parsedatahand_is_empty()
+parsedatahand_has_one_record()
 {
     local ifname="$1"
 
-    [ -n "$(cat $ifname)" ] && return 1
+    awk '
+NR == 1 {
+    if ($1 == "1" && $2 == "1" && $3 ~ /^https?:\/\// && $4 ~ /./) {
+        exit 0
+    } else {
+        exit 1
+    }
+}
+END {
+    if (NR == 0) {
+        exit 1
+    }
+}
+' "$ifname" || return 1
     return 0
 }
 
