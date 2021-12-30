@@ -348,26 +348,35 @@ topichand_convert_cuttrees()
     local tfname_s1="${ifname}.converted.stage1.tmp"
     local tfname_s2="${ifname}.converted.stage2.tmp"
     local tfname_s3="${ifname}.converted.stage3.tmp"
+    local tfname_s4="${ifname}.converted.stage4.tmp"
 
     echo -n >"$tfname_s1"
-    if ctrees_converter_convert_ahref_to_var "$ifname" "$tfname_s1" && \
+    if ctrees_converter_convert_remove_post_align "$ifname" "$tfname_s1" && \
        ctrees_converter_test_converted_cuttrees "$tfname_s1"; then
+        :
+    else
+        error "Can't convert cut trees to the removed post alignment."
+        return 1
+    fi
+    echo -n >"$tfname_s2"
+    if ctrees_converter_convert_ahref_to_var "$tfname_s1" "$tfname_s2" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s2"; then
         :
     else
         error "Can't convert cut trees from var in tag a to var."
         return 1
     fi
-    echo -n >"$tfname_s2"
-    if ctrees_converter_convert_deep0_to_deep1 "$tfname_s1" "$tfname_s2" && \
-       ctrees_converter_test_converted_cuttrees "$tfname_s2"; then
+    echo -n >"$tfname_s3"
+    if ctrees_converter_convert_deep0_to_deep1 "$tfname_s2" "$tfname_s3" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s3"; then
         :
     else
         error "Can't convert cut trees from deep 0 to deep 1."
         return 1
     fi
-    echo -n >"$tfname_s3"
-    if ctrees_converter_convert_deepn_to_deep1 "$tfname_s2" "$tfname_s3" && \
-       ctrees_converter_test_converted_cuttrees "$tfname_s3"; then
+    echo -n >"$tfname_s4"
+    if ctrees_converter_convert_deepn_to_deep1 "$tfname_s3" "$tfname_s4" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s4"; then
         :
     else
         error "Can't convert cut trees from deep N to deep 1."
@@ -375,7 +384,39 @@ topichand_convert_cuttrees()
     fi
     rm -f "$tfname_s1" || return 1
     rm -f "$tfname_s2" || return 1
-    mv "$tfname_s3" "$ofname" || return 1
+    rm -f "$tfname_s3" || return 1
+    mv "$tfname_s4" "$ofname" || return 1
+    return 0
+}
+
+ctrees_converter_convert_remove_post_align()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq1 xpathreq2
+
+    xpathreq1='./body/div'
+    xpathreq2='.//div[@class="post-align"]'
+
+    echo -n >"$ofname"
+
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+
+doc = lxml.html.fromstring(sys.stdin.read())
+print("<html>\n<body>")
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+for i in outer_nodes:
+    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
+    for j in inner_nodes:
+        for k in j:
+            j.addprevious(k)
+        j.getparent().remove(j)
+    text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
+    print(text)
+print("</body>\n</html>")
+'   >"$ofname" || return 1
     return 0
 }
 
