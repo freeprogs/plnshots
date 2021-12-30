@@ -19,6 +19,16 @@ msg()
     echo "$progname: $1"
 }
 
+# Print an message to a log file
+# log(file, str)
+log()
+{
+    local ofname="$1"
+    local message="$2"
+
+    echo "$message" >>"$ofname"
+}
+
 # Print program usage to stderr
 # usage()
 usage()
@@ -42,29 +52,45 @@ load_screenshots()
     local fname_converted="converted.temp"
     local fname_report="report.temp"
     local fname_run="run.temp"
+    local fname_run_log="run_log.txt"
 
     [ -d "$odir" ] || mkdir "$odir"
-    loader_load_topic_page "$url" "$odir/$fname_topic" || {
+    loader_load_topic_page \
+        "$url" \
+        "$odir/$fname_topic" || {
         error "Can't load the topic page from $url."
         return 1
     }
-    loader_parse_topic_page "$odir/$fname_topic" "$odir/$fname_parsed" "$odir" || {
+    loader_parse_topic_page \
+        "$odir/$fname_topic" \
+        "$odir/$fname_parsed" \
+        "$odir" || {
         error "Can't parse the topic page."
         return 1
     }
-    loader_convert_data "$odir/$fname_parsed" "$odir/$fname_converted" || {
+    loader_convert_data \
+        "$odir/$fname_parsed" \
+        "$odir/$fname_converted" || {
         error "Can't convert the parsed data."
         return 1
     }
-    loader_make_report "$odir/$fname_converted" "$odir/$fname_report" || {
+    loader_make_report \
+        "$odir/$fname_converted" \
+        "$odir/$fname_report" || {
         error "Can't make the report file."
         return 1
     }
-    loader_make_run "$odir/$fname_converted" "$odir/$fname_run" "$odir" || {
+    loader_make_run \
+        "$odir/$fname_converted" \
+        "$odir/$fname_run" \
+        "$odir" || {
         error "Can't make the run file."
         return 1
     }
-    loader_run "$odir/$fname_run" "$odir/$fname_report" || {
+    loader_run \
+        "$odir/$fname_run" \
+        "$odir/$fname_report" \
+        "$odir/$fname_run_log" || {
         error "Can't run the run file."
         return 1
     }
@@ -943,6 +969,7 @@ loader_run()
 {
     local ifname_run="$1"
     local ifname_report="$2"
+    local ofname_log="$3"
     local line
     local report_numoftrees
     local report_treeurls
@@ -957,7 +984,10 @@ loader_run()
     done || return 1
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
-        eval "$line" || return 1
+        eval "$line" || {
+            msg "$(echo "$line" | reporter_wrap_wget_broken_url)"
+            log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
+        }
     done || return 1
     return 0
 }
@@ -1032,6 +1062,23 @@ reporter_wrap_wget_start()
 '
 }
 
+reporter_wrap_wget_broken_url()
+{
+    local maxfname=40
+
+    awk -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Unable to load", file
+}
+'
+}
+
 reporter_wrap_numoftrees_totalurls()
 {
     awk '
@@ -1057,6 +1104,11 @@ reporter_wrap_treenumber_treeurls()
           "url" ($2 != 1 ? "s" : "") "."
 }
 '
+}
+
+logger_wrap_broken_url()
+{
+    awk '{ print "Found broken [" $NF "] at [" $(NF-2) "]"; }'
 }
 
 main()
