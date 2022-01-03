@@ -208,10 +208,10 @@ ctrees_extractor_extract_cuttrees_direct()
 {
     local ifname="$1"
     local ofname="$2"
-    local xpathreq
+    local xpathreq1 xpathreq2
 
-    xpathreq='..//div[@class="post-user-message"]'\
-'/div[@class="sp-wrap"]'
+    xpathreq1='..//div[@class="post-user-message"]'
+    xpathreq2='./div[@class="sp-wrap"]'
 
     echo -n >"$ofname"
 
@@ -221,9 +221,11 @@ import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
 print("<html>\n<body>")
-nodes = doc.xpath(r"""'"$xpathreq"'""")
-for i in nodes:
-    print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+if outer_nodes:
+    inner_nodes = outer_nodes[0].xpath(r"""'"$xpathreq2"'""")
+    for i in inner_nodes:
+        print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
 print("</body>\n</html>")
 '   >"$ofname" || return 1
     return 0
@@ -233,10 +235,10 @@ ctrees_extractor_extract_cuttrees_wrapped()
 {
     local ifname="$1"
     local ofname="$2"
-    local xpathreq
+    local xpathreq1 xpathreq2
 
-    xpathreq='..//div[@class="post-user-message"]'\
-'/div[@class="post-align"]/div[@class="sp-wrap"]'
+    xpathreq1='..//div[@class="post-user-message"]'
+    xpathreq2='./div[@class="post-align"]/div[@class="sp-wrap"]'
 
     echo -n >"$ofname"
 
@@ -246,9 +248,11 @@ import lxml.html
 
 doc = lxml.html.fromstring(sys.stdin.read())
 print("<html>\n<body>")
-nodes = doc.xpath(r"""'"$xpathreq"'""")
-for i in nodes:
-    print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
+outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+if outer_nodes:
+    inner_nodes = outer_nodes[0].xpath(r"""'"$xpathreq2"'""")
+    for i in inner_nodes:
+        print(lxml.html.tostring(i, encoding="unicode", pretty_print=True))
 print("</body>\n</html>")
 '   >"$ofname" || return 1
     return 0
