@@ -485,11 +485,12 @@ ctrees_converter_convert_deep0_to_deep1()
 {
     local ifname="$1"
     local ofname="$2"
-    local xpathreq1 xpathreq2
+    local xpathreq1 xpathreq2 xpathreq3
     local urlname_default urltext_default
 
     xpathreq1='./body/div'
     xpathreq2='./div/var[@class="postImg"]'
+    xpathreq3='./div/div/div/var[@class="postImg"]/../..'
     urlname_default="screenshot"
     urltext_default="description"
 
@@ -503,8 +504,9 @@ doc = lxml.html.fromstring(sys.stdin.read())
 print("<html>\n<body>")
 outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
 for i in outer_nodes:
-    inner_nodes = i.xpath(r"""'"$xpathreq2"'""")
-    if inner_nodes:
+    inner_nodes_var = i.xpath(r"""'"$xpathreq2"'""")
+    inner_nodes_div = i.xpath(r"""'"$xpathreq3"'""")
+    if inner_nodes_var:
         new_item = lxml.html.Element("div")
         new_item.attrib["class"] = "sp-wrap"
         new_item.text = "\n"
@@ -515,7 +517,7 @@ for i in outer_nodes:
         new_item_sub1_sub1 = lxml.etree.SubElement(new_item_sub1, "h3")
         new_item_sub1_sub1.attrib["class"] = "sp-title"
         new_item_sub1_sub1.text = i[0][0].text
-        for item in inner_nodes:
+        for item in inner_nodes_var:
             new_item_w = lxml.html.Element("div")
             new_item_w.attrib["class"] = "sp-wrap"
             new_item_w.text = "\n"
@@ -531,6 +533,8 @@ for i in outer_nodes:
             new_item_w_sub1_sub2.text = "'"$urltext_default"'"
             new_item_w_sub1.append(item)
             new_item_sub1.append(new_item_w)
+        for item in inner_nodes_div:
+            new_item_sub1.append(item)
         text = lxml.html.tostring(new_item, encoding="unicode", pretty_print=True)
         print(text)
     else:
