@@ -499,48 +499,70 @@ ctrees_converter_convert_deep0_to_deep1()
     cat "$ifname" | python3 -c '
 import sys
 import lxml.html
+import lxml.etree
 
-doc = lxml.html.fromstring(sys.stdin.read())
-print("<html>\n<body>")
-outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
-for i in outer_nodes:
-    inner_nodes_var = i.xpath(r"""'"$xpathreq2"'""")
-    inner_nodes_div = i.xpath(r"""'"$xpathreq3"'""")
-    if inner_nodes_var:
-        new_item = lxml.html.Element("div")
-        new_item.attrib["class"] = "sp-wrap"
-        new_item.text = "\n"
-        new_item_sub1 = lxml.etree.SubElement(new_item, "div")
-        new_item_sub1.attrib["class"] = "sp-body"
-        new_item_sub1.attrib["title"] = i[0].attrib["title"]
-        new_item_sub1.text = "\n"
-        new_item_sub1_sub1 = lxml.etree.SubElement(new_item_sub1, "h3")
-        new_item_sub1_sub1.attrib["class"] = "sp-title"
-        new_item_sub1_sub1.text = i[0][0].text
-        for item in inner_nodes_var:
-            new_item_w = lxml.html.Element("div")
-            new_item_w.attrib["class"] = "sp-wrap"
-            new_item_w.text = "\n"
-            new_item_w_sub1 = lxml.etree.SubElement(new_item_w, "div")
-            new_item_w_sub1.attrib["class"] = "sp-body"
-            new_item_w_sub1.attrib["title"] = "'"$urlname_default"'"
-            new_item_w_sub1.text = "\n"
-            new_item_w_sub1_sub1 = lxml.etree.SubElement(new_item_w_sub1, "h3")
-            new_item_w_sub1_sub1.attrib["class"] = "sp-title"
-            new_item_w_sub1_sub1.text = "'"$urlname_default"'"
-            new_item_w_sub1_sub2 = lxml.etree.SubElement(new_item_w_sub1, "span")
-            new_item_w_sub1_sub2.attrib["class"] = "post-b"
-            new_item_w_sub1_sub2.text = "'"$urltext_default"'"
-            new_item_w_sub1.append(item)
-            new_item_sub1.append(new_item_w)
-        for item in inner_nodes_div:
-            new_item_sub1.append(item)
-        text = lxml.html.tostring(new_item, encoding="unicode", pretty_print=True)
-        print(text)
+def create_new_ctree_from_source(source_node):
+    node_div = lxml.html.Element("div")
+    node_div.attrib["class"] = "sp-wrap"
+    node_div.text = "\n"
+    node_div_div = lxml.etree.SubElement(node_div, "div")
+    node_div_div.attrib["class"] = "sp-body"
+    node_div_div.attrib["title"] = source_node[0].attrib["title"]
+    node_div_div.text = "\n"
+    node_div_div_h3 = lxml.etree.SubElement(node_div_div, "h3")
+    node_div_div_h3.attrib["class"] = "sp-title"
+    node_div_div_h3.text = source_node[0][0].text
+    out = node_div
+    return out
+
+def create_new_ctree_wrapped(urlname, urltext):
+    node_div = lxml.html.Element("div")
+    node_div.attrib["class"] = "sp-wrap"
+    node_div.text = "\n"
+    node_div_div = lxml.etree.SubElement(node_div, "div")
+    node_div_div.attrib["class"] = "sp-body"
+    node_div_div.attrib["title"] = urlname
+    node_div_div.text = "\n"
+    node_div_div_h3 = lxml.etree.SubElement(node_div_div, "h3")
+    node_div_div_h3.attrib["class"] = "sp-title"
+    node_div_div_h3.text = urlname
+    node_div_div_span = lxml.etree.SubElement(node_div_div, "span")
+    node_div_div_span.attrib["class"] = "post-b"
+    node_div_div_span.text = urltext
+    out = node_div
+    return out
+
+def wrap_vars_in_ctree(ctree_node, xpathreq_var, xpathreq_div,
+                       urlname, urltext):
+    nodes_var = ctree_node.xpath(xpathreq_var)
+    nodes_div = ctree_node.xpath(xpathreq_div)
+    if nodes_var:
+        new_item = create_new_ctree_from_source(ctree_node)
+        for item in nodes_var:
+            new_item_w = create_new_ctree_wrapped(
+                urlname, urltext)
+            new_item_w[0].append(item)
+            new_item[0].append(new_item_w)
+        for item in nodes_div:
+            new_item[0].append(item)
+        return new_item
     else:
-        text = lxml.html.tostring(i, encoding="unicode", pretty_print=True)
+        return ctree_node
+
+def main():
+    doc = lxml.html.fromstring(sys.stdin.read())
+    print("<html>\n<body>")
+    outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+    for i in outer_nodes:
+        wrapped_ctree = wrap_vars_in_ctree(
+            i, r"""'"$xpathreq2"'""", r"""'"$xpathreq3"'""",
+            "'"$urlname_default"'", "'"$urltext_default"'")
+        text = lxml.html.tostring(
+            wrapped_ctree, encoding="unicode", pretty_print=True)
         print(text)
-print("</body>\n</html>")
+    print("</body>\n</html>")
+
+main()
 '   >"$ofname" || return 1
     return 0
 }
