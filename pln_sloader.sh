@@ -379,6 +379,7 @@ topichand_convert_cuttrees()
     local tfname_s2="${ifname}.converted.stage2.tmp"
     local tfname_s3="${ifname}.converted.stage3.tmp"
     local tfname_s4="${ifname}.converted.stage4.tmp"
+    local tfname_s5="${ifname}.converted.stage5.tmp"
 
     echo -n >"$tfname_s1"
     if ctrees_converter_convert_remove_post_align "$ifname" "$tfname_s1" && \
@@ -405,8 +406,16 @@ topichand_convert_cuttrees()
         return 1
     fi
     echo -n >"$tfname_s4"
-    if ctrees_converter_convert_deepn_to_deep1 "$tfname_s3" "$tfname_s4" && \
+    if ctrees_converter_convert_wrap_deep_vars "$tfname_s3" "$tfname_s4" && \
        ctrees_converter_test_converted_cuttrees "$tfname_s4"; then
+        :
+    else
+        error "Can't convert cut trees from deep vars to wrapped deep vars."
+        return 1
+    fi
+    echo -n >"$tfname_s5"
+    if ctrees_converter_convert_deepn_to_deep1 "$tfname_s4" "$tfname_s5" && \
+       ctrees_converter_test_converted_cuttrees "$tfname_s5"; then
         :
     else
         error "Can't convert cut trees from deep N to deep 1."
@@ -415,7 +424,8 @@ topichand_convert_cuttrees()
     rm -f "$tfname_s1" || return 1
     rm -f "$tfname_s2" || return 1
     rm -f "$tfname_s3" || return 1
-    mv "$tfname_s4" "$ofname" || return 1
+    rm -f "$tfname_s4" || return 1
+    mv "$tfname_s5" "$ofname" || return 1
     return 0
 }
 
@@ -545,6 +555,95 @@ def wrap_vars_in_ctree(ctree_node, xpathreq_var, xpathreq_div,
             new_item[0].append(new_item_w)
         for item in nodes_div:
             new_item[0].append(item)
+        return new_item
+    else:
+        return ctree_node
+
+def main():
+    doc = lxml.html.fromstring(sys.stdin.read())
+    print("<html>\n<body>")
+    outer_nodes = doc.xpath(r"""'"$xpathreq1"'""")
+    for i in outer_nodes:
+        wrapped_ctree = wrap_vars_in_ctree(
+            i, r"""'"$xpathreq2"'""", r"""'"$xpathreq3"'""",
+            "'"$urlname_default"'", "'"$urltext_default"'")
+        text = lxml.html.tostring(
+            wrapped_ctree, encoding="unicode", pretty_print=True)
+        print(text)
+    print("</body>\n</html>")
+
+main()
+'   >"$ofname" || return 1
+    return 0
+}
+
+ctrees_converter_convert_wrap_deep_vars()
+{
+    local ifname="$1"
+    local ofname="$2"
+    local xpathreq1 xpathreq2 xpathreq3
+    local urlname_default urltext_default
+
+    xpathreq1='./body/div'
+    xpathreq2='./div/var[@class="postImg"]'
+    xpathreq3='./div/div/div/var[@class="postImg"]/../..'
+    urlname_default="screenshot"
+    urltext_default="description"
+
+    echo -n >"$ofname"
+
+    cat "$ifname" | python3 -c '
+import sys
+import lxml.html
+import lxml.etree
+
+def create_new_ctree_from_source(source_node):
+    node_div = lxml.html.Element("div")
+    node_div.attrib["class"] = "sp-wrap"
+    node_div.text = "\n"
+    node_div_div = lxml.etree.SubElement(node_div, "div")
+    node_div_div.attrib["class"] = "sp-body"
+    node_div_div.attrib["title"] = source_node[0].attrib["title"]
+    node_div_div.text = "\n"
+    node_div_div_h3 = lxml.etree.SubElement(node_div_div, "h3")
+    node_div_div_h3.attrib["class"] = "sp-title"
+    node_div_div_h3.text = source_node[0][0].text
+    out = node_div
+    return out
+
+def create_new_ctree_wrapped(urlname, urltext):
+    node_div = lxml.html.Element("div")
+    node_div.attrib["class"] = "sp-wrap"
+    node_div.text = "\n"
+    node_div_div = lxml.etree.SubElement(node_div, "div")
+    node_div_div.attrib["class"] = "sp-body"
+    node_div_div.attrib["title"] = urlname
+    node_div_div.text = "\n"
+    node_div_div_h3 = lxml.etree.SubElement(node_div_div, "h3")
+    node_div_div_h3.attrib["class"] = "sp-title"
+    node_div_div_h3.text = urlname
+    node_div_div_span = lxml.etree.SubElement(node_div_div, "span")
+    node_div_div_span.attrib["class"] = "post-b"
+    node_div_div_span.text = urltext
+    out = node_div
+    return out
+
+def wrap_vars_in_ctree(ctree_node, xpathreq_var, xpathreq_div,
+                       urlname, urltext):
+    nodes_var = ctree_node.xpath(xpathreq_var)
+    nodes_div = ctree_node.xpath(xpathreq_div)
+    if nodes_div:
+        new_item = create_new_ctree_from_source(ctree_node)
+        for item in nodes_var:
+            new_item_w = create_new_ctree_wrapped(
+                urlname, urltext)
+            new_item_w[0].append(item)
+            new_item[0].append(new_item_w)
+        for item in nodes_div:
+            wrapped_div = wrap_vars_in_ctree(
+                item, xpathreq_var, xpathreq_div,
+                urlname, urltext)
+            new_item[0].append(wrapped_div)
         return new_item
     else:
         return ctree_node
