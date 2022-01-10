@@ -90,7 +90,8 @@ load_screenshots()
     loader_run \
         "$odir/$fname_run" \
         "$odir/$fname_report" \
-        "$odir/$fname_run_log" || {
+        "$odir/$fname_run_log" \
+        "$odir" || {
         error "Can't run the running loadings file."
         return 1
     }
@@ -1099,6 +1100,43 @@ loader_run()
     local ifname_run="$1"
     local ifname_report="$2"
     local ofname_log="$3"
+    local odir="$4"
+    local tfname_result="runresult.tmp"
+    local tfname_reload="runreload.tmp"
+
+    lowloader_load_run_list \
+        "$ifname_run" \
+        "$ifname_report" \
+        "$ofname_log" \
+        "$odir/$tfname_result" || {
+        error "Can't load files from run list."
+        return 1
+    }
+    if lowloader_make_reload_list \
+           "$odir/$tfname_result" \
+           "$odir/$tfname_reload"; then
+        lowloader_load_reload_list \
+            "$odir/$tfname_reload" \
+            "$ofname_log" || {
+            error "Can't reload files from reload list."
+            return 1
+        }
+    fi
+    lowloader_clean_all \
+        "$odir/$tfname_result" \
+        "$odir/$tfname_reload" || {
+        error "Can't clean temporary files after loading."
+        return 1
+    }
+    return 0
+}
+
+lowloader_load_run_list()
+{
+    local ifname_run="$1"
+    local ifname_report="$2"
+    local ofname_log="$3"
+    local ofname_result="$4"
     local line
     local report_numoftrees
     local report_treeurls
@@ -1118,6 +1156,34 @@ loader_run()
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
         }
     done || return 1
+    return 0
+}
+
+lowloader_make_reload_list()
+{
+    local ifname_result="$1"
+    local ofname_reload="$2"
+
+    echo "lowloader_make_reload_list() $ifname_result $ofname_reload"
+    return 0
+}
+
+lowloader_load_reload_list()
+{
+    local ifname_reload="$1"
+    local ofname_log="$2"
+
+    echo "lowloader_load_reload_list() $ifname_reload $ofname_log"
+    return 0
+}
+
+lowloader_clean_all()
+{
+    local fname_result="$1"
+    local fname_reload="$2"
+
+    rm -f "$fname_result" \
+       "$fname_reload" || return 1
     return 0
 }
 
