@@ -91,7 +91,7 @@ load_screenshots()
         "$odir/$fname_run" \
         "$odir/$fname_report" \
         "$odir/$fname_run_log" || {
-        error "Can't run the run file."
+        error "Can't run the running loadings file."
         return 1
     }
     loader_clean_all \
