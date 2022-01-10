@@ -162,7 +162,7 @@ loader_parse_topic_page()
         "$fname_tfi" \
         "$fname_tfico" \
         "$fname_tficora" || {
-        error "Can't clean files after building parsed data from topic."
+        error "Can't clean temporary files after building parsed data from topic."
         return 1
     }
     return 0
