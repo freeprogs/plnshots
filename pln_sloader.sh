@@ -1149,12 +1149,17 @@ lowloader_load_run_list()
         report_treeurls="$(cat "$ifname_report" | reporthand_get_tree_urls $i)"
         msg "$(echo "$i $report_treeurls" | reporter_wrap_treenumber_treeurls)"
     done || return 1
+
+    echo -n >"$ofname_result"
+
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
-        eval "$line" || {
+        if eval "$line"; then
+            echo "$line" >>"$ofname_result"
+        else
             msg "$(echo "$line" | reporter_wrap_wget_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
-        }
+        fi
     done || return 1
     return 0
 }
