@@ -1138,6 +1138,7 @@ lowloader_load_run_list()
     local ofname_log="$3"
     local ofname_result="$4"
     local line
+    local resultline
     local report_numoftrees
     local report_treeurls
     local report_totalurls
@@ -1155,13 +1156,30 @@ lowloader_load_run_list()
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
         if eval "$line"; then
-            echo "$line" >>"$ofname_result"
+            resultline="$(echo "$line" | resulthand_wrap_command_to_result)"
+            echo "$resultline" >>"$ofname_result"
         else
             msg "$(echo "$line" | reporter_wrap_wget_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
         fi
     done || return 1
     return 0
+}
+
+resulthand_wrap_command_to_result()
+{
+    awk '
+{
+    if ($1 == "wget" && $4 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+        site = "fpo"
+    }
+    else {
+        site = "unknown"
+    }
+    split($6, arr, "/")
+    print "loaded", site, arr[1], arr[2], $4
+}
+'
 }
 
 lowloader_make_reload_list()
