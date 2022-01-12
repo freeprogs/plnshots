@@ -200,8 +200,8 @@ topichand_extract_cuttrees()
         mv "$tfname" "$ofname" || return 1
         return 0
     fi
-    error "Can't extract cuttree by the direct method."
-    error "Can't extract cuttree by the wrapped method."
+    error "Can't extract cut tree by the direct method."
+    error "Can't extract cut tree by the wrapped method."
     return 1
 }
 
