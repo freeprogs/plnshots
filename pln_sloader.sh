@@ -1186,9 +1186,84 @@ lowloader_make_reload_list()
 {
     local ifname_result="$1"
     local ofname_reload="$2"
+    local line
+    local result_status
+    local result_site
+    local result_file
+    local result_dir
+    local result_url
+    local reload_file
+    local reload_dir
+    local reload_url
 
-    echo "lowloader_make_reload_list() $ifname_result $ofname_reload"
+    echo -n >"$ofname_reload"
+
+    cat "$ifname_result" | while read line; do
+        result_status=$(echo "$line" | resultlinehand_getfield "1")
+        result_site=$(echo "$line" | resultlinehand_getfield "2")
+        result_dir=$(echo "$line" | resultlinehand_getfield "3")
+        result_file=$(echo "$line" | resultlinehand_getfield "4")
+        result_url=$(echo "$line" | resultlinehand_getfield "5")
+        [ "$result_status" = "loaded" ] && {
+            [ "$result_site" = "fpo" ] && {
+                sitefpo_file_needs_reload "$result_dir/$result_file" && {
+                    reload_file="$(sitefpo_make_reload_file "$result_file")"
+                    reload_dir="$(sitefpo_make_reload_dir "$result_dir")"
+                    reload_url="$(sitefpo_make_reload_url "$result_url")"
+                    reloadline="$(echo "$reload_file $reload_dir $reload_url" | \
+                        sitefpo_wrap_to_reloadline)"
+                    echo "$reloadline" >>"$ofname_reload"
+                }
+            }
+        }
+    done || return 1
     return 0
+}
+
+sitefpo_file_needs_reload()
+{
+    local ifname="$1"
+
+    return 0
+}
+
+sitefpo_make_reload_file()
+{
+    local fname="$1"
+    local out
+
+    out="$(echo "$fname" | sed 's/\.jpg$/_reloaded&/')"
+    echo "$out"
+}
+
+sitefpo_make_reload_dir()
+{
+    local dname="$1"
+    local out
+
+    out="$dname"
+    echo "$out"
+}
+
+sitefpo_make_reload_url()
+{
+    local url="$1"
+    local out
+
+    out="try_$url"
+    echo "$out"
+}
+
+sitefpo_wrap_to_reloadline()
+{
+    awk '{ printf "echo wget -q -c \"%s\" -O %s/%s\n", $3, $2, $1; }'
+}
+
+resultlinehand_getfield()
+{
+    local field_number="$1"
+
+    awk -v n="$field_number" '{ print $n; }'
 }
 
 lowloader_load_reload_list()
