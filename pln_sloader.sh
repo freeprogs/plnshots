@@ -1282,7 +1282,7 @@ sitefpo_make_reload_url()
 
 sitefpo_wrap_to_reloadline()
 {
-    awk '{ printf "echo wget -q -c \"%s\" -O %s/%s\n", $3, $2, $1; }'
+    awk '{ printf "wget -q -c \"%s\" -O %s/%s\n", $3, $2, $1; }'
 }
 
 resultlinehand_getfield()
@@ -1296,9 +1296,25 @@ lowloader_load_reload_list()
 {
     local ifname_reload="$1"
     local ofname_log="$2"
+    local reload_totalurls
 
-    echo "lowloader_load_reload_list() $ifname_reload $ofname_log"
+    reload_totalurls="$(cat "$ifname_reload" | reloadhand_get_total_urls)"
+    msg "$(echo "$reload_totalurls" | reporter_wrap_reload_total_urls)"
+    cat "$ifname_reload" | while read line; do
+        msg "$(echo "$line" | reporter_wrap_reload_wget_start)"
+        if eval "$line"; then
+            :
+        else
+            msg "$(echo "$line" | reporter_wrap_reload_wget_broken_url)"
+            log "$ofname_log" "$(echo "$line" | logger_wrap_reload_broken_url)"
+        fi
+    done || return 1
     return 0
+}
+
+reloadhand_get_total_urls()
+{
+    wc -l | awk '{ print $1; }'
 }
 
 lowloader_clean_all()
@@ -1421,6 +1437,58 @@ reporter_wrap_treenumber_treeurls()
           "has",
           $2,
           "url" ($2 != 1 ? "s" : "") "."
+}
+'
+}
+
+reporter_wrap_reload_wget_start()
+{
+    local maxdname=15
+    local maxfname=40
+
+    awk -v maxdname="$maxdname" \
+        -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    dir = arr[1]
+    if (length(dir) > maxdname) {
+        dir = substr(arr[1], 1, maxdname - 2) ".."
+    }
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Reloading", dir, file " ..."
+}
+'
+}
+
+reporter_wrap_reload_wget_broken_url()
+{
+    local maxfname=40
+
+    awk -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Unable to reload", file
+}
+'
+}
+
+reporter_wrap_reload_total_urls()
+{
+    awk '
+{
+    print "Found",
+          $1,
+          "url" ($1 != 1 ? "s" : ""),
+          "for reload."
 }
 '
 }
