@@ -1156,9 +1156,11 @@ lowloader_load_run_list()
     cat "$ifname_run" | while read line; do
         msg "$(echo "$line" | reporter_wrap_wget_start)"
         if eval "$line"; then
-            resultline="$(echo "$line" | resulthand_wrap_command_to_result)"
+            resultline="$(echo "$line" | resulthand_wrap_ok_command_to_result)"
             echo "$resultline" >>"$ofname_result"
         else
+            resultline="$(echo "$line" | resulthand_wrap_fail_command_to_result)"
+            echo "$resultline" >>"$ofname_result"
             msg "$(echo "$line" | reporter_wrap_wget_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
         fi
@@ -1166,7 +1168,7 @@ lowloader_load_run_list()
     return 0
 }
 
-resulthand_wrap_command_to_result()
+resulthand_wrap_ok_command_to_result()
 {
     awk '
 {
@@ -1178,6 +1180,22 @@ resulthand_wrap_command_to_result()
     }
     split($6, arr, "/")
     print "loaded", site, arr[1], arr[2], $4
+}
+'
+}
+
+resulthand_wrap_fail_command_to_result()
+{
+    awk '
+{
+    if ($1 == "wget" && $4 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+        site = "fpo"
+    }
+    else {
+        site = "unknown"
+    }
+    split($6, arr, "/")
+    print "broken", site, arr[1], arr[2], $4
 }
 '
 }
