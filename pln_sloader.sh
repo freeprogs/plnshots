@@ -1241,7 +1241,9 @@ lowloader_make_reload_list()
 sitefpo_file_needs_reload()
 {
     local ifname="$1"
+    local pattern='<!doc'
 
+    [ "$(head -c 5 "$ifname")" = "$pattern" ] || return 1
     return 0
 }
 
