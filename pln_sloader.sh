@@ -1227,7 +1227,7 @@ lowloader_make_reload_list()
                 sitefpo_file_needs_reload "$result_dir/$result_file" && {
                     reload_file="$(sitefpo_make_reload_file "$result_file")"
                     reload_dir="$(sitefpo_make_reload_dir "$result_dir")"
-                    reload_url="$(sitefpo_make_reload_url "$result_url")"
+                    reload_url="$(sitefpo_make_reload_url "$result_dir/$result_file")"
                     reloadline="$(echo "$reload_file $reload_dir $reload_url" | \
                         sitefpo_wrap_to_reloadline)"
                     echo "$reloadline" >>"$ofname_reload"
@@ -1267,10 +1267,16 @@ sitefpo_make_reload_dir()
 
 sitefpo_make_reload_url()
 {
-    local url="$1"
+    local ifname="$1"
     local out
 
-    out="try_$url"
+    out="$(sed -n '
+\%<img src="http.*://[^/]*fastpic.org/big/% {
+    s%^.*<img src="\(http[^"]*\)".*$%\1%p
+    q
+}
+' "$ifname")"
+
     echo "$out"
 }
 
