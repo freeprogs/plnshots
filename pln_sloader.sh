@@ -1419,11 +1419,11 @@ reporter_wrap_numoftrees_totalurls()
     awk '
 {
     print "Found",
-           $1,
-           "tree" ($1 != 1 ? "s" : ""),
-           "with total",
-           $2,
-           "url" ($2 != 1 ? "s" : "") "."
+          $1,
+          "tree" ($1 != 1 ? "s" : ""),
+          "with total",
+          $2,
+          "url" ($2 != 1 ? "s" : "") "."
 }
 '
 }
