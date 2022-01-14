@@ -1121,6 +1121,10 @@ loader_run()
             error "Can't reload files from reload list."
             return 1
         }
+        lowloader_clean_reloaded_files "$odir/$tfname_reload" || {
+            error "Can't clean reloaded files from run list."
+            return 1
+        }
     fi
     lowloader_clean_all \
         "$odir/$tfname_result" \
@@ -1342,6 +1346,13 @@ reporthand_get_tree_urls()
 reporthand_get_total_urls()
 {
     awk '$1 == "t" { print $2; }'
+}
+
+lowloader_clean_reloaded_files()
+{
+    local ifname_reload="$1"
+
+    return 0
 }
 
 loader_clean_all()
