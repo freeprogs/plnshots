@@ -1289,6 +1289,15 @@ sitefpo_wrap_to_reloadline()
     awk '{ printf "wget -q -c \"%s\" -O %s/%s\n", $3, $2, $1; }'
 }
 
+sitefpo_make_load_file()
+{
+    local fname="$1"
+    local out
+
+    out="$(echo "$fname" | sed 's/_reloaded\.jpg$/.jpg/')"
+    echo "$out"
+}
+
 resultlinehand_getfield()
 {
     local field_number="$1"
@@ -1351,8 +1360,40 @@ reporthand_get_total_urls()
 lowloader_clean_reloaded_files()
 {
     local ifname_reload="$1"
+    local reload_dir
+    local reload_file
+    local load_dir
+    local load_file
+    local line
 
+    cat "$ifname_reload" | while read line; do
+        reload_dir="$(echo "$line" | reloadlinehand_get_dir)"
+        reload_file="$(echo "$line" | reloadlinehand_get_file)"
+        load_file="$(sitefpo_make_load_file "$reload_file")"
+        rm -f "$reload_dir/$load_file" || return 1
+        mv "$reload_dir/$reload_file" "$reload_dir/$load_file" || return 1
+    done || return 1
     return 0
+}
+
+reloadlinehand_get_dir()
+{
+    awk '
+{
+    split($6, arr, "/")
+    print arr[1]
+}
+'
+}
+
+reloadlinehand_get_file()
+{
+    awk '
+{
+    split($6, arr, "/")
+    print arr[2]
+}
+'
 }
 
 loader_clean_all()
