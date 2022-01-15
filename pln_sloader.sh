@@ -1247,7 +1247,7 @@ sitefpo_file_needs_reload()
     local ifname="$1"
     local pattern='<!doc'
 
-    [ "$(head -c 5 "$ifname")" = "$pattern" ] || return 1
+    [ "$(head -c 5 "$ifname" | tr -d '\0')" = "$pattern" ] || return 1
     return 0
 }
 
