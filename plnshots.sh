@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# plnshots v0.0.1
 # This script loads screenshots from the first post of a topic on site
 # https://pornolab.net
+# Copyright (C) 2021-2022, Slava <freeprogs.feedback@yandex.ru>
 
 progname=`basename $0`
 
