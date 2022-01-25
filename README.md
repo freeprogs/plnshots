@@ -1,7 +1,7 @@
 
 plnshots v0.0.1
 
-This script loads screenshots from the first post of a topic on site
+This script loads screenshots from the first post of a given topic on site
 https://pornolab.net
 
 This is a __PORN SITE__, so remove children from the screen.

@@ -4,3 +4,7 @@
 tasks
 cmd.txt
 empty.html
+
+Makefile
+build/
+tmp/
