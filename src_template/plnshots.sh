@@ -57,7 +57,25 @@ usage()
 # help_info()
 help_info()
 {
-    echo "usage: $progname url [ outdir=. ]" >&2
+    {
+        echo "usage: $progname url [ outdir=. ]"
+        echo ""
+        echo "Save screenshots from topic on __SITE_ADDRESS__ to given directory."
+        echo ""
+        echo "  --version  --  Print program version information."
+        echo ""
+    } >&2
+}
+
+# Print program version information
+# print_version()
+print_version()
+{
+    {
+        echo "__PROGRAM_NAME__ __PROGRAM_VERSION__"
+        echo "__PROGRAM_COPYRIGHT__ __PROGRAM_AUTHOR__ __PROGRAM_AUTHOR_EMAIL__"
+        echo "License: __PROGRAM_LICENSE__"
+    } >&2
 }
 
 load_screenshots()
@@ -1577,6 +1595,10 @@ main()
       1)
         [ "$1" = "--help" ] && {
             help_info
+            return 1
+        }
+        [ "$1" = "--version" ] && {
+            print_version
             return 1
         }
         usage

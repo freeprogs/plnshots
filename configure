@@ -25,7 +25,7 @@ m4dir="m4"
 # create_makefile()
 create_makefile()
 {
-    m4 -P "$m4dir"/version.m4 \
+    m4 -P "$m4dir"/version.m4 "$m4dir"/helpinfo.m4 \
           makefile.template > Makefile
 }
 
