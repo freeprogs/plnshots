@@ -4,6 +4,7 @@ m4_define(__PROGRAM_AUTHOR__, Slava)m4_dnl
 m4_define(__PROGRAM_AUTHOR_EMAIL__, <freeprogs.feedback@yandex.ru>)m4_dnl
 m4_define(__PROGRAM_AUTHOR_EMAIL_RAW__, freeprogs.feedback@yandex.ru)m4_dnl
 m4_define(__PROGRAM_LICENSE__, GNU GPLv3)m4_dnl
+m4_define(__PROGRAM_SITE__, https://github.com/freeprogs/__PROGRAM_NAME__)m4_dnl
 m4_define(__PROGRAM_DAY__, 6)m4_dnl
 m4_define(__PROGRAM_MONTH__, Dec)m4_dnl
 m4_define(__PROGRAM_YEAR__, 2021)m4_dnl
