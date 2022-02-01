@@ -3,3 +3,128 @@ plnshots v0.0.1
 
 This script loads screenshots from the first post of a given topic on site
 https://pornolab.net
+
+========================================================================
+
+README
+
+ 0. Requirements
+ 1. Configuration
+ 2. Building
+ 3. Installation
+   3.1 General installation
+   3.2 How to uninstall the program
+ 4. Operating
+   4.1 Run program
+ 5. Copyright
+ 6. Licensing
+ 7. Bugs
+
+========================================================================
+
+0. REQUIREMENTS
+
+This program has tested on environment configuration
+
+- Linux Fedora 26
+- Python 3.6.1
+- python3-lxml 3.7.2
+- GNU bash 4.4.12
+- GNU awk 4.1.4
+- GNU sed 4.4
+- curl 7.53.1
+- GNU Wget 1.19.1
+
+For other systems (macOS, Windows) this program wasn't tested and may
+work, but it is not guaranteed.
+
+
+1. CONFIGURATION
+
+To configure Makefile for building the program run:
+
+  ./configure
+
+Another configuration of this program is automated in Makefile.
+Run `make help' to know available commands.
+
+
+2. BUILDING
+
+At first, you should build the program, run:
+
+   `make'
+
+It will create the `build' directory with files and directories ready
+for installation.
+
+
+3. INSTALLATION
+
+3.1 General installation
+
+When the program has built, you can install it, run:
+
+   `sudo make install'
+
+3.2 How to uninstall the program
+
+To uninstall the program run command:
+
+  `sudo make uninstall'
+
+
+4. OPERATING
+
+4.1 Run program
+
+   `plnshots.sh topic_url output_directory'
+
+For example:
+
+You run
+
+   `plnshots.sh https://pornolab.net/forum/viewtopic.php?t=12345 dir12345'
+
+Then in directory dir12345 you will see downloaded screenshots.
+
+If you don't set the output directory, then the screenshots will be
+downloaded to the current directory.
+
+
+5. COPYRIGHT
+
+Copyright (C) 2021-2022 Slava <freeprogs.feedback@yandex.ru>
+
+
+6. LICENSING
+
+You can read full license text in file LICENSE in the distribution or
+program documenatation.
+
+GNU GPLv3
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+7. BUGS
+
+To write about bugs and features you can go to the website or write an
+email to:
+
+  Slava <freeprogs.feedback@yandex.ru>
+
+or use the issue system on:
+
+  https://github.com/freeprogs/plnshots
