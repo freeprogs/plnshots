@@ -15,10 +15,12 @@ README
    3.1 General installation
    3.2 How to uninstall the program
  4. Operating
-   4.1 Run program
- 5. Copyright
- 6. Licensing
- 7. Bugs
+   4.1 Set configuration file
+   4.2 Run program
+ 5. Files
+ 6. Copyright
+ 7. Licensing
+ 8. Bugs
 
 ========================================================================
 
@@ -76,9 +78,31 @@ To uninstall the program run command:
 
 4. OPERATING
 
-4.1 Run program
+4.1 Set configuration file
 
-   `__FNAME_GENERAL_SH__ topic_url output_directory'
+There are two configuration files available in the program.
+
+The first file
+
+   `__DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__'
+
+is a general file for all users in the operating system.
+
+The second file
+
+   `__DNAME_HOME_CONFIG__/__FNAME_HOME_CONFIG__'
+
+is a special file for the current user.
+
+The configuration file contains commented fields itself (you can view
+it for more information).
+
+The configuration file in the user's home directory overrides fields
+from the configuration file from the system directory.
+
+4.2 Run program
+
+   `__FNAME_GENERAL_SH__ topic_url [ output_directory ]'
 
 For example:
 
@@ -92,12 +116,31 @@ If you don't set the output directory, then the screenshots will be
 downloaded to the current directory.
 
 
-5. COPYRIGHT
+5. FILES
+
+After installation you have files:
+
+   `__DNAME_LOCAL_BIN__/__FNAME_GENERAL_SH__'
+
+The main program which loads screenshots from the first post of a
+given topic on site __SITE_ADDRESS__ and save the screenshots to the
+given directory.
+
+   `__DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__'
+
+Configuration file for all system users.
+
+   `__DNAME_DOC__/__PROGRAM_NAME__'
+
+Documentation (help, history and license).
+
+
+6. COPYRIGHT
 
 __PROGRAM_COPYRIGHT__ __PROGRAM_AUTHOR__ __PROGRAM_AUTHOR_EMAIL__
 
 
-6. LICENSING
+7. LICENSING
 
 You can read full license text in file LICENSE in the distribution or
 program documenatation.
@@ -118,7 +161,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-7. BUGS
+8. BUGS
 
 To write about bugs and features you can go to the website or write an
 email to:
