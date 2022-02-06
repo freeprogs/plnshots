@@ -21,7 +21,7 @@
 
 .SH NAME
 
-__PROGRAM_NAME__.conf \- __PROGRAM_NAME__ configuration for all users
+__FNAME_ETC_CONFIG__ \- __PROGRAM_NAME__ configuration for all users
 
 .SH DESCRIPTION
 
@@ -32,9 +32,9 @@ newlines with a pair on every line in the format
   key=value
 
 The program at first uses the general file from
-.I /etc/__PROGRAM_NAME__.conf
+.I __DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__
 to set its configuration and then uses the second file
-.I ~/.__PROGRAM_NAME__.conf
+.I __DNAME_HOME_CONFIG__/__FNAME_HOME_CONFIG__
 edited by the user to override key-value pairs.
 
 .PP
@@ -74,11 +74,11 @@ __PROGRAM_LICENSE__
 .SH FILES
 
 .TP
-\fI /etc/__PROGRAM_NAME__.conf \fR
+\fI __DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__ \fR
 configuration for all users
 
 .TP
-\fI ~/.__PROGRAM_NAME__.conf \fR
+\fI __DNAME_HOME_CONFIG__/__FNAME_HOME_CONFIG__ \fR
 configuration for the current user
 
 .SH "SEE ALSO"

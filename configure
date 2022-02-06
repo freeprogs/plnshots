@@ -25,8 +25,11 @@ m4dir="m4"
 # create_makefile()
 create_makefile()
 {
-    m4 -P "$m4dir"/version.m4 "$m4dir"/helpinfo.m4 \
-          src_template/makefile.template > Makefile
+    m4 -P \
+       "$m4dir"/version.m4 \
+       "$m4dir"/pathnames.m4 \
+       "$m4dir"/helpinfo.m4 \
+       src_template/makefile.template > Makefile
 }
 
 # Print short help about this script

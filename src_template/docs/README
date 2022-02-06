@@ -78,13 +78,13 @@ To uninstall the program run command:
 
 4.1 Run program
 
-   `__PROGRAM_NAME__.sh topic_url output_directory'
+   `__FNAME_GENERAL_SH__ topic_url output_directory'
 
 For example:
 
 You run
 
-   `__PROGRAM_NAME__.sh __SITE_ADDRESS__/forum/viewtopic.php?t=12345 dir12345'
+   `__FNAME_GENERAL_SH__ __SITE_ADDRESS__/forum/viewtopic.php?t=12345 dir12345'
 
 Then in directory dir12345 you will see downloaded screenshots.
 
@@ -128,3 +128,4 @@ email to:
 or use the issue system on:
 
   __PROGRAM_SITE__
+
