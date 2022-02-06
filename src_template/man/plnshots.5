@@ -17,33 +17,45 @@
 .\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .\"
 
-.TH __PROGRAM_NAME__ "1" "__PROGRAM_DATE__" "__PROGRAM_NAME__ __PROGRAM_VERSION__" "User Commands"
+.TH __PROGRAM_NAME__ "5" "__PROGRAM_DATE__" "__PROGRAM_NAME__ __PROGRAM_VERSION__" "File Formats"
 
 .SH NAME
 
-__PROGRAM_NAME__ \- loads screenshots from the first post of a given topic on site __SITE_ADDRESS__.
-
-.SH SYNOPSIS
-
-.B __PROGRAM_NAME__.sh
-topic_url [ output_directory=. ]
+__PROGRAM_NAME__.conf \- __PROGRAM_NAME__ configuration for all users
 
 .SH DESCRIPTION
 
-.PP
-Load screenshots from the first post of a given topic on site __SITE_ADDRESS__ and save the screenshots to the given directory. If directory is not given, then save the screenshots to the current directory.
+The configuration file has format as several lines separated by
+newlines with a pair on every line in the format
 
 .PP
-Usually, a topic has many screenshots (tens, hundreds) and viewing them in a browser is slow. So, you cannot view all screenshots in one time and you should remember, which screenshots you have viewed and which you have not yet. By this program you can load all screenshots to a local directory and view them quickly in an image viewer and change them if you want remember where you stopped.
+  key=value
+
+The program at first uses the general file from
+.I /etc/__PROGRAM_NAME__.conf
+to set its configuration and then uses the second file
+.I ~/.__PROGRAM_NAME__.conf
+edited by the user to override key-value pairs.
 
 .PP
-After selecting screenshots which you like, you may load from the topic a torrent file with a list of videos and select in the list only those videos for downloading, which screenshots you liked.
-
-.SH OPTIONS
+These keys are available:
 
 .TP
-\fB\-\-version\fR
-print the program version
+.B key
+Key description.
+.br
+By deafult it is
+.I default value
+
+.SH EXAMPLE
+
+.PP
+Example description.
+
+.nf
+    key1=value1
+    key2=value2
+.fi
 
 .SH AUTHOR
 
@@ -71,4 +83,4 @@ configuration for the current user
 
 .SH "SEE ALSO"
 
-.BR __PROGRAM_NAME__ (5)
+.BR __PROGRAM_NAME__ (1)
