@@ -1,0 +1,152 @@
+
+# This file is a part of __PROGRAM_NAME__ __PROGRAM_VERSION__
+#
+# This file installs __PROGRAM_NAME__ in the operating system, cleans
+# temporary files and directory in the project.
+#
+# __PROGRAM_COPYRIGHT__ __PROGRAM_AUTHOR__ __PROGRAM_AUTHOR_EMAIL__
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Names section
+
+PROG = __PROGRAM_NAME__
+
+TARGET_SHELL_SCRIPT = __PROGRAM_NAME__.sh
+TARGET_SHELL_SCRIPT_CONFIG = __PROGRAM_NAME__.conf
+
+TARGET_README = README
+TARGET_NEWS = NEWS
+TARGET_LICENSE = LICENSE
+
+TARGET_MAN_BIN = __PROGRAM_NAME__.1
+TARGET_MAN_CONFIG = __PROGRAM_NAME__.5
+
+
+# Build section
+
+M4 = m4 -P
+M4DIR = m4
+
+GZIP = gzip
+GZIP_EXT = .gz
+
+SELF = Makefile
+
+SRC_TEMPLATE_DIR = src_template
+
+build_dir = build
+BUILD_DIR = $(build_dir)
+
+docs_dir = docs
+DOCS_DIR = $(docs_dir)
+
+man_dir = man
+MAN_DIR = $(man_dir)
+
+VERSION_M4 = $(M4DIR)/version.m4
+HELPINFO_M4 = $(M4DIR)/helpinfo.m4
+
+SRC_DOCS_DIR = $(SRC_TEMPLATE_DIR)/$(DOCS_DIR)
+SRC_TARGET_SHELL_SCRIPT = $(SRC_TEMPLATE_DIR)/$(TARGET_SHELL_SCRIPT)
+SRC_TARGET_SHELL_SCRIPT_CONFIG = $(SRC_TEMPLATE_DIR)/$(TARGET_SHELL_SCRIPT_CONFIG)
+SRC_TARGET_MAN_BIN = $(SRC_TEMPLATE_DIR)/$(MAN_DIR)/$(TARGET_MAN_BIN)
+SRC_TARGET_MAN_CONFIG = $(SRC_TEMPLATE_DIR)/$(MAN_DIR)/$(TARGET_MAN_CONFIG)
+
+
+# Install section
+
+shell_script_dir = /usr/local/bin
+shell_script_config_dir = /etc
+system_docs_dir = /usr/share/doc
+system_man_bin_dir = /usr/share/man/man1
+system_man_config_dir = /usr/share/man/man5
+
+SHELL_SCRIPT_INSTALL_DIR = $(shell_script_dir)
+SHELL_SCRIPT_CONFIG_INSTALL_DIR = $(shell_script_config_dir)
+DOCS_INSTALL_DIR = $(system_docs_dir)/$(PROG)
+MAN_BIN_INSTALL_DIR = $(system_man_bin_dir)
+MAN_CONFIG_INSTALL_DIR = $(system_man_config_dir)
+
+
+# Commands
+
+all: build
+
+help:
+	@echo "usage: make [ clean | install | uninstall ]"
+
+build:
+	@[ -d $(BUILD_DIR) ] $&& rm -rf $(BUILD_DIR)
+	@mkdir $(BUILD_DIR)
+
+	@$(M4) $(VERSION_M4) $(HELPINFO_M4) $(SRC_TARGET_SHELL_SCRIPT) > $(BUILD_DIR)/$(TARGET_SHELL_SCRIPT)
+	@chmod u+x $(BUILD_DIR)/$(TARGET_SHELL_SCRIPT)
+	@$(M4) $(VERSION_M4) $(PATHNAMES_M4) $(SRC_TARGET_SHELL_SCRIPT_CONFIG) > $(BUILD_DIR)/$(TARGET_SHELL_SCRIPT_CONFIG)
+
+	@mkdir $(BUILD_DIR)/$(MAN_DIR)
+	@$(M4) $(VERSION_M4) $(HELPINFO_M4) $(SRC_TARGET_MAN_BIN) > $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_BIN)
+	@$(GZIP) $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_BIN)
+	@$(M4) $(VERSION_M4) $(HELPINFO_M4) $(SRC_TARGET_MAN_CONFIG) > $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_CONFIG)
+	@$(GZIP) $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_CONFIG)
+
+	@mkdir $(BUILD_DIR)/$(DOCS_DIR)
+	@$(M4) $(VERSION_M4) $(HELPINFO_M4) $(SRC_DOCS_DIR)/$(TARGET_README) > $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_README)
+	@$(M4) $(VERSION_M4) $(HELPINFO_M4) $(SRC_DOCS_DIR)/$(TARGET_NEWS) > $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_NEWS)
+	@cp $(SRC_DOCS_DIR)/$(TARGET_LICENSE) $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_LICENSE)
+
+	@cp $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_README) .
+	@cp $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_NEWS) .
+	@cp $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_LICENSE) .
+
+	@echo "$(PROG) has built in the \`$(BUILD_DIR)' directory."
+
+clean:
+	@rm -rf $(BUILD_DIR)
+	@rm -rf $(TARGET_README)
+	@rm -rf $(TARGET_NEWS)
+	@rm -rf $(TARGET_LICENSE)
+	@rm -f $(SELF)
+	@echo "$(PROG) has cleaned."
+
+install:
+	@[ -d $(BUILD_DIR) ] || { \
+            echo "error: Build directory not found." 1>&2;\
+            echo "error: Should to run \`make' first." 1>&2;\
+            exit 1;\
+        }
+	install -d $(SHELL_SCRIPT_INSTALL_DIR)
+	install $(BUILD_DIR)/$(TARGET_SHELL_SCRIPT) $(SHELL_SCRIPT_INSTALL_DIR)/$(TARGET_SHELL_SCRIPT)
+	install -d $(SHELL_SCRIPT_CONFIG_INSTALL_DIR)
+	install -m 644 $(BUILD_DIR)/$(TARGET_SHELL_SCRIPT_CONFIG) $(SHELL_SCRIPT_CONFIG_INSTALL_DIR)/$(TARGET_SHELL_SCRIPT_CONFIG)
+
+	install -d $(MAN_BIN_INSTALL_DIR)
+	install -m 644 $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_BIN)$(GZIP_EXT) $(MAN_BIN_INSTALL_DIR)
+	install -d $(MAN_CONFIG_INSTALL_DIR)
+	install -m 644 $(BUILD_DIR)/$(MAN_DIR)/$(TARGET_MAN_CONFIG)$(GZIP_EXT) $(MAN_CONFIG_INSTALL_DIR)
+
+	install -d $(DOCS_INSTALL_DIR)
+	install -m 644 $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_README) $(DOCS_INSTALL_DIR)/$(TARGET_README)
+	install -m 644 $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_NEWS) $(DOCS_INSTALL_DIR)/$(TARGET_NEWS)
+	install -m 644 $(BUILD_DIR)/$(DOCS_DIR)/$(TARGET_LICENSE) $(DOCS_INSTALL_DIR)/$(TARGET_LICENSE)
+
+uninstall:
+	rm -f $(SHELL_SCRIPT_INSTALL_DIR)/$(TARGET_SHELL_SCRIPT)
+	rm -f $(SHELL_SCRIPT_CONFIG_INSTALL_DIR)/$(TARGET_SHELL_SCRIPT_CONFIG)
+	rm -f $(MAN_BIN_INSTALL_DIR)/$(TARGET_MAN_BIN)$(GZIP_EXT)
+	rm -f $(MAN_CONFIG_INSTALL_DIR)/$(TARGET_MAN_CONFIG)$(GZIP_EXT)
+	rm -rf $(DOCS_INSTALL_DIR)
+	@echo "$(PROG) has uninstalled."
+
+.PHONY: all help build clean install uninstall
