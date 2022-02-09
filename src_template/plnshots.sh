@@ -89,7 +89,10 @@ load_screenshots()
     local fname_run="run.temp"
     local fname_run_log="run_log.txt"
 
-    [ -d "$odir" ] || mkdir "$odir"
+    [ -d "$odir" ] || mkdir "$odir" || {
+        error "Can't create directory $odir."
+        return 1
+    }
     loader_load_topic_page \
         "$url" \
         "$odir/$fname_topic" || {
