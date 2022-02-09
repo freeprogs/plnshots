@@ -80,13 +80,115 @@ print_version()
 
 load_configuration()
 {
+    local odir="$1"
     local ifname_config_general="__DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__"
     local ifname_config_user="__DNAME_HOME_CONFIG__/__FNAME_HOME_CONFIG__"
-    local ofname_config="config.temp"
+    local ofname_config="$odir/config.temp"
 
-    echo "load_configuration"
-    echo "$ifname_config_general $ifname_config_user $ofname_config"
+    local icf_topic_proxy
+    local icf_topic_proxy_host
+    local icf_topic_proxy_port
+    local icf_topic_proxy_type
+    local icf_topic_proxy_user
+    local icf_topic_proxy_password
+
+    icf_topic_proxy=$(multiconfigfiles_get_topic_proxy \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_topic_proxy_host=$(multiconfigfiles_get_topic_proxy_host \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_topic_proxy_port=$(multiconfigfiles_get_topic_proxy_port \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_topic_proxy_type=$(multiconfigfiles_get_topic_proxy_type \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_topic_proxy_user=$(multiconfigfiles_get_topic_proxy_user \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_topic_proxy_password=$(multiconfigfiles_get_topic_proxy_password \
+        "$ifname_config_general" "$ifname_config_user")
+
+    {
+        echo "$icf_topic_proxy"
+        echo "$icf_topic_proxy_host"
+        echo "$icf_topic_proxy_port"
+        echo "$icf_topic_proxy_type"
+        echo "$icf_topic_proxy_user"
+        echo "$icf_topic_proxy_password"
+    } | rawconfigfile_wrap_topic_proxy >"$ofname_config"
+
     return 0
+}
+
+multiconfigfiles_get_topic_proxy()
+{
+    local out
+
+    out="on"
+    echo "$out"
+}
+
+multiconfigfiles_get_topic_proxy_host()
+{
+    local out
+
+    out="localhost"
+    echo "$out"
+}
+
+multiconfigfiles_get_topic_proxy_port()
+{
+    local out
+
+    out="9050"
+    echo "$out"
+}
+
+multiconfigfiles_get_topic_proxy_type()
+{
+    local out
+
+    out="socks4"
+    echo "$out"
+}
+
+multiconfigfiles_get_topic_proxy_user()
+{
+    local out
+
+    out=""
+    echo "$out"
+}
+
+multiconfigfiles_get_topic_proxy_password()
+{
+    local out
+
+    out=""
+    echo "$out"
+}
+
+configfile_get_value()
+{
+    local keyname="$1"
+
+    sed -n '
+/^#/ d
+/^[[:space:]]*$/ d
+/^'"$keyname="'/ { s/'"$keyname"'=//p; q; }
+'
+}
+
+rawconfigfile_wrap_topic_proxy()
+{
+    awk '
+BEGIN {
+    out = "topic proxy"
+}
+{
+    out = out " " (/^$/ ? "-" : $0)
+}
+END {
+    print out
+}
+'
 }
 
 load_screenshots()
@@ -1616,13 +1718,13 @@ main()
             return 1
         }
         usage
-        load_configuration || return 1
+        load_configuration "." || return 1
         load_screenshots "$1" "." || return 1
         msg "Ok Files have loaded to the current directory."
         ;;
       2)
         usage
-        load_configuration || return 1
+        load_configuration "$2" || return 1
         load_screenshots "$1" "$2" || return 1
         msg "Ok Files have loaded to directory $2."
         ;;
