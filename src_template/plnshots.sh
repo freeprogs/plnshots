@@ -78,6 +78,17 @@ print_version()
     } >&2
 }
 
+load_configuration()
+{
+    local ifname_config_general="__DNAME_ETC_CONFIG__/__FNAME_ETC_CONFIG__"
+    local ifname_config_user="__DNAME_HOME_CONFIG__/__FNAME_HOME_CONFIG__"
+    local ofname_config="config.temp"
+
+    echo "load_configuration"
+    echo "$ifname_config_general $ifname_config_user $ofname_config"
+    return 0
+}
+
 load_screenshots()
 {
     local url="$1"
@@ -1605,11 +1616,13 @@ main()
             return 1
         }
         usage
+        load_configuration || return 1
         load_screenshots "$1" "." || return 1
         msg "Ok Files have loaded to the current directory."
         ;;
       2)
         usage
+        load_configuration || return 1
         load_screenshots "$1" "$2" || return 1
         msg "Ok Files have loaded to directory $2."
         ;;
