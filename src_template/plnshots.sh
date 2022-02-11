@@ -355,6 +355,7 @@ load_screenshots()
 {
     local url="$1"
     local odir="$2"
+    local fname_config="config.temp"
     local fname_topic="topic.temp"
     local fname_parsed="parsed.temp"
     local fname_converted="converted.temp"
@@ -367,6 +368,7 @@ load_screenshots()
         return 1
     }
     loader_load_topic_page \
+        "$odir/$fname_config" \
         "$url" \
         "$odir/$fname_topic" || {
         error "Can't load the topic page from $url."
@@ -420,16 +422,120 @@ load_screenshots()
 
 loader_load_topic_page()
 {
-    local url="$1"
-    local ofname="$2"
-    local proxy="localhost:9050"
+    local ifname_config="$1"
+    local url="$2"
+    local ofname="$3"
+    local proxy_host \
+          proxy_port \
+          proxy_type \
+          proxy_user \
+          proxy_password \
+          proxy_str
 
     msg "$(echo $url | reporter_wrap_curl_start)"
+    if ! loaderconfig_has_topic_proxy "$ifname_config"; then
+        rawloader_load_topic_page "$url" "$ofname" || return 1
+    else
+        proxy_host=$(loaderconfig_get_topic_proxy_host "$ifname_config")
+        proxy_port=$(loaderconfig_get_topic_proxy_port "$ifname_config")
+        proxy_type=$(loaderconfig_get_topic_proxy_type "$ifname_config")
+        proxy_user=$(loaderconfig_get_topic_proxy_user "$ifname_config")
+        proxy_password=$(loaderconfig_get_topic_proxy_password "$ifname_config")
+        if [ "$proxy_type" = "socks4" ]; then
+            proxy_str="${proxy_type}://${proxy_host}:${proxy_port}"
+            msg "$(echo "$proxy_type $proxy_host $proxy_port" | reporter_wrap_curl_proxy_on)"
+            rawloader_load_proxy_topic_page "$proxy_str" "$url" "$ofname" || return 1
+        else
+            error "Connection for proxy with type $proxy_type is not implemented."
+            return 1
+        fi
+    fi
+    msg "$(echo $url | reporter_wrap_curl_end)"
+    return 0
+}
+
+loaderconfig_has_topic_proxy()
+{
+    local ifname="$1"
+
+    grep -q "^topic proxy on" "$ifname" || return 1
+    return 0
+}
+
+loaderconfig_get_topic_proxy_host()
+{
+    local ifname="$1"
+
+    awk '
+{
+    print $4
+}
+' "$ifname"
+}
+
+loaderconfig_get_topic_proxy_port()
+{
+    local ifname="$1"
+
+    awk '
+{
+    print $5
+}
+' "$ifname"
+}
+
+loaderconfig_get_topic_proxy_type()
+{
+    local ifname="$1"
+
+    awk '
+{
+    print $6
+}
+' "$ifname"
+}
+
+loaderconfig_get_topic_proxy_user()
+{
+    local ifname="$1"
+
+    awk '
+{
+    print $7
+}
+' "$ifname"
+}
+
+loaderconfig_get_topic_proxy_password()
+{
+    local ifname="$1"
+
+    awk '
+{
+    print $8
+}
+' "$ifname"
+}
+
+rawloader_load_topic_page()
+{
+    local url="$1"
+    local ofname="$2"
+
+    curl -s "$url" -o "$ofname" || return 1
+    return 0
+}
+
+rawloader_load_proxy_topic_page()
+{
+    local proxy="$1"
+    local url="$2"
+    local ofname="$3"
+
     curl -s \
-         --preproxy "socks4://$proxy" \
+         --preproxy "$proxy" \
          "$url" \
          -o "$ofname" || return 1
-    msg "$(echo $url | reporter_wrap_curl_end)"
     return 0
 }
 
@@ -1728,6 +1834,15 @@ reporter_wrap_curl_start()
     local url="$(cat)"
 
     echo "Loading ${url} ..."
+}
+
+reporter_wrap_curl_proxy_on()
+{
+    awk '
+{
+    print "Connect with proxy", $1, $2 ":" $3
+}
+'
 }
 
 reporter_wrap_curl_end()
