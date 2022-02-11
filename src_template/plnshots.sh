@@ -105,6 +105,7 @@ load_configuration()
     icf_topic_proxy_password=$(multiconfigfiles_get_topic_proxy_password \
         "$ifname_config_general" "$ifname_config_user")
 
+    echo -n >"$ofname_config"
     {
         echo "$icf_topic_proxy"
         echo "$icf_topic_proxy_host"
@@ -112,7 +113,7 @@ load_configuration()
         echo "$icf_topic_proxy_type"
         echo "$icf_topic_proxy_user"
         echo "$icf_topic_proxy_password"
-    } | rawconfigfile_wrap_topic_proxy >"$ofname_config"
+    } | rawconfigfile_wrap_topic_proxy >>"$ofname_config"
 
     return 0
 }
