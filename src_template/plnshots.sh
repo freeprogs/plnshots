@@ -120,14 +120,14 @@ load_configuration()
 multiconfigfiles_get_topic_proxy()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy "$fname" && {
+                out=$(configfile_get_topic_proxy "$fname")
+            }
         }
     done
     echo "$out"
@@ -136,14 +136,14 @@ multiconfigfiles_get_topic_proxy()
 multiconfigfiles_get_topic_proxy_host()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy_host "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy_host "$fname" && {
+                out=$(configfile_get_topic_proxy_host "$fname")
+            }
         }
     done
     echo "$out"
@@ -152,14 +152,14 @@ multiconfigfiles_get_topic_proxy_host()
 multiconfigfiles_get_topic_proxy_port()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy_port "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy_port "$fname" && {
+                out=$(configfile_get_topic_proxy_port "$fname")
+            }
         }
     done
     echo "$out"
@@ -168,14 +168,14 @@ multiconfigfiles_get_topic_proxy_port()
 multiconfigfiles_get_topic_proxy_type()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy_type "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy_type "$fname" && {
+                out=$(configfile_get_topic_proxy_type "$fname")
+            }
         }
     done
     echo "$out"
@@ -184,14 +184,14 @@ multiconfigfiles_get_topic_proxy_type()
 multiconfigfiles_get_topic_proxy_user()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy_user "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy_user "$fname" && {
+                out=$(configfile_get_topic_proxy_user "$fname")
+            }
         }
     done
     echo "$out"
@@ -200,17 +200,25 @@ multiconfigfiles_get_topic_proxy_user()
 multiconfigfiles_get_topic_proxy_password()
 {
     local fname
-    local str
     local out
 
     for fname in "$@"; do
         fname="${fname//\~/$HOME}"
         [ -f "$fname" ] && {
-            str=$(configfile_get_topic_proxy_password "$fname")
-            [ "$str" ] && { out="$str"; }
+            configfile_has_topic_proxy_password "$fname" && {
+                out=$(configfile_get_topic_proxy_password "$fname")
+            }
         }
     done
     echo "$out"
+}
+
+configfile_has_topic_proxy()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy" || return 1
+    return 0
 }
 
 configfile_get_topic_proxy()
@@ -222,6 +230,14 @@ configfile_get_topic_proxy()
     echo "$out"
 }
 
+configfile_has_topic_proxy_host()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy_host" || return 1
+    return 0
+}
+
 configfile_get_topic_proxy_host()
 {
     local ifname="$1"
@@ -229,6 +245,14 @@ configfile_get_topic_proxy_host()
 
     out=$(cat "$ifname" | rawconfigfile_get_value "topic_proxy_host")
     echo "$out"
+}
+
+configfile_has_topic_proxy_port()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy_port" || return 1
+    return 0
 }
 
 configfile_get_topic_proxy_port()
@@ -240,6 +264,14 @@ configfile_get_topic_proxy_port()
     echo "$out"
 }
 
+configfile_has_topic_proxy_type()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy_type" || return 1
+    return 0
+}
+
 configfile_get_topic_proxy_type()
 {
     local ifname="$1"
@@ -247,6 +279,14 @@ configfile_get_topic_proxy_type()
 
     out=$(cat "$ifname" | rawconfigfile_get_value "topic_proxy_type")
     echo "$out"
+}
+
+configfile_has_topic_proxy_user()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy_user" || return 1
+    return 0
 }
 
 configfile_get_topic_proxy_user()
@@ -258,6 +298,14 @@ configfile_get_topic_proxy_user()
     echo "$out"
 }
 
+configfile_has_topic_proxy_password()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "topic_proxy_password" || return 1
+    return 0
+}
+
 configfile_get_topic_proxy_password()
 {
     local ifname="$1"
@@ -265,6 +313,15 @@ configfile_get_topic_proxy_password()
 
     out=$(cat "$ifname" | rawconfigfile_get_value "topic_proxy_password")
     echo "$out"
+}
+
+rawconfigfile_has_value()
+{
+    local ifname="$1"
+    local keyname="$2"
+
+    grep -q "^${keyname}=" "$ifname" || return 1
+    return 0
 }
 
 rawconfigfile_get_value()
