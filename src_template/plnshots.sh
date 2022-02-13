@@ -554,7 +554,18 @@ loaderconfig_are_valid_data()
     local proxy_user="$4"
     local proxy_password="$5"
 
-    echo "loaderconfig_are_valid_data $proxy_host $proxy_port $proxy_type $proxy_user $proxy_password"
+    [ "$proxy_type" = "socks4" -o "$proxy_type" = "socks5" ] || return 1
+    [ "$proxy_host" != "-" -a "$proxy_port" != "-" ] || return 1
+    echo "$proxy_port" | grep -q '^[0-9][0-9]*$' || return 1
+    [ "$proxy_type" = "socks4" ] && {
+        [ "$proxy_user" = "-" -a "$proxy_password" = "-" ] || return 1
+    }
+    [ "$proxy_type" = "socks5" ] && {
+        [ "$proxy_user" != "-" ] || return 1
+    }
+    [ "$proxy_type" = "socks5" ] && {
+        [ "$proxy_password" != "-" ] || return 1
+    }
     return 0
 }
 
