@@ -575,8 +575,13 @@ topicproxyhand_detect_type()
     local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
     local out
 
-    out=$PT_SOCKS4
-
+    if [ "$proxy_type_str" = "socks4" ]; then
+        out=$PT_SOCKS4
+    elif [ "$proxy_type_str" = "socks5" ]; then
+        out=$PT_SOCKS5
+    else
+        out=$PT_UNDEF
+    fi
     echo "$out"
 }
 
