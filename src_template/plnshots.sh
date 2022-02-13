@@ -425,30 +425,59 @@ loader_load_topic_page()
     local ifname_config="$1"
     local url="$2"
     local ofname="$3"
-    local proxy_host \
-          proxy_port \
-          proxy_type \
-          proxy_user \
-          proxy_password \
-          proxy_str
+    local config_proxy_host \
+          config_proxy_port \
+          config_proxy_type \
+          config_proxy_user \
+          config_proxy_password
+    local proxy_type
+    local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
+    local proxy_curl_str
 
     msg "$(echo $url | reporter_wrap_curl_start)"
-    if ! loaderconfig_has_topic_proxy "$ifname_config"; then
-        rawloader_load_topic_page "$url" "$ofname" || return 1
-    else
-        proxy_host=$(loaderconfig_get_topic_proxy_host "$ifname_config")
-        proxy_port=$(loaderconfig_get_topic_proxy_port "$ifname_config")
-        proxy_type=$(loaderconfig_get_topic_proxy_type "$ifname_config")
-        proxy_user=$(loaderconfig_get_topic_proxy_user "$ifname_config")
-        proxy_password=$(loaderconfig_get_topic_proxy_password "$ifname_config")
-        if [ "$proxy_type" = "socks4" ]; then
-            proxy_str="${proxy_type}://${proxy_host}:${proxy_port}"
-            msg "$(echo "$proxy_type $proxy_host $proxy_port" | reporter_wrap_curl_proxy_on)"
-            rawloader_load_proxy_topic_page "$proxy_str" "$url" "$ofname" || return 1
-        else
-            error "Connection for proxy with type $proxy_type is not implemented."
+    if loaderconfig_has_topic_proxy "$ifname_config"; then
+        config_proxy_host=$(loaderconfig_get_topic_proxy_host "$ifname_config")
+        config_proxy_port=$(loaderconfig_get_topic_proxy_port "$ifname_config")
+        config_proxy_type=$(loaderconfig_get_topic_proxy_type "$ifname_config")
+        config_proxy_user=$(loaderconfig_get_topic_proxy_user "$ifname_config")
+        config_proxy_password=$(loaderconfig_get_topic_proxy_password "$ifname_config")
+        loaderconfig_are_valid_data \
+            "$config_proxy_host" \
+            "$config_proxy_port" \
+            "$config_proxy_type" \
+            "$config_proxy_user" \
+            "$config_proxy_password" || {
+            error "Loaded configuration for topic proxy is invalid."
             return 1
-        fi
+        }
+        proxy_type=`topicproxyhand_detect_type "$config_proxy_type"`
+        case $proxy_type in
+          $PT_SOCKS4)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port" | \
+                    topicproxyhand_wrap_curl_string_socks4)
+            ;;
+          $PT_SOCKS5)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port $config_proxy_user $config_proxy_password" | \
+                    topicproxyhand_wrap_curl_string_socks5)
+            ;;
+          $PT_UNDEF)
+            error "Can't detect implemented proxy type."
+            return 1
+            ;;
+          *)
+            error "Unknown proxy type: \"$proxy_type\""
+            return 1
+            ;;
+        esac
+        msg "$(echo "$config_proxy_type $config_proxy_host $config_proxy_port" | \
+reporter_wrap_topic_proxy_on)"
+        rawloader_load_proxy_topic_page "$proxy_curl_str" "$url" "$ofname" || return 1
+    else
+        rawloader_load_topic_page "$url" "$ofname" || return 1
     fi
     msg "$(echo $url | reporter_wrap_curl_end)"
     return 0
@@ -515,6 +544,47 @@ loaderconfig_get_topic_proxy_password()
     print $8
 }
 ' "$ifname"
+}
+
+loaderconfig_are_valid_data()
+{
+    local proxy_host="$1"
+    local proxy_port="$2"
+    local proxy_type="$3"
+    local proxy_user="$4"
+    local proxy_password="$5"
+
+    echo "loaderconfig_are_valid_data $proxy_host $proxy_port $proxy_type $proxy_user $proxy_password"
+    return 0
+}
+
+topicproxyhand_detect_type()
+{
+    local proxy_type_str="$1"
+    local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
+    local out
+
+    out=$PT_SOCKS4
+
+    echo "$out"
+}
+
+topicproxyhand_wrap_curl_string_socks4()
+{
+    awk '
+{
+    print "socks4://" $1 ":" $2
+}
+'
+}
+
+topicproxyhand_wrap_curl_string_socks5()
+{
+    awk '
+{
+    print "socks5://" $3 ":" $4 "@" $1 ":" $2
+}
+'
 }
 
 rawloader_load_topic_page()
@@ -1836,11 +1906,11 @@ reporter_wrap_curl_start()
     echo "Loading ${url} ..."
 }
 
-reporter_wrap_curl_proxy_on()
+reporter_wrap_topic_proxy_on()
 {
     awk '
 {
-    print "Connect with proxy", $1, $2 ":" $3
+    print "Connect to topic with proxy", $1, $2 ":" $3
 }
 '
 }
