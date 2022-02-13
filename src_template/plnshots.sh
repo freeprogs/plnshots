@@ -409,6 +409,7 @@ load_screenshots()
         return 1
     }
     loader_clean_all \
+        "$odir/$fname_config" \
         "$odir/$fname_topic" \
         "$odir/$fname_parsed" \
         "$odir/$fname_converted" \
@@ -1901,13 +1902,16 @@ reloadlinehand_get_file()
 
 loader_clean_all()
 {
-    local fname_topic="$1"
-    local fname_parsed="$2"
-    local fname_converted="$3"
-    local fname_report="$4"
-    local fname_run="$5"
+    local fname_config="$1"
+    local fname_topic="$2"
+    local fname_parsed="$3"
+    local fname_converted="$4"
+    local fname_report="$5"
+    local fname_run="$6"
 
-    rm -f "$fname_topic" \
+    rm -f \
+       "$fname_config" \
+       "$fname_topic" \
        "$fname_parsed" \
        "$fname_converted" \
        "$fname_report" \
