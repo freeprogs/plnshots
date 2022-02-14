@@ -1669,7 +1669,7 @@ lowloader_load_run_list()
         else
             resultline="$(echo "$line" | resulthand_wrap_fail_command_to_result)"
             echo "$resultline" >>"$ofname_result"
-            msg "$(echo "$line" | reporter_wrap_wget_broken_url)"
+            msg "$(echo "$line" | reporter_wrap_imageload_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
         fi
     done || return 1
@@ -1965,7 +1965,7 @@ reporter_wrap_imageload_start()
 '
 }
 
-reporter_wrap_wget_broken_url()
+reporter_wrap_imageload_broken_url()
 {
     local maxfname=40
 
