@@ -1818,7 +1818,7 @@ lowloader_load_reload_list()
     reload_totalurls="$(cat "$ifname_reload" | reloadhand_get_total_urls)"
     msg "$(echo "$reload_totalurls" | reporter_wrap_reload_total_urls)"
     cat "$ifname_reload" | while read line; do
-        msg "$(echo "$line" | reporter_wrap_reload_wget_start)"
+        msg "$(echo "$line" | reporter_wrap_reload_imageload_start)"
         if eval "$line"; then
             :
         else
@@ -2009,7 +2009,7 @@ reporter_wrap_treenumber_treeurls()
 '
 }
 
-reporter_wrap_reload_wget_start()
+reporter_wrap_reload_imageload_start()
 {
     local maxdname=15
     local maxfname=40
