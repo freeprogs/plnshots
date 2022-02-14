@@ -1662,7 +1662,7 @@ lowloader_load_run_list()
     echo -n >"$ofname_result"
 
     cat "$ifname_run" | while read line; do
-        msg "$(echo "$line" | reporter_wrap_wget_start)"
+        msg "$(echo "$line" | reporter_wrap_imageload_start)"
         if eval "$line"; then
             resultline="$(echo "$line" | resulthand_wrap_ok_command_to_result)"
             echo "$resultline" >>"$ofname_result"
@@ -1942,7 +1942,7 @@ reporter_wrap_curl_end()
     echo "Ok $url loaded."
 }
 
-reporter_wrap_wget_start()
+reporter_wrap_imageload_start()
 {
     local maxdname=15
     local maxfname=40
