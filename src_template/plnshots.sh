@@ -480,7 +480,7 @@ reporter_wrap_topic_proxy_on)"
     else
         rawloader_load_topic_page "$url" "$ofname" || return 1
     fi
-    msg "$(echo $url | reporter_wrap_curl_end)"
+    msg "$(echo $url | reporter_wrap_topicload_end)"
     return 0
 }
 
@@ -1935,7 +1935,7 @@ reporter_wrap_topic_proxy_on()
 '
 }
 
-reporter_wrap_curl_end()
+reporter_wrap_topicload_end()
 {
     local url="$(cat)"
 
