@@ -40,7 +40,6 @@ This program has tested on environment configuration
   GNU awk 4.1.4
   GNU sed 4.4
   curl 7.53.1
-  GNU Wget 1.19.1
 ```
 
 ### Building
