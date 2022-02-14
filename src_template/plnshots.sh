@@ -1742,7 +1742,7 @@ lowloader_make_reload_list()
                 }
             }
         }
-    done || return 1
+    done
     return 0
 }
 
