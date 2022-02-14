@@ -1822,7 +1822,7 @@ lowloader_load_reload_list()
         if eval "$line"; then
             :
         else
-            msg "$(echo "$line" | reporter_wrap_reload_wget_broken_url)"
+            msg "$(echo "$line" | reporter_wrap_reload_imageload_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_reload_broken_url)"
         fi
     done || return 1
@@ -2032,7 +2032,7 @@ reporter_wrap_reload_imageload_start()
 '
 }
 
-reporter_wrap_reload_wget_broken_url()
+reporter_wrap_reload_imageload_broken_url()
 {
     local maxfname=40
 
