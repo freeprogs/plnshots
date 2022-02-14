@@ -1592,7 +1592,7 @@ loader_make_run()
     awk -v odir="$odir" '
 {
     ext = "jpg"
-    printf "wget -q -c %s -O %s/%03d_%03d_%s.%s\n",
+    printf "curl -s %s -o %s/%03d_%03d_%s.%s\n",
         $3, odir, $1, $2, $4, ext
 }
 '   "$ifname" >"$ofname" || return 1
@@ -1680,14 +1680,14 @@ resulthand_wrap_ok_command_to_result()
 {
     awk '
 {
-    if ($1 == "wget" && $4 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+    if ($1 == "curl" && $3 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
         site = "fpo"
     }
     else {
         site = "unknown"
     }
-    split($6, arr, "/")
-    print "loaded", site, arr[1], arr[2], $4
+    split($5, arr, "/")
+    print "loaded", site, arr[1], arr[2], $3
 }
 '
 }
@@ -1696,14 +1696,14 @@ resulthand_wrap_fail_command_to_result()
 {
     awk '
 {
-    if ($1 == "wget" && $4 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+    if ($1 == "curl" && $3 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
         site = "fpo"
     }
     else {
         site = "unknown"
     }
-    split($6, arr, "/")
-    print "broken", site, arr[1], arr[2], $4
+    split($5, arr, "/")
+    print "broken", site, arr[1], arr[2], $3
 }
 '
 }
@@ -1790,7 +1790,7 @@ sitefpo_make_reload_url()
 
 sitefpo_wrap_to_reloadline()
 {
-    awk '{ printf "wget -q -c \"%s\" -O %s/%s\n", $3, $2, $1; }'
+    awk '{ printf "curl -s \"%s\" -o %s/%s\n", $3, $2, $1; }'
 }
 
 sitefpo_make_load_file()
@@ -1884,7 +1884,7 @@ reloadlinehand_get_dir()
 {
     awk '
 {
-    split($6, arr, "/")
+    split($5, arr, "/")
     print arr[1]
 }
 '
@@ -1894,7 +1894,7 @@ reloadlinehand_get_file()
 {
     awk '
 {
-    split($6, arr, "/")
+    split($5, arr, "/")
     print arr[2]
 }
 '
