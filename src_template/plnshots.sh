@@ -1743,6 +1743,7 @@ lowloader_make_reload_list()
             }
         }
     done
+    [ -n "$(head -c 1 "$ofname_reload")" ] || return 1
     return 0
 }
 
