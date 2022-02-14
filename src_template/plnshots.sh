@@ -435,7 +435,7 @@ loader_load_topic_page()
     local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
     local proxy_curl_str
 
-    msg "$(echo $url | reporter_wrap_curl_start)"
+    msg "$(echo $url | reporter_wrap_topicload_start)"
     if loaderconfig_has_topic_proxy "$ifname_config"; then
         config_proxy_host=$(loaderconfig_get_topic_proxy_host "$ifname_config")
         config_proxy_port=$(loaderconfig_get_topic_proxy_port "$ifname_config")
@@ -1919,7 +1919,7 @@ loader_clean_all()
     return 0
 }
 
-reporter_wrap_curl_start()
+reporter_wrap_topicload_start()
 {
     local url="$(cat)"
 
