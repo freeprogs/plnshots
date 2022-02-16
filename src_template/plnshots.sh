@@ -92,6 +92,13 @@ load_configuration()
     local icf_topic_proxy_user
     local icf_topic_proxy_password
 
+    local icf_image_proxy
+    local icf_image_proxy_host
+    local icf_image_proxy_port
+    local icf_image_proxy_type
+    local icf_image_proxy_user
+    local icf_image_proxy_password
+
     icf_topic_proxy=$(multiconfigfiles_get_topic_proxy \
         "$ifname_config_general" "$ifname_config_user")
     icf_topic_proxy_host=$(multiconfigfiles_get_topic_proxy_host \
@@ -105,6 +112,19 @@ load_configuration()
     icf_topic_proxy_password=$(multiconfigfiles_get_topic_proxy_password \
         "$ifname_config_general" "$ifname_config_user")
 
+    icf_image_proxy=$(multiconfigfiles_get_image_proxy \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_image_proxy_host=$(multiconfigfiles_get_image_proxy_host \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_image_proxy_port=$(multiconfigfiles_get_image_proxy_port \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_image_proxy_type=$(multiconfigfiles_get_image_proxy_type \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_image_proxy_user=$(multiconfigfiles_get_image_proxy_user \
+        "$ifname_config_general" "$ifname_config_user")
+    icf_image_proxy_password=$(multiconfigfiles_get_image_proxy_password \
+        "$ifname_config_general" "$ifname_config_user")
+
     echo -n >"$ofname_config"
     {
         echo "$icf_topic_proxy"
@@ -114,6 +134,14 @@ load_configuration()
         echo "$icf_topic_proxy_user"
         echo "$icf_topic_proxy_password"
     } | rawconfigfile_wrap_topic_proxy >>"$ofname_config"
+    {
+        echo "$icf_image_proxy"
+        echo "$icf_image_proxy_host"
+        echo "$icf_image_proxy_port"
+        echo "$icf_image_proxy_type"
+        echo "$icf_image_proxy_user"
+        echo "$icf_image_proxy_password"
+    } | rawconfigfile_wrap_image_proxy >>"$ofname_config"
 
     return 0
 }
@@ -208,6 +236,102 @@ multiconfigfiles_get_topic_proxy_password()
         [ -f "$fname" ] && {
             configfile_has_topic_proxy_password "$fname" && {
                 out=$(configfile_get_topic_proxy_password "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy "$fname" && {
+                out=$(configfile_get_image_proxy "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy_host()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy_host "$fname" && {
+                out=$(configfile_get_image_proxy_host "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy_port()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy_port "$fname" && {
+                out=$(configfile_get_image_proxy_port "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy_type()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy_type "$fname" && {
+                out=$(configfile_get_image_proxy_type "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy_user()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy_user "$fname" && {
+                out=$(configfile_get_image_proxy_user "$fname")
+            }
+        }
+    done
+    echo "$out"
+}
+
+multiconfigfiles_get_image_proxy_password()
+{
+    local fname
+    local out
+
+    for fname in "$@"; do
+        fname="${fname//\~/$HOME}"
+        [ -f "$fname" ] && {
+            configfile_has_image_proxy_password "$fname" && {
+                out=$(configfile_get_image_proxy_password "$fname")
             }
         }
     done
@@ -316,6 +440,108 @@ configfile_get_topic_proxy_password()
     echo "$out"
 }
 
+configfile_has_image_proxy()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy" || return 1
+    return 0
+}
+
+configfile_get_image_proxy()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy")
+    echo "$out"
+}
+
+configfile_has_image_proxy_host()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy_host" || return 1
+    return 0
+}
+
+configfile_get_image_proxy_host()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy_host")
+    echo "$out"
+}
+
+configfile_has_image_proxy_port()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy_port" || return 1
+    return 0
+}
+
+configfile_get_image_proxy_port()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy_port")
+    echo "$out"
+}
+
+configfile_has_image_proxy_type()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy_type" || return 1
+    return 0
+}
+
+configfile_get_image_proxy_type()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy_type")
+    echo "$out"
+}
+
+configfile_has_image_proxy_user()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy_user" || return 1
+    return 0
+}
+
+configfile_get_image_proxy_user()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy_user")
+    echo "$out"
+}
+
+configfile_has_image_proxy_password()
+{
+    local ifname="$1"
+
+    rawconfigfile_has_value "$ifname" "image_proxy_password" || return 1
+    return 0
+}
+
+configfile_get_image_proxy_password()
+{
+    local ifname="$1"
+    local out
+
+    out=$(cat "$ifname" | rawconfigfile_get_value "image_proxy_password")
+    echo "$out"
+}
+
 rawconfigfile_has_value()
 {
     local ifname="$1"
@@ -341,6 +567,21 @@ rawconfigfile_wrap_topic_proxy()
     awk '
 BEGIN {
     out = "topic proxy"
+}
+{
+    out = out " " (/^$/ ? "-" : $0)
+}
+END {
+    print out
+}
+'
+}
+
+rawconfigfile_wrap_image_proxy()
+{
+    awk '
+BEGIN {
+    out = "image proxy"
 }
 {
     out = out " " (/^$/ ? "-" : $0)
@@ -497,7 +738,7 @@ loaderconfig_get_topic_proxy_host()
     local ifname="$1"
 
     awk '
-{
+$1 == "topic" && $2 == "proxy" {
     print $4
 }
 ' "$ifname"
@@ -508,7 +749,7 @@ loaderconfig_get_topic_proxy_port()
     local ifname="$1"
 
     awk '
-{
+$1 == "topic" && $2 == "proxy" {
     print $5
 }
 ' "$ifname"
@@ -519,7 +760,7 @@ loaderconfig_get_topic_proxy_type()
     local ifname="$1"
 
     awk '
-{
+$1 == "topic" && $2 == "proxy" {
     print $6
 }
 ' "$ifname"
@@ -530,7 +771,7 @@ loaderconfig_get_topic_proxy_user()
     local ifname="$1"
 
     awk '
-{
+$1 == "topic" && $2 == "proxy" {
     print $7
 }
 ' "$ifname"
@@ -541,7 +782,7 @@ loaderconfig_get_topic_proxy_password()
     local ifname="$1"
 
     awk '
-{
+$1 == "topic" && $2 == "proxy" {
     print $8
 }
 ' "$ifname"
