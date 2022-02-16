@@ -1420,7 +1420,7 @@ loader_convert_data()
         field3=$(echo "${fields[2]}" | converter_convert_url)
         field4=$(echo "${fields[3]}" | converter_convert_name)
         echo "$field1 $field2 $field3 $field4" >>"$ofname"
-    done || return 1
+    done
     return 0
 }
 
@@ -1657,7 +1657,7 @@ lowloader_load_run_list()
     for i in $(seq 1 "$report_numoftrees"); do
         report_treeurls="$(cat "$ifname_report" | reporthand_get_tree_urls $i)"
         msg "$(echo "$i $report_treeurls" | reporter_wrap_treenumber_treeurls)"
-    done || return 1
+    done
 
     echo -n >"$ofname_result"
 
@@ -1672,7 +1672,7 @@ lowloader_load_run_list()
             msg "$(echo "$line" | reporter_wrap_imageload_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_broken_url)"
         fi
-    done || return 1
+    done
     return 0
 }
 
@@ -1826,7 +1826,7 @@ lowloader_load_reload_list()
             msg "$(echo "$line" | reporter_wrap_reload_imageload_broken_url)"
             log "$ofname_log" "$(echo "$line" | logger_wrap_reload_broken_url)"
         fi
-    done || return 1
+    done
     return 0
 }
 
@@ -1877,7 +1877,7 @@ lowloader_clean_reloaded_files()
         load_file="$(sitefpo_make_load_file "$reload_file")"
         rm -f "$reload_dir/$load_file" || return 1
         mv "$reload_dir/$reload_file" "$reload_dir/$load_file" || return 1
-    done || return 1
+    done
     return 0
 }
 
