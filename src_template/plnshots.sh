@@ -635,6 +635,7 @@ load_screenshots()
         return 1
     }
     loader_make_run \
+        "$odir/$fname_config" \
         "$odir/$fname_converted" \
         "$odir/$fname_run" \
         "$odir" || {
@@ -811,6 +812,92 @@ loaderconfig_are_valid_topic_proxy_data()
     return 0
 }
 
+loaderconfig_has_image_proxy()
+{
+    local ifname="$1"
+
+    grep -q "^image proxy on" "$ifname" || return 1
+    return 0
+}
+
+loaderconfig_get_image_proxy_host()
+{
+    local ifname="$1"
+
+    awk '
+$1 == "image" && $2 == "proxy" {
+    print $4
+}
+' "$ifname"
+}
+
+loaderconfig_get_image_proxy_port()
+{
+    local ifname="$1"
+
+    awk '
+$1 == "image" && $2 == "proxy" {
+    print $5
+}
+' "$ifname"
+}
+
+loaderconfig_get_image_proxy_type()
+{
+    local ifname="$1"
+
+    awk '
+$1 == "image" && $2 == "proxy" {
+    print $6
+}
+' "$ifname"
+}
+
+loaderconfig_get_image_proxy_user()
+{
+    local ifname="$1"
+
+    awk '
+$1 == "image" && $2 == "proxy" {
+    print $7
+}
+' "$ifname"
+}
+
+loaderconfig_get_image_proxy_password()
+{
+    local ifname="$1"
+
+    awk '
+$1 == "image" && $2 == "proxy" {
+    print $8
+}
+' "$ifname"
+}
+
+loaderconfig_are_valid_image_proxy_data()
+{
+    local proxy_host="$1"
+    local proxy_port="$2"
+    local proxy_type="$3"
+    local proxy_user="$4"
+    local proxy_password="$5"
+
+    [ "$proxy_type" = "socks4" -o "$proxy_type" = "socks5" ] || return 1
+    [ "$proxy_host" != "-" -a "$proxy_port" != "-" ] || return 1
+    echo "$proxy_port" | grep -q '^[0-9][0-9]*$' || return 1
+    [ "$proxy_type" = "socks4" ] && {
+        [ "$proxy_user" = "-" -a "$proxy_password" = "-" ] || return 1
+    }
+    [ "$proxy_type" = "socks5" ] && {
+        [ "$proxy_user" != "-" ] || return 1
+    }
+    [ "$proxy_type" = "socks5" ] && {
+        [ "$proxy_password" != "-" ] || return 1
+    }
+    return 0
+}
+
 topicproxyhand_detect_type()
 {
     local proxy_type_str="$1"
@@ -837,6 +924,40 @@ topicproxyhand_wrap_curl_string_socks4()
 }
 
 topicproxyhand_wrap_curl_string_socks5()
+{
+    awk '
+{
+    print "socks5://" $3 ":" $4 "@" $1 ":" $2
+}
+'
+}
+
+imageproxyhand_detect_type()
+{
+    local proxy_type_str="$1"
+    local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
+    local out
+
+    if [ "$proxy_type_str" = "socks4" ]; then
+        out=$PT_SOCKS4
+    elif [ "$proxy_type_str" = "socks5" ]; then
+        out=$PT_SOCKS5
+    else
+        out=$PT_UNDEF
+    fi
+    echo "$out"
+}
+
+imageproxyhand_wrap_curl_string_socks4()
+{
+    awk '
+{
+    print "socks4://" $1 ":" $2
+}
+'
+}
+
+imageproxyhand_wrap_curl_string_socks5()
 {
     awk '
 {
@@ -1826,6 +1947,89 @@ END {
 
 loader_make_run()
 {
+    local ifname_config="$1"
+    local ifname="$2"
+    local ofname="$3"
+    local odir="$4"
+    local config_proxy_host \
+          config_proxy_port \
+          config_proxy_type \
+          config_proxy_user \
+          config_proxy_password
+    local proxy_type
+    local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
+    local proxy_curl_str
+
+    if loaderconfig_has_image_proxy "$ifname_config"; then
+        config_proxy_host=$(loaderconfig_get_image_proxy_host "$ifname_config")
+        config_proxy_port=$(loaderconfig_get_image_proxy_port "$ifname_config")
+        config_proxy_type=$(loaderconfig_get_image_proxy_type "$ifname_config")
+        config_proxy_user=$(loaderconfig_get_image_proxy_user "$ifname_config")
+        config_proxy_password=$(loaderconfig_get_image_proxy_password "$ifname_config")
+        loaderconfig_are_valid_image_proxy_data \
+            "$config_proxy_host" \
+            "$config_proxy_port" \
+            "$config_proxy_type" \
+            "$config_proxy_user" \
+            "$config_proxy_password" || {
+            error "Loaded configuration for image proxy is invalid."
+            return 1
+        }
+        proxy_type=`imageproxyhand_detect_type "$config_proxy_type"`
+        case $proxy_type in
+          $PT_SOCKS4)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port" | \
+                    imageproxyhand_wrap_curl_string_socks4)
+            ;;
+          $PT_SOCKS5)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port $config_proxy_user $config_proxy_password" | \
+                    imageproxyhand_wrap_curl_string_socks5)
+            ;;
+          $PT_UNDEF)
+            error "Can't detect implemented image proxy type."
+            return 1
+            ;;
+          *)
+            error "Unknown image proxy type: \"$proxy_type\""
+            return 1
+            ;;
+        esac
+        msg "$(echo "$config_proxy_type $config_proxy_host $config_proxy_port" | \
+reporter_wrap_image_proxy_on)"
+        runmaker_make_run_with_proxy \
+            "$proxy_curl_str" \
+            "$ifname" \
+            "$ofname" \
+            "$odir" || return 1
+    else
+        runmaker_make_run "$ifname" "$ofname" "$odir" || return 1
+    fi
+    return 0
+}
+
+runmaker_make_run_with_proxy()
+{
+    local proxy="$1"
+    local ifname="$2"
+    local ofname="$3"
+    local odir="$4"
+
+    awk -v odir="$odir" -v proxy="$proxy" '
+{
+    ext = "jpg"
+    printf "curl -s --preproxy \"%s\" %s -o %s/%03d_%03d_%s.%s\n",
+        proxy, $3, odir, $1, $2, $4, ext
+}
+'   "$ifname" >"$ofname" || return 1
+    return 0
+}
+
+runmaker_make_run()
+{
     local ifname="$1"
     local ofname="$2"
     local odir="$3"
@@ -2173,6 +2377,15 @@ reporter_wrap_topic_proxy_on()
     awk '
 {
     print "Connect to topic with proxy", $1, $2 ":" $3
+}
+'
+}
+
+reporter_wrap_image_proxy_on()
+{
+    awk '
+{
+    print "Connect to image with proxy", $1, $2 ":" $3
 }
 '
 }
