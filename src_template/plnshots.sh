@@ -683,7 +683,7 @@ loader_load_topic_page()
         config_proxy_type=$(loaderconfig_get_topic_proxy_type "$ifname_config")
         config_proxy_user=$(loaderconfig_get_topic_proxy_user "$ifname_config")
         config_proxy_password=$(loaderconfig_get_topic_proxy_password "$ifname_config")
-        loaderconfig_are_valid_data \
+        loaderconfig_are_valid_topic_proxy_data \
             "$config_proxy_host" \
             "$config_proxy_port" \
             "$config_proxy_type" \
@@ -707,11 +707,11 @@ loader_load_topic_page()
                     topicproxyhand_wrap_curl_string_socks5)
             ;;
           $PT_UNDEF)
-            error "Can't detect implemented proxy type."
+            error "Can't detect implemented topic proxy type."
             return 1
             ;;
           *)
-            error "Unknown proxy type: \"$proxy_type\""
+            error "Unknown topic proxy type: \"$proxy_type\""
             return 1
             ;;
         esac
@@ -788,7 +788,7 @@ $1 == "topic" && $2 == "proxy" {
 ' "$ifname"
 }
 
-loaderconfig_are_valid_data()
+loaderconfig_are_valid_topic_proxy_data()
 {
     local proxy_host="$1"
     local proxy_port="$2"
