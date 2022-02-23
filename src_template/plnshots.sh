@@ -643,6 +643,7 @@ load_screenshots()
         return 1
     }
     loader_run \
+        "$odir/$fname_config" \
         "$odir/$fname_run" \
         "$odir/$fname_report" \
         "$odir/$fname_run_log" \
@@ -2045,6 +2046,88 @@ runmaker_make_run()
 }
 
 loader_run()
+{
+    local ifname_config="$1"
+    local ifname_run="$2"
+    local ifname_report="$3"
+    local ofname_log="$4"
+    local odir="$5"
+    local config_proxy_host \
+          config_proxy_port \
+          config_proxy_type \
+          config_proxy_user \
+          config_proxy_password
+    local proxy_type
+    local PT_SOCKS4=0 PT_SOCKS5=1 PT_UNDEF=2
+    local proxy_curl_str
+
+    if loaderconfig_has_image_proxy "$ifname_config"; then
+        config_proxy_host=$(loaderconfig_get_image_proxy_host "$ifname_config")
+        config_proxy_port=$(loaderconfig_get_image_proxy_port "$ifname_config")
+        config_proxy_type=$(loaderconfig_get_image_proxy_type "$ifname_config")
+        config_proxy_user=$(loaderconfig_get_image_proxy_user "$ifname_config")
+        config_proxy_password=$(loaderconfig_get_image_proxy_password "$ifname_config")
+        loaderconfig_are_valid_image_proxy_data \
+            "$config_proxy_host" \
+            "$config_proxy_port" \
+            "$config_proxy_type" \
+            "$config_proxy_user" \
+            "$config_proxy_password" || {
+            error "Loaded configuration for image proxy is invalid."
+            return 1
+        }
+        proxy_type=`imageproxyhand_detect_type "$config_proxy_type"`
+        case $proxy_type in
+          $PT_SOCKS4)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port" | \
+                    imageproxyhand_wrap_curl_string_socks4)
+            ;;
+          $PT_SOCKS5)
+            proxy_curl_str=$(
+                echo \
+"$config_proxy_host $config_proxy_port $config_proxy_user $config_proxy_password" | \
+                    imageproxyhand_wrap_curl_string_socks5)
+            ;;
+          $PT_UNDEF)
+            error "Can't detect implemented image proxy type."
+            return 1
+            ;;
+          *)
+            error "Unknown image proxy type: \"$proxy_type\""
+            return 1
+            ;;
+        esac
+        loaderrunner_run_with_proxy \
+            "$proxy_curl_str" \
+            "$odir/$fname_run" \
+            "$odir/$fname_report" \
+            "$odir/$fname_run_log" \
+            "$odir" || return 1
+    else
+        loaderrunner_run_plain \
+            "$odir/$fname_run" \
+            "$odir/$fname_report" \
+            "$odir/$fname_run_log" \
+            "$odir" || return 1
+    fi
+    return 0
+}
+
+loaderrunner_run_with_proxy()
+{
+    local proxy="$1"
+    local ifname_run="$2"
+    local ifname_report="$3"
+    local ofname_log="$4"
+    local odir="$5"
+
+    echo "loaderrunner_run_with_proxy() $proxy $ifname_run $ifname_report $ofname_log $odir"
+    return 0
+}
+
+loaderrunner_run_plain()
 {
     local ifname_run="$1"
     local ifname_report="$2"
