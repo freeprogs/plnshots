@@ -2122,8 +2122,83 @@ loaderrunner_run_with_proxy()
     local ifname_report="$3"
     local ofname_log="$4"
     local odir="$5"
+    local tfname_result="runresult.tmp"
+    local tfname_reload="runreload.tmp"
 
-    echo "loaderrunner_run_with_proxy() $proxy $ifname_run $ifname_report $ofname_log $odir"
+    lowloaderproxy_load_run_list \
+        "$ifname_run" \
+        "$ifname_report" \
+        "$ofname_log" \
+        "$odir/$tfname_result" || {
+        error "Can't load with proxy files from run list."
+        return 1
+    }
+    if lowloaderproxy_make_reload_list \
+           "$odir/$tfname_result" \
+           "$odir/$tfname_reload"; then
+        lowloaderproxy_load_reload_list \
+            "$odir/$tfname_reload" \
+            "$ofname_log" || {
+            error "Can't reload with proxy files from reload list."
+            return 1
+        }
+        lowloaderproxy_clean_reloaded_files "$odir/$tfname_reload" || {
+            error "Can't clean reloaded files from run list."
+            return 1
+        }
+    fi
+    lowloaderproxy_clean_all \
+        "$odir/$tfname_result" \
+        "$odir/$tfname_reload" || {
+        error "Can't clean temporary files after loading."
+        return 1
+    }
+    return 0
+}
+
+lowloaderproxy_load_run_list()
+{
+    local ifname_run="$1"
+    local ifname_report="$2"
+    local ofname_log="$3"
+    local ofname_result="$4"
+
+    echo "lowloaderproxy_load_run_list() $ifname_run $ifname_report $ofname_log $ofname_result"
+    return 0
+}
+
+lowloaderproxy_make_reload_list()
+{
+    local ifname_result="$1"
+    local ofname_reload="$2"
+
+    echo "lowloaderproxy_make_reload_list() $ifname_result $ofname_reload"
+    return 0
+}
+
+lowloaderproxy_load_reload_list()
+{
+    local ifname_reload="$1"
+    local ofname_log="$2"
+
+    echo "lowloaderproxy_load_reload_list() $ifname_reload $ofname_log"
+    return 0
+}
+
+lowloaderproxy_clean_all()
+{
+    local fname_result="$1"
+    local fname_reload="$2"
+
+    echo "lowloaderproxy_clean_all() $fname_result $fname_reload"
+    return 0
+}
+
+lowloaderproxy_clean_reloaded_files()
+{
+    local ifname_reload="$1"
+
+    echo "lowloaderproxy_clean_reloaded_files() $ifname_reload"
     return 0
 }
 
