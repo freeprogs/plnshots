@@ -2238,8 +2238,19 @@ lowloaderproxy_load_reload_list()
 {
     local ifname_reload="$1"
     local ofname_log="$2"
+    local reload_totalurls
 
-    echo "lowloaderproxy_load_reload_list() $ifname_reload $ofname_log"
+    reload_totalurls="$(cat "$ifname_reload" | reloadhand_get_total_urls)"
+    msg "$(echo "$reload_totalurls" | reporter_wrap_reload_total_urls)"
+    cat "$ifname_reload" | while read line; do
+        msg "$(echo "$line" | reporter_wrap_proxy_reload_imageload_start)"
+        if eval "$line"; then
+            :
+        else
+            msg "$(echo "$line" | reporter_wrap_proxy_reload_imageload_broken_url)"
+            log "$ofname_log" "$(echo "$line" | logger_wrap_proxy_reload_broken_url)"
+        fi
+    done
     return 0
 }
 
@@ -2787,6 +2798,46 @@ reporter_wrap_reload_imageload_start()
 '
 }
 
+reporter_wrap_proxy_reload_imageload_start()
+{
+    local maxdname=15
+    local maxfname=40
+
+    awk -v maxdname="$maxdname" \
+        -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    dir = arr[1]
+    if (length(dir) > maxdname) {
+        dir = substr(arr[1], 1, maxdname - 2) ".."
+    }
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Reloading", dir, file " ..."
+}
+'
+}
+
+reporter_wrap_proxy_reload_imageload_broken_url()
+{
+    local maxfname=40
+
+    awk -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Unable to reload", file
+}
+'
+}
+
 reporter_wrap_reload_imageload_broken_url()
 {
     local maxfname=40
@@ -2827,6 +2878,11 @@ logger_wrap_proxy_broken_url()
 }
 
 logger_wrap_reload_broken_url()
+{
+    awk '{ print "Found reloaded broken [" $NF "] at [" $(NF-2) "]"; }'
+}
+
+logger_wrap_proxy_reload_broken_url()
 {
     awk '{ print "Found reloaded broken [" $NF "] at [" $(NF-2) "]"; }'
 }
