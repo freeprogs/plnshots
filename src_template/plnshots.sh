@@ -2267,8 +2267,19 @@ lowloaderproxy_clean_all()
 lowloaderproxy_clean_reloaded_files()
 {
     local ifname_reload="$1"
+    local reload_dir
+    local reload_file
+    local load_dir
+    local load_file
+    local line
 
-    echo "lowloaderproxy_clean_reloaded_files() $ifname_reload"
+    cat "$ifname_reload" | while read line; do
+        reload_dir="$(echo "$line" | reloadlinehand_proxy_get_dir)"
+        reload_file="$(echo "$line" | reloadlinehand_proxy_get_file)"
+        load_file="$(sitefpo_make_load_file "$reload_file")"
+        rm -f "$reload_dir/$load_file" || return 1
+        mv "$reload_dir/$reload_file" "$reload_dir/$load_file" || return 1
+    done
     return 0
 }
 
@@ -2608,11 +2619,31 @@ reloadlinehand_get_dir()
 '
 }
 
+reloadlinehand_proxy_get_dir()
+{
+    awk '
+{
+    split($7, arr, "/")
+    print arr[1]
+}
+'
+}
+
 reloadlinehand_get_file()
 {
     awk '
 {
     split($5, arr, "/")
+    print arr[2]
+}
+'
+}
+
+reloadlinehand_proxy_get_file()
+{
+    awk '
+{
+    split($7, arr, "/")
     print arr[2]
 }
 '
