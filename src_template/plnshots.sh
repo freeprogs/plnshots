@@ -2826,6 +2826,11 @@ logger_wrap_proxy_broken_url()
     awk '{ print "Found broken [" $NF "] at [" $(NF-2) "]"; }'
 }
 
+logger_wrap_reload_broken_url()
+{
+    awk '{ print "Found reloaded broken [" $NF "] at [" $(NF-2) "]"; }'
+}
+
 main()
 {
     case $# in
