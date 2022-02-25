@@ -2162,8 +2162,34 @@ lowloaderproxy_load_run_list()
     local ifname_report="$2"
     local ofname_log="$3"
     local ofname_result="$4"
+    local line
+    local resultline
+    local report_numoftrees
+    local report_treeurls
+    local report_totalurls
 
-    echo "lowloaderproxy_load_run_list() $ifname_run $ifname_report $ofname_log $ofname_result"
+    report_numoftrees="$(cat "$ifname_report" | reporthand_get_num_of_trees)"
+    report_totalurls="$(cat "$ifname_report" | reporthand_get_total_urls)"
+    msg "$(echo "$report_numoftrees $report_totalurls" | reporter_wrap_numoftrees_totalurls)"
+    for i in $(seq 1 "$report_numoftrees"); do
+        report_treeurls="$(cat "$ifname_report" | reporthand_get_tree_urls $i)"
+        msg "$(echo "$i $report_treeurls" | reporter_wrap_treenumber_treeurls)"
+    done
+
+    echo -n >"$ofname_result"
+
+    cat "$ifname_run" | while read line; do
+        msg "$(echo "$line" | reporter_wrap_proxy_imageload_start)"
+        if eval "$line"; then
+            resultline="$(echo "$line" | resulthand_wrap_proxy_ok_command_to_result)"
+            echo "$resultline" >>"$ofname_result"
+        else
+            resultline="$(echo "$line" | resulthand_wrap_proxy_fail_command_to_result)"
+            echo "$resultline" >>"$ofname_result"
+            msg "$(echo "$line" | reporter_wrap_proxy_imageload_broken_url)"
+            log "$ofname_log" "$(echo "$line" | logger_wrap_proxy_broken_url)"
+        fi
+    done
     return 0
 }
 
@@ -2295,6 +2321,22 @@ resulthand_wrap_ok_command_to_result()
 '
 }
 
+resulthand_wrap_proxy_ok_command_to_result()
+{
+    awk '
+{
+    if ($1 == "curl" && $5 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+        site = "fpo"
+    }
+    else {
+        site = "unknown"
+    }
+    split($7, arr, "/")
+    print "loaded", site, arr[1], arr[2], $5
+}
+'
+}
+
 resulthand_wrap_fail_command_to_result()
 {
     awk '
@@ -2307,6 +2349,22 @@ resulthand_wrap_fail_command_to_result()
     }
     split($5, arr, "/")
     print "broken", site, arr[1], arr[2], $3
+}
+'
+}
+
+resulthand_wrap_proxy_fail_command_to_result()
+{
+    awk '
+{
+    if ($1 == "curl" && $5 ~ /^https?:\/\/[^/]+\.fastpic\.org\//) {
+        site = "fpo"
+    }
+    else {
+        site = "unknown"
+    }
+    split($7, arr, "/")
+    print "broken", site, arr[1], arr[2], $5
 }
 '
 }
@@ -2578,7 +2636,47 @@ reporter_wrap_imageload_start()
 '
 }
 
+reporter_wrap_proxy_imageload_start()
+{
+    local maxdname=15
+    local maxfname=40
+
+    awk -v maxdname="$maxdname" \
+        -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    dir = arr[1]
+    if (length(dir) > maxdname) {
+        dir = substr(arr[1], 1, maxdname - 2) ".."
+    }
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Loading", dir, file " ..."
+}
+'
+}
+
 reporter_wrap_imageload_broken_url()
+{
+    local maxfname=40
+
+    awk -v maxfname="$maxfname" '
+{
+    dirfile = $NF
+    split(dirfile, arr, "/")
+    file = arr[2]
+    if (length(file) > maxfname) {
+        file = substr(arr[2], 1, maxfname - 2) ".."
+    }
+    print "Unable to load", file
+}
+'
+}
+
+reporter_wrap_proxy_imageload_broken_url()
 {
     local maxfname=40
 
@@ -2675,6 +2773,11 @@ reporter_wrap_reload_total_urls()
 }
 
 logger_wrap_broken_url()
+{
+    awk '{ print "Found broken [" $NF "] at [" $(NF-2) "]"; }'
+}
+
+logger_wrap_proxy_broken_url()
 {
     awk '{ print "Found broken [" $NF "] at [" $(NF-2) "]"; }'
 }
