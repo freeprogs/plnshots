@@ -2106,7 +2106,7 @@ loader_run()
             "$odir/$fname_run_log" \
             "$odir" || return 1
     else
-        loaderrunner_run_plain \
+        loaderrunner_run \
             "$odir/$fname_run" \
             "$odir/$fname_report" \
             "$odir/$fname_run_log" \
@@ -2202,7 +2202,7 @@ lowloaderproxy_clean_reloaded_files()
     return 0
 }
 
-loaderrunner_run_plain()
+loaderrunner_run()
 {
     local ifname_run="$1"
     local ifname_report="$2"
