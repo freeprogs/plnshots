@@ -2259,7 +2259,8 @@ lowloaderproxy_clean_all()
     local fname_result="$1"
     local fname_reload="$2"
 
-    echo "lowloaderproxy_clean_all() $fname_result $fname_reload"
+    rm -f "$fname_result" \
+       "$fname_reload" || return 1
     return 0
 }
 
