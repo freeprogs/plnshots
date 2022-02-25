@@ -2134,6 +2134,7 @@ loaderrunner_run_with_proxy()
         return 1
     }
     if lowloaderproxy_make_reload_list \
+           "$proxy" \
            "$odir/$tfname_result" \
            "$odir/$tfname_reload"; then
         lowloaderproxy_load_reload_list \
@@ -2195,10 +2196,41 @@ lowloaderproxy_load_run_list()
 
 lowloaderproxy_make_reload_list()
 {
-    local ifname_result="$1"
-    local ofname_reload="$2"
+    local proxy="$1"
+    local ifname_result="$2"
+    local ofname_reload="$3"
+    local line
+    local result_status
+    local result_site
+    local result_file
+    local result_dir
+    local result_url
+    local reload_file
+    local reload_dir
+    local reload_url
 
-    echo "lowloaderproxy_make_reload_list() $ifname_result $ofname_reload"
+    echo -n >"$ofname_reload"
+
+    cat "$ifname_result" | while read line; do
+        result_status=$(echo "$line" | resultlinehand_getfield "1")
+        result_site=$(echo "$line" | resultlinehand_getfield "2")
+        result_dir=$(echo "$line" | resultlinehand_getfield "3")
+        result_file=$(echo "$line" | resultlinehand_getfield "4")
+        result_url=$(echo "$line" | resultlinehand_getfield "5")
+        [ "$result_status" = "loaded" ] && {
+            [ "$result_site" = "fpo" ] && {
+                sitefpo_file_needs_reload "$result_dir/$result_file" && {
+                    reload_file="$(sitefpo_make_reload_file "$result_file")"
+                    reload_dir="$(sitefpo_make_reload_dir "$result_dir")"
+                    reload_url="$(sitefpo_make_reload_url "$result_dir/$result_file")"
+                    reloadline="$(echo "$reload_file $reload_dir $reload_url" | \
+                        sitefpo_wrap_to_reloadline_with_proxy "$proxy")"
+                    echo "$reloadline" >>"$ofname_reload"
+                }
+            }
+        }
+    done
+    [ -n "$(head -c 1 "$ofname_reload")" ] || return 1
     return 0
 }
 
@@ -2453,6 +2485,18 @@ sitefpo_make_reload_url()
 sitefpo_wrap_to_reloadline()
 {
     awk '{ printf "curl -s \"%s\" -o %s/%s\n", $3, $2, $1; }'
+}
+
+sitefpo_wrap_to_reloadline_with_proxy()
+{
+    local proxy="$1"
+
+    awk -v proxystr="$proxy" '
+{
+    printf "curl -s --preproxy \"%s\" \"%s\" -o %s/%s\n",
+        proxystr, $3, $2, $1
+}
+'
 }
 
 sitefpo_make_load_file()
