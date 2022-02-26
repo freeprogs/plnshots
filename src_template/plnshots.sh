@@ -2508,7 +2508,7 @@ sitefpo_make_reload_url()
 
 sitefpo_wrap_to_reloadline()
 {
-    awk '{ printf "curl -s \"%s\" -o %s/%s\n", $3, $2, $1; }'
+    awk '{ printf "curl -s %s -o %s/%s\n", $3, $2, $1; }'
 }
 
 sitefpo_wrap_to_reloadline_with_proxy()
