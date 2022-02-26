@@ -2517,7 +2517,7 @@ sitefpo_wrap_to_reloadline_with_proxy()
 
     awk -v proxystr="$proxy" '
 {
-    printf "curl -s --preproxy \"%s\" \"%s\" -o %s/%s\n",
+    printf "curl -s --preproxy \"%s\" %s -o %s/%s\n",
         proxystr, $3, $2, $1
 }
 '
