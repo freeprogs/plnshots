@@ -2603,6 +2603,7 @@ lowloader_clean_reloaded_files()
         reload_dir="$(echo "$line" | reloadlinehand_get_dir)"
         reload_file="$(echo "$line" | reloadlinehand_get_file)"
         load_file="$(sitefpo_make_load_file "$reload_file")"
+        [ -f "$reload_dir/$reload_file" ] || return 1
         rm -f "$reload_dir/$load_file" || return 1
         mv "$reload_dir/$reload_file" "$reload_dir/$load_file" || return 1
     done
