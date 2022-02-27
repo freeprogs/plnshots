@@ -2903,14 +2903,22 @@ reporter_wrap_reload_total_urls()
 
 logger_wrap_broken_url()
 {
-    awk '{ print "Found broken [" $NF "] at [" $(NF-2) "]"; }'
+    local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
+
+    awk -v datetime="$datetime" '
+{
+    print datetime, "Found broken [" $NF "] at [" $(NF-2) "]"
+}
+'
 }
 
 logger_wrap_proxy_broken_url()
 {
-    awk '
+    local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
+
+    awk -v datetime="$datetime" '
 {
-    print "Found broken [" \
+    print datetime, "Found broken [" \
         $NF "] at [" \
         $(NF-2) \
         "] with proxy [" \
@@ -2922,14 +2930,22 @@ logger_wrap_proxy_broken_url()
 
 logger_wrap_reload_broken_url()
 {
-    awk '{ print "Found reload broken [" $NF "] at [" $(NF-2) "]"; }'
+    local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
+
+    awk -v datetime="$datetime" '
+{
+    print datetime, "Found reload broken [" $NF "] at [" $(NF-2) "]"
+}
+'
 }
 
 logger_wrap_proxy_reload_broken_url()
 {
-    awk '
+    local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
+
+    awk -v datetime="$datetime" '
 {
-    print "Found reload broken [" \
+    print datetime, "Found reload broken [" \
         $NF "] at [" \
         $(NF-2) \
         "] with proxy [" \
