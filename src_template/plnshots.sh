@@ -2927,7 +2927,16 @@ logger_wrap_reload_broken_url()
 
 logger_wrap_proxy_reload_broken_url()
 {
-    awk '{ print "Found reload broken [" $NF "] at [" $(NF-2) "]"; }'
+    awk '
+{
+    print "Found reload broken [" \
+        $NF "] at [" \
+        $(NF-2) \
+        "] with proxy [" \
+        $(NF-3) \
+        "]"
+}
+'
 }
 
 main()
