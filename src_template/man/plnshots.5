@@ -41,21 +41,150 @@ edited by the user to override key-value pairs.
 These keys are available:
 
 .TP
-.B key
-Key description.
+.B topic_proxy
+Set a proxy for the topic page downloading.
 .br
-By deafult it is
-.I default value
+Values are
+.B on
+or
+.B off
+.br
+By default it is off.
+
+.TP
+.B topic_proxy_host
+Set the proxy host for the topic page downloading.
+.br
+Value is a domain name or an ip-address.
+.br
+By default it is empty.
+
+.TP
+.B topic_proxy_port
+Set the proxy port for the topic page downloading.
+.br
+Value is a decimal number.
+.br
+By default it is empty.
+
+.TP
+.B topic_proxy_type
+Set the proxy type for the topic page downloading.
+.br
+Values are
+.B socks4
+or
+.B socks5
+.br
+By default it is empty.
+
+.TP
+.B topic_proxy_user
+Set the proxy user for the topic page downloading.
+.br
+The type of proxy should be socks5.
+.br
+Value is a string.
+.br
+By default it is empty.
+
+.TP
+.B topic_proxy_password
+Set the proxy password for the topic page downloading.
+.br
+The type of proxy should be socks5.
+.br
+Value is a string.
+.br
+By default it is empty.
+
+.TP
+.B image_proxy
+Set a proxy for the image file downloading.
+.br
+Values are
+.B on
+or
+.B off
+.br
+By default it is off.
+
+.TP
+.B image_proxy_host
+Set the proxy host for the image file downloading.
+.br
+Value is a domain name or an ip-address.
+.br
+By default it is empty.
+
+.TP
+.B image_proxy_port
+Set the proxy port for the image file downloading.
+.br
+Value is a decimal number.
+.br
+By default it is empty.
+
+.TP
+.B image_proxy_type
+Set the proxy type for the image file downloading.
+.br
+Values are
+.B socks4
+or
+.B socks5
+.br
+By default it is empty.
+
+.TP
+.B image_proxy_user
+Set the proxy user for the image file downloading.
+.br
+The type of proxy should be socks5.
+.br
+Value is a string.
+.br
+By default it is empty.
+
+.TP
+.B image_proxy_password
+Set the proxy password for the image file downloading.
+.br
+The type of proxy should be socks5.
+.br
+Value is a string.
+.br
+By default it is empty.
 
 .SH EXAMPLE
 
 .PP
-Example description.
+In this example we set configuration as different proxies for the topic page
+and for the each image file.
 
 .nf
-    key1=value1
-    key2=value2
+    topic_proxy=on
+    topic_proxy_host=somehost
+    topic_proxy_port=1080
+    topic_proxy_type=socks4
+    topic_proxy_user=
+    topic_proxy_password=
+
+    image_proxy=on
+    image_proxy_host=123.456.789.001
+    image_proxy_port=8080
+    image_proxy_type=socks5
+    image_proxy_user=john
+    image_proxy_password=smith
 .fi
+
+.PP
+After that the program will download topic pages through a sock4 proxy.
+.br
+And each file will be downloaded through a socks5 proxy with a user and a password.
+
+.PP
+You can set off any proxy or both of them.
 
 .SH AUTHOR
 
