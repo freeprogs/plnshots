@@ -2720,7 +2720,7 @@ reporter_wrap_imageload_start()
     if (length(file) > maxfname) {
         file = substr(arr[2], 1, maxfname - 2) ".."
     }
-    print "Loading", dir, file " ..."
+    print "---", "Loading", dir, file " ..."
 }
 '
 }
@@ -2743,7 +2743,7 @@ reporter_wrap_proxy_imageload_start()
     if (length(file) > maxfname) {
         file = substr(arr[2], 1, maxfname - 2) ".."
     }
-    print "Loading", dir, file " ..."
+    print "-|-", "Loading", dir, file " ..."
 }
 '
 }
@@ -2827,7 +2827,7 @@ reporter_wrap_reload_imageload_start()
     if (length(file) > maxfname) {
         file = substr(arr[2], 1, maxfname - 2) ".."
     }
-    print "Reloading", dir, file " ..."
+    print "---", "Reloading", dir, file " ..."
 }
 '
 }
@@ -2850,7 +2850,7 @@ reporter_wrap_proxy_reload_imageload_start()
     if (length(file) > maxfname) {
         file = substr(arr[2], 1, maxfname - 2) ".."
     }
-    print "Reloading", dir, file " ..."
+    print "-|-", "Reloading", dir, file " ..."
 }
 '
 }
