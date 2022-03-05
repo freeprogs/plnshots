@@ -3,13 +3,27 @@
 #+TODO: BUG(b!) | FIXED(f) REJECT(r)
 #+PRIORITIES: A F C
 #+TAGS: current(c) testing(t)
-#+CONSTANTS: last_issue_id=0
+#+CONSTANTS: last_issue_id=1
 
 * Задачи
   :PROPERTIES:
   :COLUMNS:  %3issue_id(ID) %4issue_type(TYPE) %TODO %40ITEM %SCHEDULED %DEADLINE %1PRIORITY
   :ARCHIVE:  tasks_archive.org::* Архив задач
   :END:
+
+** TASK Добавить информацию о скриншоте с ошибкой 404
+   :PROPERTIES:
+   :issue_id: 1
+   :issue_type: task
+   :END:
+
+   [2022-03-05 Сб]
+
+   При закачивании скриншота на его месте может быть какая-то
+   HTTP-ошибка. Нужно сделать обработчик ошибки 404. Также бывает ещё
+   перезакачивание, в котором тоже нужно обрабатывать аналогичный
+   результат загрузки. Если скриншот не закачался правильно, нужно
+   сообщить об этом в лог-файле.
 
 
 * Баги
