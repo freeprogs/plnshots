@@ -16,6 +16,7 @@ README
    3.2 How to uninstall the program
  4. Operating
    4.1 Set configuration file
+   4.1.1 Set fields and values
    4.2 Run program
  5. Files
  6. Copyright
@@ -98,6 +99,106 @@ it for more information).
 
 The configuration file in the user's home directory overrides fields
 from the configuration file from the system directory.
+
+4.1.1 Set fields and values
+
+How to set fields in the configuration file you can know from comments
+in the file.
+
+Every field has form:
+
+   `field_name=field_value'
+
+There are available fields:
+
+topic_proxy
+   Set a proxy for the topic page downloading.
+   Values are on or off
+   By default it is off.
+
+topic_proxy_host
+   Set the proxy host for the topic page downloading.
+   Value is a domain name or an ip-address.
+   By default it is empty.
+
+topic_proxy_port
+   Set the proxy port for the topic page downloading.
+   Value is a decimal number.
+   By default it is empty.
+
+topic_proxy_type
+   Set the proxy type for the topic page downloading.
+   Values are socks4 or socks5
+   By default it is empty.
+
+topic_proxy_user
+   Set the proxy user for the topic page downloading.
+   The type of proxy should be socks5.
+   Value is a string.
+   By default it is empty.
+
+topic_proxy_password
+   Set the proxy password for the topic page downloading.
+   The type of proxy should be socks5.
+   Value is a string.
+   By default it is empty.
+
+image_proxy
+   Set a proxy for the image file downloading.
+   Values are on or off
+   By default it is off.
+
+image_proxy_host
+   Set the proxy host for the image file downloading.
+   Value is a domain name or an ip-address.
+   By default it is empty.
+
+image_proxy_port
+   Set the proxy port for the image file downloading.
+   Value is a decimal number.
+   By default it is empty.
+
+image_proxy_type
+   Set the proxy type for the image file downloading.
+   Values are socks4 or socks5
+   By default it is empty.
+
+image_proxy_user
+   Set the proxy user for the image file downloading.
+   The type of proxy should be socks5.
+   Value is a string.
+   By default it is empty.
+
+image_proxy_password
+   Set the proxy password for the image file downloading.
+   The type of proxy should be socks5.
+   Value is a string.
+   By default it is empty.
+
+EXAMPLE
+
+In this example we set configuration as different proxies for the
+topic page and for the each image file.
+
+    topic_proxy=on
+    topic_proxy_host=somehost
+    topic_proxy_port=1080
+    topic_proxy_type=socks4
+    topic_proxy_user=
+    topic_proxy_password=
+
+    image_proxy=on
+    image_proxy_host=123.456.789.001
+    image_proxy_port=8080
+    image_proxy_type=socks5
+    image_proxy_user=john
+    image_proxy_password=smith
+
+After that the program will download topic pages through a sock4 proxy.
+And each file will be downloaded through a socks5 proxy with a user and
+a password.
+
+You can set off any proxy or both of them.
 
 4.2 Run program
 
