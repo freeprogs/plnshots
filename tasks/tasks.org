@@ -1,0 +1,26 @@
+#+STARTUP: content logdone hideblocks
+#+TODO: TASK(t!) | DONE(d) CANCEL(c)
+#+TODO: BUG(b!) | FIXED(f) REJECT(r)
+#+PRIORITIES: A F C
+#+TAGS: current(c) testing(t)
+#+CONSTANTS: last_issue_id=0
+
+* Задачи
+  :PROPERTIES:
+  :COLUMNS:  %3issue_id(ID) %4issue_type(TYPE) %TODO %40ITEM %SCHEDULED %DEADLINE %1PRIORITY
+  :ARCHIVE:  tasks_archive.org::* Архив задач
+  :END:
+
+
+* Баги
+  :PROPERTIES:
+  :COLUMNS:  %3issue_id(ID) %4issue_type(TYPE) %TODO %40ITEM %SCHEDULED %DEADLINE %1PRIORITY
+  :ARCHIVE:  tasks_archive.org::* Архив багов
+  :END:
+
+
+* Окружение проекта
+  :PROPERTIES:
+  :COLUMNS:  %3issue_id(ID) %4issue_type(TYPE) %TODO %40ITEM %SCHEDULED %DEADLINE %1PRIORITY
+  :ARCHIVE:  tasks_archive.org::* Архив окружения
+  :END:

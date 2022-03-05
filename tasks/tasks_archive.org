@@ -1,0 +1,9 @@
+#+STARTUP: content hideblocks
+#+TODO: TASK(t!) | DONE(d) CANCEL(c)
+#+TODO: BUG(b!) | FIXED(f) REJECT(r)
+
+* Архив задач
+
+* Архив багов
+
+* Архив окружения
