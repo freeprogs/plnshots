@@ -14,12 +14,6 @@ __This project is under construction:__
 
   Usually, there are over three active sites with screenshots.
 
-- It connects to the topic page through the local tor daemon on localhost:9050 .
-
-  You can edit this command in the script to switch off the tor
-  connection, but I am going to add the option for tor connection to
-  the config file of the program.
-
 - The code is not commented at all.
 
 I made this script in period started at 10 Dec 2021 till 16 Jan 2022. So in the next period I will complete the first version and remove the "under construction" tag.
@@ -32,14 +26,13 @@ __How to build and install the program__
 
 This program has tested on environment configuration
 ```
-1)
-  Linux Fedora 26
-  Python 3.6.1
-  python3-lxml 3.7.2
-  GNU bash 4.4.12
-  GNU awk 4.1.4
-  GNU sed 4.4
-  curl 7.53.1
+- Linux Fedora 26
+- Python 3.6.1
+- python3-lxml 3.7.2
+- GNU bash 4.4.12
+- GNU awk 4.1.4
+- GNU sed 4.4
+- curl 7.53.1
 ```
 
 ### Building
@@ -72,7 +65,7 @@ $ sudo make uninstall
 In general form:
 
 ```sh
-$ plnshots.sh topic_url output_dir
+$ plnshots topic_url output_dir
 ```
 
 ---
@@ -86,22 +79,22 @@ __How to run and use it:__
 3. Then run it
 
 ``` sh
-$ plnshots.sh https://forum_topic_url directory_to_save
+$ plnshots https://forum_topic_url directory_to_save
 ```
 
 You will see something like that
 
 ```
 
-$ ./plnshots.sh https://pornolab.net/forum/viewtopic.php?t=12345 girls12345
-Try `plnshots.sh --help' for more information.
-plnshots.sh: Loading https://pornolab.net/forum/viewtopic.php?t=12345 ...
-plnshots.sh: Ok https://pornolab.net/forum/viewtopic.php?t=12345 loaded.
-plnshots.sh: Found 1 tree with total 48 urls.
-plnshots.sh: Tree #1 has 48 urls.
-plnshots.sh: Loading girls12345 001_001_Girls_Allie_wmv.jpg ...
-plnshots.sh: Loading girls12345 001_002_Girls_Amanda_wmv.jpg ...
-plnshots.sh: Loading girls12345 001_003_Girls_Audrey_wmv.jpg ...
+$ ./plnshots https://pornolab.net/forum/viewtopic.php?t=12345 girls12345
+Try `plnshots --help' for more information.
+plnshots: Loading https://pornolab.net/forum/viewtopic.php?t=12345 ...
+plnshots: Ok https://pornolab.net/forum/viewtopic.php?t=12345 loaded.
+plnshots: Found 1 tree with total 48 urls.
+plnshots: Tree #1 has 48 urls.
+plnshots: Loading girls12345 001_001_Girls_Allie_wmv.jpg ...
+plnshots: Loading girls12345 001_002_Girls_Amanda_wmv.jpg ...
+plnshots: Loading girls12345 001_003_Girls_Audrey_wmv.jpg ...
 ...
 
 ```
