@@ -2,7 +2,7 @@
 *.template
 !makefile.template
 *.patch
-tasks
+tmp/tasks
 cmd.txt
 empty.html
 
