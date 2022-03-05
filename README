@@ -202,13 +202,13 @@ You can set off any proxy or both of them.
 
 4.2 Run program
 
-   `plnshots.sh topic_url [ output_directory ]'
+   `plnshots topic_url [ output_directory ]'
 
 For example:
 
 You run
 
-   `plnshots.sh https://pornolab.net/forum/viewtopic.php?t=12345 dir12345'
+   `plnshots https://pornolab.net/forum/viewtopic.php?t=12345 dir12345'
 
 Then in directory dir12345 you will see downloaded screenshots.
 
@@ -220,7 +220,7 @@ downloaded to the current directory.
 
 After installation you have files:
 
-   `/usr/local/bin/plnshots.sh'
+   `/usr/local/bin/plnshots'
 
 The main program which loads screenshots from the first post of a
 given topic on site https://pornolab.net and save the screenshots to the
