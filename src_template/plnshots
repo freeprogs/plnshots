@@ -553,6 +553,8 @@ configfile_get_image_proxy_host()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy port
+# configfile_has_image_proxy_port(configfile)
 configfile_has_image_proxy_port()
 {
     local ifname="$1"
