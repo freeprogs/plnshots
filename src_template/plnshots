@@ -497,6 +497,9 @@ configfile_has_topic_proxy_password()
     return 0
 }
 
+# Get the topic proxy password field from the config file and print the
+# value to stdout
+# configfile_get_topic_proxy_password(configfile)
 configfile_get_topic_proxy_password()
 {
     local ifname="$1"
