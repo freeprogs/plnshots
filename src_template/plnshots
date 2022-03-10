@@ -387,6 +387,9 @@ configfile_has_topic_proxy()
     return 0
 }
 
+# Get the topic proxy field from the config file and print the value
+# to stdout
+# configfile_get_topic_proxy(configfile)
 configfile_get_topic_proxy()
 {
     local ifname="$1"
