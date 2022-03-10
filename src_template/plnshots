@@ -421,6 +421,8 @@ configfile_get_topic_proxy_host()
     echo "$out"
 }
 
+# Test whether the config file has field for topic proxy port
+# configfile_has_topic_proxy_port(configfile)
 configfile_has_topic_proxy_port()
 {
     local ifname="$1"
