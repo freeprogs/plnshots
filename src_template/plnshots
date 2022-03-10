@@ -563,6 +563,9 @@ configfile_has_image_proxy_port()
     return 0
 }
 
+# Get the image proxy port field from the config file and print the
+# value to stdout
+# configfile_get_image_proxy_port(configfile)
 configfile_get_image_proxy_port()
 {
     local ifname="$1"
