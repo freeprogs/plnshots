@@ -453,6 +453,9 @@ configfile_has_topic_proxy_type()
     return 0
 }
 
+# Get the topic proxy type field from the config file and print the
+# value to stdout
+# configfile_get_topic_proxy_type(configfile)
 configfile_get_topic_proxy_type()
 {
     local ifname="$1"
