@@ -36,7 +36,7 @@ msg()
     echo "$progname: $1"
 }
 
-# Print an message to a log file
+# Print a message to a log file
 # log(file, str)
 log()
 {
