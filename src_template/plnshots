@@ -607,6 +607,9 @@ configfile_has_image_proxy_user()
     return 0
 }
 
+# Get the image proxy user field from the config file and print the
+# value to stdout
+# configfile_get_image_proxy_user(configfile)
 configfile_get_image_proxy_user()
 {
     local ifname="$1"
