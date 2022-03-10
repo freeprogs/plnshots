@@ -225,6 +225,9 @@ multiconfigfiles_get_topic_proxy_type()
     echo "$out"
 }
 
+# Get the topic proxy user field value from config files list and
+# print the last value to stdout
+# multiconfigfiles_get_topic_proxy_user(configfile1[, ..., configfileN])
 multiconfigfiles_get_topic_proxy_user()
 {
     local fname
