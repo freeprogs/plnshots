@@ -409,6 +409,9 @@ configfile_has_topic_proxy_host()
     return 0
 }
 
+# Get the topic proxy host field from the config file and print the
+# value to stdout
+# configfile_get_topic_proxy_host(configfile)
 configfile_get_topic_proxy_host()
 {
     local ifname="$1"
