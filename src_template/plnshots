@@ -641,6 +641,8 @@ configfile_get_image_proxy_password()
     echo "$out"
 }
 
+# Test whether the config file has a field with the given name
+# rawconfigfile_has_value(configfile, fieldname)
 rawconfigfile_has_value()
 {
     local ifname="$1"
