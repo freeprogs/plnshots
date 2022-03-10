@@ -575,6 +575,8 @@ configfile_get_image_proxy_port()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy type
+# configfile_has_image_proxy_type(configfile)
 configfile_has_image_proxy_type()
 {
     local ifname="$1"
