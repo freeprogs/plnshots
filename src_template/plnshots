@@ -629,6 +629,9 @@ configfile_has_image_proxy_password()
     return 0
 }
 
+# Get the image proxy password field from the config file and print the
+# value to stdout
+# configfile_get_image_proxy_password(configfile)
 configfile_get_image_proxy_password()
 {
     local ifname="$1"
