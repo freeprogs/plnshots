@@ -487,6 +487,8 @@ configfile_get_topic_proxy_user()
     echo "$out"
 }
 
+# Test whether the config file has field for topic proxy password
+# configfile_has_topic_proxy_password(configfile)
 configfile_has_topic_proxy_password()
 {
     local ifname="$1"
