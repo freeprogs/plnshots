@@ -149,6 +149,9 @@ load_configuration()
     return 0
 }
 
+# Get the topic proxy field value from config files list and print
+# the last value to stdout
+# multiconfigfiles_get_topic_proxy(configfile1[, ..., configfileN])
 multiconfigfiles_get_topic_proxy()
 {
     local fname
