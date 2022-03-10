@@ -78,6 +78,9 @@ print_version()
     } >&2
 }
 
+# Load configuration from external form to internal form and put
+# internal configuration to the output directory
+# load_configuration(outdir)
 load_configuration()
 {
     local odir="$1"
