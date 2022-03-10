@@ -619,6 +619,8 @@ configfile_get_image_proxy_user()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy password
+# configfile_has_image_proxy_password(configfile)
 configfile_has_image_proxy_password()
 {
     local ifname="$1"
