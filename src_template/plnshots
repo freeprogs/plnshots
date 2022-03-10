@@ -666,6 +666,8 @@ rawconfigfile_get_value()
 '
 }
 
+# Wrap lines from stdin to topic proxy lines and print them to stdout
+# rawconfigfile_wrap_topic_proxy()
 rawconfigfile_wrap_topic_proxy()
 {
     awk '
