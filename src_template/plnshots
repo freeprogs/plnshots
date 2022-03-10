@@ -509,6 +509,8 @@ configfile_get_topic_proxy_password()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy
+# configfile_has_image_proxy(configfile)
 configfile_has_image_proxy()
 {
     local ifname="$1"
