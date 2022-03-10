@@ -67,7 +67,7 @@ help_info()
     } >&2
 }
 
-# Print program version information
+# Print program version information to stderr
 # print_version()
 print_version()
 {
