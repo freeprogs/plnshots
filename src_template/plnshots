@@ -187,6 +187,9 @@ multiconfigfiles_get_topic_proxy_host()
     echo "$out"
 }
 
+# Get the topic proxy port field value from config files list and
+# print the last value to stdout
+# multiconfigfiles_get_topic_proxy_port(configfile1[, ..., configfileN])
 multiconfigfiles_get_topic_proxy_port()
 {
     local fname
