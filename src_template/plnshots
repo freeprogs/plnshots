@@ -443,6 +443,8 @@ configfile_get_topic_proxy_port()
     echo "$out"
 }
 
+# Test whether the config file has field for topic proxy type
+# configfile_has_topic_proxy_type(configfile)
 configfile_has_topic_proxy_type()
 {
     local ifname="$1"
