@@ -263,6 +263,9 @@ multiconfigfiles_get_topic_proxy_password()
     echo "$out"
 }
 
+# Get the image proxy field value from config files list and print the
+# last value to stdout
+# multiconfigfiles_get_image_proxy(configfile1[, ..., configfileN])
 multiconfigfiles_get_image_proxy()
 {
     local fname
