@@ -29,7 +29,7 @@ error()
     echo "error: $progname: $1" >&2
 }
 
-# Print an message to stdout
+# Print a message to stdout
 # msg(str)
 msg()
 {
