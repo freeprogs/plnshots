@@ -652,6 +652,9 @@ rawconfigfile_has_value()
     return 0
 }
 
+# Get a field with the given name from stdin and print the value to
+# stdout
+# rawconfigfile_get_value(fieldname)
 rawconfigfile_get_value()
 {
     local keyname="$1"
