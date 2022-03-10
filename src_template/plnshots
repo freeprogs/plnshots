@@ -597,6 +597,8 @@ configfile_get_image_proxy_type()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy user
+# configfile_has_image_proxy_user(configfile)
 configfile_has_image_proxy_user()
 {
     local ifname="$1"
