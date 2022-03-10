@@ -683,6 +683,8 @@ END {
 '
 }
 
+# Wrap lines from stdin to image proxy lines and print them to stdout
+# rawconfigfile_wrap_image_proxy()
 rawconfigfile_wrap_image_proxy()
 {
     awk '
