@@ -206,6 +206,9 @@ multiconfigfiles_get_topic_proxy_port()
     echo "$out"
 }
 
+# Get the topic proxy type field value from config files list and
+# print the last value to stdout
+# multiconfigfiles_get_topic_proxy_type(configfile1[, ..., configfileN])
 multiconfigfiles_get_topic_proxy_type()
 {
     local fname
