@@ -531,6 +531,8 @@ configfile_get_image_proxy()
     echo "$out"
 }
 
+# Test whether the config file has field for image proxy host
+# configfile_has_image_proxy_host(configfile)
 configfile_has_image_proxy_host()
 {
     local ifname="$1"
