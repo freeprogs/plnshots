@@ -849,6 +849,9 @@ loaderconfig_has_topic_proxy()
     return 0
 }
 
+# Get the topic proxy host field from the config file and print the
+# value to stdout
+# loaderconfig_get_topic_proxy_host(configfile)
 loaderconfig_get_topic_proxy_host()
 {
     local ifname="$1"
