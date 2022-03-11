@@ -1123,6 +1123,9 @@ imageproxyhand_wrap_curl_string_socks4()
 '
 }
 
+# Wrap lines from stdin to image proxy socks5 curl lines and print
+# them to stdout
+# imageproxyhand_wrap_curl_string_socks5()
 imageproxyhand_wrap_curl_string_socks5()
 {
     awk '
