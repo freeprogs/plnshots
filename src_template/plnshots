@@ -1025,6 +1025,9 @@ $1 == "image" && $2 == "proxy" {
 ' "$ifname"
 }
 
+# Test whether image proxy fields host, port, type, user and password
+# all have valid values
+# loaderconfig_are_valid_image_proxy_data(host, port, type, user, password)
 loaderconfig_are_valid_image_proxy_data()
 {
     local proxy_host="$1"
