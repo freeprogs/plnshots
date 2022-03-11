@@ -700,6 +700,8 @@ END {
 '
 }
 
+# Load screenshots from the topic page to the output directory
+# load_screenshots(pageurl, outdir)
 load_screenshots()
 {
     local url="$1"
