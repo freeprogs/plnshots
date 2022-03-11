@@ -905,6 +905,9 @@ $1 == "topic" && $2 == "proxy" {
 ' "$ifname"
 }
 
+# Get the topic proxy password field from the config file and print the
+# value to stdout
+# loaderconfig_get_topic_proxy_password(configfile)
 loaderconfig_get_topic_proxy_password()
 {
     local ifname="$1"
