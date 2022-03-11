@@ -1093,6 +1093,8 @@ topicproxyhand_wrap_curl_string_socks5()
 '
 }
 
+# Detect the type of image proxy and print it to stdout
+# imageproxyhand_detect_type(proxytypestring)
 imageproxyhand_detect_type()
 {
     local proxy_type_str="$1"
