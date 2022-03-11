@@ -839,6 +839,8 @@ reporter_wrap_topic_proxy_on)"
     return 0
 }
 
+# Test whether the config file has field for enabled topic proxy
+# loaderconfig_has_topic_proxy(configfile)
 loaderconfig_has_topic_proxy()
 {
     local ifname="$1"
