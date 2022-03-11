@@ -877,6 +877,9 @@ $1 == "topic" && $2 == "proxy" {
 ' "$ifname"
 }
 
+# Get the topic proxy type field from the config file and print the
+# value to stdout
+# loaderconfig_get_topic_proxy_type(configfile)
 loaderconfig_get_topic_proxy_type()
 {
     local ifname="$1"
