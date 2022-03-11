@@ -1111,6 +1111,9 @@ imageproxyhand_detect_type()
     echo "$out"
 }
 
+# Wrap lines from stdin to image proxy socks4 curl lines and print
+# them to stdout
+# imageproxyhand_wrap_curl_string_socks4()
 imageproxyhand_wrap_curl_string_socks4()
 {
     awk '
