@@ -1069,6 +1069,9 @@ topicproxyhand_detect_type()
     echo "$out"
 }
 
+# Wrap lines from stdin to topic proxy socks4 curl lines and print
+# them to stdout
+# topicproxyhand_wrap_curl_string_socks4()
 topicproxyhand_wrap_curl_string_socks4()
 {
     awk '
