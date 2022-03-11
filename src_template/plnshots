@@ -997,6 +997,9 @@ $1 == "image" && $2 == "proxy" {
 ' "$ifname"
 }
 
+# Get the image proxy user field from the config file and print the
+# value to stdout
+# loaderconfig_get_image_proxy_user(configfile)
 loaderconfig_get_image_proxy_user()
 {
     local ifname="$1"
