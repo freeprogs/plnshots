@@ -863,6 +863,9 @@ $1 == "topic" && $2 == "proxy" {
 ' "$ifname"
 }
 
+# Get the topic proxy port field from the config file and print the
+# value to stdout
+# loaderconfig_get_topic_proxy_port(configfile)
 loaderconfig_get_topic_proxy_port()
 {
     local ifname="$1"
