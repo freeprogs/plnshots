@@ -945,6 +945,8 @@ loaderconfig_are_valid_topic_proxy_data()
     return 0
 }
 
+# Test whether the config file has field for enabled image proxy
+# loaderconfig_has_image_proxy(configfile)
 loaderconfig_has_image_proxy()
 {
     local ifname="$1"
