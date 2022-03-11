@@ -1081,6 +1081,9 @@ topicproxyhand_wrap_curl_string_socks4()
 '
 }
 
+# Wrap lines from stdin to topic proxy socks5 curl lines and print
+# them to stdout
+# topicproxyhand_wrap_curl_string_socks5()
 topicproxyhand_wrap_curl_string_socks5()
 {
     awk '
