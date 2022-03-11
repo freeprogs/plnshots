@@ -774,6 +774,8 @@ load_screenshots()
     return 0
 }
 
+# Use configuration to load the topic page to the topic page file
+# loader_load_topic_page(configfile, pageurl, pagefile)
 loader_load_topic_page()
 {
     local ifname_config="$1"
