@@ -1210,6 +1210,8 @@ loader_parse_topic_page()
     return 0
 }
 
+# Change encoding of the page file from cp1251 to utf8
+# pagehand_reencode_cp1251_utf8(pagefile, outfile)
 pagehand_reencode_cp1251_utf8()
 {
     local ifname="$1"
