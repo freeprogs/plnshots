@@ -1135,6 +1135,8 @@ imageproxyhand_wrap_curl_string_socks5()
 '
 }
 
+# Load topic page to an output file
+# rawloader_load_topic_page(url, outfile)
 rawloader_load_topic_page()
 {
     local url="$1"
