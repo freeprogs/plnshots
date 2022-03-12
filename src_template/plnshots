@@ -1858,6 +1858,8 @@ for i in outer_nodes:
     return 0
 }
 
+# Test whether the raw data file has cut trees converted to raw data
+# ctrees_converter_test_converted_rawdata(textfile)
 ctrees_converter_test_converted_rawdata()
 {
     local ifname="$1"
