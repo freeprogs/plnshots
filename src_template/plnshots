@@ -1438,6 +1438,8 @@ ctrees_selector_test_filtered_cuttrees()
     return 0
 }
 
+# Convert cut trees from the html file and save them to an output file
+# topichand_convert_cuttrees(htmlfile, outfile)
 topichand_convert_cuttrees()
 {
     local ifname="$1"
