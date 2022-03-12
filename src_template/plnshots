@@ -1824,6 +1824,9 @@ topichand_convert_cuttrees_to_rawdata()
     return 0
 }
 
+# Convert cut trees from the html file to raw data and save them to an
+# output file
+# ctrees_converter_convert_cuttrees_to_rawdata(htmlfile, outfile)
 ctrees_converter_convert_cuttrees_to_rawdata()
 {
     local ifname="$1"
