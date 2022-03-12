@@ -1396,6 +1396,9 @@ print("</body>\n</html>")
     return 0
 }
 
+# Filter cut trees from html file with site fastpic context and save
+# filtered cut trees to an output file
+# ctrees_selector_filter_cuttrees_sitefpo(htmlfile, outfile)
 ctrees_selector_filter_cuttrees_sitefpo()
 {
     local ifname="$1"
