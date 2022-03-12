@@ -1320,6 +1320,8 @@ ctrees_extractor_test_extracted_cuttrees()
     return 0
 }
 
+# Test whether the html file is an empty document
+# htmlpagehand_is_empty(htmlfile)
 htmlpagehand_is_empty()
 {
     local ifname="$1"
