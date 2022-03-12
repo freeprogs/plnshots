@@ -1498,6 +1498,9 @@ topichand_convert_cuttrees()
     return 0
 }
 
+# Convert cut trees from the html file with removing post alignment
+# method and save them to an output file
+# ctrees_converter_convert_remove_post_align(htmlfile, outfile)
 ctrees_converter_convert_remove_post_align()
 {
     local ifname="$1"
