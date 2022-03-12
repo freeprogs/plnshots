@@ -1333,6 +1333,9 @@ htmlpagehand_is_empty()
     return 0
 }
 
+# Filter cut trees from html file and save filtered cut trees to an
+# output file
+# topichand_filter_cuttrees(htmlfile, outfile)
 topichand_filter_cuttrees()
 {
     local ifname="$1"
