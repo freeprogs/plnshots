@@ -1161,6 +1161,8 @@ rawloader_load_proxy_topic_page()
     return 0
 }
 
+# Parse the topic page file to the output file in the output directory
+# loader_parse_topic_page(pagefile, outfile, outdir)
 loader_parse_topic_page()
 {
     local ifname="$1"
