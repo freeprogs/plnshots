@@ -1566,6 +1566,9 @@ print("</body>\n</html>")
     return 0
 }
 
+# Convert cut trees from the html file with deep0 to deep1 method and
+# save them to an output file
+# ctrees_converter_convert_deep0_to_deep1(htmlfile, outfile)
 ctrees_converter_convert_deep0_to_deep1()
 {
     local ifname="$1"
