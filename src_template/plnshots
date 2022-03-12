@@ -1250,6 +1250,9 @@ topichand_extract_cuttrees()
     return 1
 }
 
+# Extract cut trees from the topic page by the direct method and save
+# them to an output file
+# ctrees_extractor_extract_cuttrees_direct(pagefile, outfile)
 ctrees_extractor_extract_cuttrees_direct()
 {
     local ifname="$1"
