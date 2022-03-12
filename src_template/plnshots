@@ -1655,6 +1655,9 @@ main()
     return 0
 }
 
+# Convert cut trees from the html file with wrap deep vars method and
+# save them to an output file
+# ctrees_converter_convert_wrap_deep_vars(htmlfile, outfile)
 ctrees_converter_convert_wrap_deep_vars()
 {
     local ifname="$1"
