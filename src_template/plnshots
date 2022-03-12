@@ -1428,6 +1428,8 @@ print("</body>\n</html>")
     return 0
 }
 
+# Test whether the html file has filtered cut trees
+# ctrees_selector_test_filtered_cuttrees(htmlfile)
 ctrees_selector_test_filtered_cuttrees()
 {
     local ifname="$1"
