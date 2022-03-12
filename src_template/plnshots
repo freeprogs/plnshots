@@ -1310,6 +1310,8 @@ print("</body>\n</html>")
     return 0
 }
 
+# Test whether the html file has extracted cut trees
+# ctrees_extractor_test_extracted_cuttrees(htmlfile)
 ctrees_extractor_test_extracted_cuttrees()
 {
     local ifname="$1"
