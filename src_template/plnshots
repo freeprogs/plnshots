@@ -1364,6 +1364,9 @@ topichand_filter_cuttrees()
     return 0
 }
 
+# Filter cut trees from html file with var and img context and save
+# filtered cut trees to an output file
+# ctrees_selector_filter_cuttrees_varimg(htmlfile, outfile)
 ctrees_selector_filter_cuttrees_varimg()
 {
     local ifname="$1"
