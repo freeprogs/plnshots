@@ -1280,6 +1280,9 @@ print("</body>\n</html>")
     return 0
 }
 
+# Extract cut trees from the topic page by the wrapped method and save
+# them to an output file
+# ctrees_extractor_extract_cuttrees_wrapped(pagefile, outfile)
 ctrees_extractor_extract_cuttrees_wrapped()
 {
     local ifname="$1"
