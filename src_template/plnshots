@@ -1146,6 +1146,8 @@ rawloader_load_topic_page()
     return 0
 }
 
+# Load with a proxy the topic page to an output file
+# rawloader_load_proxy_topic_page(proxystring, url, outfile)
 rawloader_load_proxy_topic_page()
 {
     local proxy="$1"
