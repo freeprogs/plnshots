@@ -1225,6 +1225,8 @@ pagehand_reencode_cp1251_utf8()
     return 0
 }
 
+# Extract cut trees from the topic page and save them to an output file
+# topichand_extract_cuttrees(pagefile, outfile)
 topichand_extract_cuttrees()
 {
     local ifname="$1"
