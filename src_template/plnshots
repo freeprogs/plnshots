@@ -1532,6 +1532,9 @@ print("</body>\n</html>")
     return 0
 }
 
+# Convert cut trees from the html file with ahref to var method and
+# save them to an output file
+# ctrees_converter_convert_ahref_to_var(htmlfile, outfile)
 ctrees_converter_convert_ahref_to_var()
 {
     local ifname="$1"
