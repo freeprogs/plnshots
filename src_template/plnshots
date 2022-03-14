@@ -1986,6 +1986,8 @@ END {
     return 0
 }
 
+# Clean all topic temporary files
+# topichand_clean_all(recodefile, extractfile, filterfile, convertfile, rawfile)
 topichand_clean_all()
 {
     local fname_recoded="$1"
