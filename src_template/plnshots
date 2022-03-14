@@ -2096,6 +2096,8 @@ urlhand_detect_type()
     fi
 }
 
+# Take url from stdin and get url core and print it to stdout
+# urlhand_get_url_core()
 urlhand_get_url_core()
 {
     sed 's%^https\?://\([^/]*\)/.*$%\1%'
