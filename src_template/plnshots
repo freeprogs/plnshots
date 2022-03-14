@@ -1898,6 +1898,8 @@ END {
     return 0
 }
 
+# Convert raw data to parsed data and save them to an output file
+# topichand_convert_rawdata_to_parsedata(textfile, outfile)
 topichand_convert_rawdata_to_parsedata()
 {
     local ifname="$1"
