@@ -2559,6 +2559,9 @@ lowloaderproxy_clean_all()
     return 0
 }
 
+# Take reload file and clean loaded files from list replaced by
+# reloaded files
+# lowloaderproxy_clean_all(reloadfile)
 lowloaderproxy_clean_reloaded_files()
 {
     local ifname_reload="$1"
