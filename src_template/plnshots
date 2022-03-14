@@ -2547,6 +2547,8 @@ lowloaderproxy_load_reload_list()
     return 0
 }
 
+# Clean all temporary files
+# lowloaderproxy_clean_all(resultfile, reloadfile)
 lowloaderproxy_clean_all()
 {
     local fname_result="$1"
