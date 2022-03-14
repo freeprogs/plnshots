@@ -2080,6 +2080,8 @@ converter_convert_url()
     echo -n "$out"
 }
 
+# Detect url type and print the type to stdout
+# urlhand_detect_type(url)
 urlhand_detect_type()
 {
     local url="$1"
