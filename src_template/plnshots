@@ -1963,6 +1963,8 @@ rawdata_converter_test_converted_parsedata()
     return 0
 }
 
+# Test whether the parsed data file has one record
+# parsedatahand_has_one_record(textfile)
 parsedatahand_has_one_record()
 {
     local ifname="$1"
