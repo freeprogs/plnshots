@@ -2582,6 +2582,9 @@ lowloaderproxy_clean_reloaded_files()
     return 0
 }
 
+# Take run file and take report file and take log file and take output
+# directory and run commands and save results
+# loaderrunner_run(runfile, reportfile, logfile, outdir)
 loaderrunner_run()
 {
     local ifname_run="$1"
