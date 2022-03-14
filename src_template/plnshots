@@ -2131,6 +2131,8 @@ urlhand_translate_fpo()
     echo -n "$out"
 }
 
+# For fastpic site url detect its type and print it to stdout
+# fpositehand_detect_url_type(url)
 fpositehand_detect_url_type()
 {
     local url="$1"
