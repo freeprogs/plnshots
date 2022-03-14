@@ -2004,6 +2004,9 @@ topichand_clean_all()
     return 0
 }
 
+# Convert parsed data to prepared parsed data and save them to an
+# output file
+# loader_convert_data(textfile, outfile)
 loader_convert_data()
 {
     local ifname="$1"
