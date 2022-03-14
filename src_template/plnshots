@@ -2215,6 +2215,9 @@ END {
     return 0
 }
 
+# Take config file and take data file and take output directory and
+# make run commands and save them to an output file
+# loader_make_run(configfile, textfile, outfile, outdir)
 loader_make_run()
 {
     local ifname_config="$1"
