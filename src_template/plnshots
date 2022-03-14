@@ -2191,6 +2191,9 @@ s/___*/_/g
 '
 }
 
+# Take the file with data and make report data and save them to an
+# output file
+# loader_make_report(textfile, outfile)
 loader_make_report()
 {
     local ifname="$1"
