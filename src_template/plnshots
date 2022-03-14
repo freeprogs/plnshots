@@ -2152,6 +2152,9 @@ fpositehand_detect_url_type()
     fi
 }
 
+# Take fastpic site url from stdin and translate it from view form to
+# big form and print it to stdout
+# fpositehand_translate_view_to_big()
 fpositehand_translate_view_to_big()
 {
     sed '
