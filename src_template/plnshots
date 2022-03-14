@@ -2396,6 +2396,9 @@ loader_run()
     return 0
 }
 
+# Take a proxy string and take run file and take report file and take
+# log file and take output directory and run commands and save results
+# loaderrunner_run_with_proxy(proxystr, runfile, reportfile, logfile, outdir)
 loaderrunner_run_with_proxy()
 {
     local proxy="$1"
