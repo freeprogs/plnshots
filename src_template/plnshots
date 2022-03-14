@@ -2481,6 +2481,9 @@ lowloaderproxy_load_run_list()
     return 0
 }
 
+# Take a proxy string and take result file and make reload data and
+# save them to reload file
+# lowloaderproxy_make_reload_list(proxystr, resultfile, reloadfile)
 lowloaderproxy_make_reload_list()
 {
     local proxy="$1"
