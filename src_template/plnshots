@@ -2029,6 +2029,9 @@ loader_convert_data()
     return 0
 }
 
+# Take line from stdin and take line field by number and print its
+# value to stdout
+# linehand_getfield(fieldnum)
 linehand_getfield()
 {
     local fieldnum="$1"
