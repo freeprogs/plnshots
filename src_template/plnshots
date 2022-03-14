@@ -1918,6 +1918,8 @@ topichand_convert_rawdata_to_parsedata()
     return 0
 }
 
+# Convert raw data to parsed data and save them to an output file
+# rawdata_converter_convert_rawdata_to_parsedata(textfile, outfile)
 rawdata_converter_convert_rawdata_to_parsedata()
 {
     local ifname="$1"
