@@ -2524,6 +2524,9 @@ lowloaderproxy_make_reload_list()
     return 0
 }
 
+# Take reload file and take log file and run commands from reload file
+# and save results
+# lowloaderproxy_load_reload_list(reloadfile, logfile)
 lowloaderproxy_load_reload_list()
 {
     local ifname_reload="$1"
