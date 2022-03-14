@@ -1952,6 +1952,9 @@ rawdata_converter_convert_rawdata_to_parsedata()
     return 0
 }
 
+# Test whether the parsed data file has raw data converted to parsed
+# data
+# rawdata_converter_test_converted_parsedata(textfile)
 rawdata_converter_test_converted_parsedata()
 {
     local ifname="$1"
