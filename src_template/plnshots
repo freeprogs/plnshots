@@ -2180,6 +2180,9 @@ fpositehand_translate_thumb_to_big()
     '
 }
 
+# Take file name from stdin and convert it to printable compact form
+# and print it to stdout
+# converter_convert_name()
 converter_convert_name()
 {
     sed '
