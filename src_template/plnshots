@@ -2059,6 +2059,9 @@ linehand_getfield()
     echo -n "$out"
 }
 
+# Take url from stdin and convert url from parsed form to download
+# form and print it to stdout
+# converter_convert_url()
 converter_convert_url()
 {
     local url="$(cat)"
