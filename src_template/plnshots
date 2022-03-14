@@ -2304,6 +2304,9 @@ runmaker_make_run_with_proxy()
     return 0
 }
 
+# Take data file and take output directory and make run data and save
+# them to an output file
+# runmaker_make_run(textfile, outfile, outdir)
 runmaker_make_run()
 {
     local ifname="$1"
