@@ -2625,6 +2625,9 @@ loaderrunner_run()
     return 0
 }
 
+# Take run file and take report file and take log file and run
+# commands from run file and save results to result file
+# lowloader_load_run_list(runfile, reportfile, logfile, resultfile)
 lowloader_load_run_list()
 {
     local ifname_run="$1"
