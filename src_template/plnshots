@@ -2103,6 +2103,9 @@ urlhand_get_url_core()
     sed 's%^https\?://\([^/]*\)/.*$%\1%'
 }
 
+# Take fastpic site url from stdin and translate it to downloadable
+# form and print it to stdout
+# urlhand_translate_fpo()
 urlhand_translate_fpo()
 {
     local url="$(cat)"
