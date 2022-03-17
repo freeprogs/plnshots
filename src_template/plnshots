@@ -2834,6 +2834,8 @@ sitefpo_make_reload_url()
     echo "$out"
 }
 
+# Wrap line from stdin to reload line and print it to stdout
+# sitefpo_wrap_to_reloadline()
 sitefpo_wrap_to_reloadline()
 {
     awk '{ printf "curl -s %s -o %s/%s\n", $3, $2, $1; }'
