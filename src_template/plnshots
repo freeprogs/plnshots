@@ -2939,6 +2939,9 @@ reporthand_get_tree_urls()
     awk -v tn="$tree_number" '$1 == tn { print $2; }'
 }
 
+# Take lines from stdin and search a line with total urls and print
+# its value to stdout
+# reporthand_get_total_urls()
 reporthand_get_total_urls()
 {
     awk '$1 == "t" { print $2; }'
