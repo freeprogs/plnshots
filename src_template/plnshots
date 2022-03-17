@@ -2665,6 +2665,9 @@ lowloader_load_run_list()
     return 0
 }
 
+# Wrap line from stdin to ok command result line and print it to
+# stdout
+# resulthand_wrap_ok_command_to_result()
 resulthand_wrap_ok_command_to_result()
 {
     awk '
