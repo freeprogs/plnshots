@@ -2996,6 +2996,9 @@ reloadlinehand_proxy_get_dir()
 '
 }
 
+# Take a line from stdin and get filename from line and print it to
+# stdout
+# reloadlinehand_get_file()
 reloadlinehand_get_file()
 {
     awk '
