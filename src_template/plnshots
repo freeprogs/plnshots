@@ -2983,6 +2983,9 @@ reloadlinehand_get_dir()
 '
 }
 
+# Take a line from stdin and get directory from line and print it to
+# stdout
+# reloadlinehand_proxy_get_dir()
 reloadlinehand_proxy_get_dir()
 {
     awk '
