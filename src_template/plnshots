@@ -2947,6 +2947,9 @@ reporthand_get_total_urls()
     awk '$1 == "t" { print $2; }'
 }
 
+# Take reload file and remove loaded files and move reloaded files to
+# loaded files
+# lowloader_clean_reloaded_files(reloadfile)
 lowloader_clean_reloaded_files()
 {
     local ifname_reload="$1"
