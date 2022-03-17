@@ -2921,6 +2921,9 @@ lowloader_clean_all()
     return 0
 }
 
+# Take lines from stdin and search a line with number of trees and
+# print its value to stdout
+# reporthand_get_num_of_trees()
 reporthand_get_num_of_trees()
 {
     awk '$1 == "n" { print $2; }'
