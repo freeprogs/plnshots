@@ -2856,6 +2856,9 @@ sitefpo_wrap_to_reloadline_with_proxy()
 '
 }
 
+# Take reloaded file name and translate it to file name and print it
+# to stdout
+# sitefpo_make_load_file(filename)
 sitefpo_make_load_file()
 {
     local fname="$1"
