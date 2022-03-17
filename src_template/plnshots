@@ -2878,6 +2878,9 @@ resultlinehand_getfield()
     awk -v n="$field_number" '{ print $n; }'
 }
 
+# Take reload file and take log file and run commands from reload file
+# and save results
+# lowloader_load_reload_list(reloadfile, logfile)
 lowloader_load_reload_list()
 {
     local ifname_reload="$1"
