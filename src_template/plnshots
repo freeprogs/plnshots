@@ -2741,6 +2741,8 @@ resulthand_wrap_proxy_fail_command_to_result()
 '
 }
 
+# Take result file and make reload data and save them to reload file
+# lowloader_make_reload_list(resultfile, reloadfile)
 lowloader_make_reload_list()
 {
     local ifname_result="$1"
