@@ -2929,6 +2929,9 @@ reporthand_get_num_of_trees()
     awk '$1 == "n" { print $2; }'
 }
 
+# Take the tree number and take lines from stdin and search a line
+# with the given tree number and print its value to stdout
+# reporthand_get_tree_urls(treenum)
 reporthand_get_tree_urls()
 {
     local tree_number="$1"
