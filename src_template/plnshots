@@ -2805,6 +2805,9 @@ sitefpo_make_reload_file()
     echo "$out"
 }
 
+# Take directory name and translate it to reloaded directory name and
+# print it to stdout
+# sitefpo_make_reload_dir(dirname)
 sitefpo_make_reload_dir()
 {
     local dname="$1"
