@@ -2901,6 +2901,9 @@ lowloader_load_reload_list()
     return 0
 }
 
+# Take lines from stdin and count number of lines and print the number
+# to stdout
+# reloadhand_get_total_urls()
 reloadhand_get_total_urls()
 {
     wc -l | awk '{ print $1; }'
