@@ -3022,6 +3022,9 @@ reloadlinehand_proxy_get_file()
 '
 }
 
+# Clean all temporary files
+# loader_clean_all(configfile, topicfile, parsedfile,
+#                  convertedfile, reportfile, runfile)
 loader_clean_all()
 {
     local fname_config="$1"
