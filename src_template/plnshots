@@ -2782,6 +2782,8 @@ lowloader_make_reload_list()
     return 0
 }
 
+# Test whether the image file has html-data and needs to be reloaded
+# sitefpo_file_needs_reload(imgfile)
 sitefpo_file_needs_reload()
 {
     local ifname="$1"
