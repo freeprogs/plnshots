@@ -2909,6 +2909,8 @@ reloadhand_get_total_urls()
     wc -l | awk '{ print $1; }'
 }
 
+# Clean all temporary files
+# lowloader_clean_all(resultfile, reloadfile)
 lowloader_clean_all()
 {
     local fname_result="$1"
