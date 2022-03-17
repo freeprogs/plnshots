@@ -2722,6 +2722,9 @@ resulthand_wrap_fail_command_to_result()
 '
 }
 
+# Wrap line from stdin to fail command result line and print it to
+# stdout
+# resulthand_wrap_proxy_fail_command_to_result()
 resulthand_wrap_proxy_fail_command_to_result()
 {
     awk '
