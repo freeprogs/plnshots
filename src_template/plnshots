@@ -2868,6 +2868,9 @@ sitefpo_make_load_file()
     echo "$out"
 }
 
+# Take line from stdin and take line field by number and print its
+# value to stdout
+# resultlinehand_getfield(fieldnum)
 resultlinehand_getfield()
 {
     local field_number="$1"
