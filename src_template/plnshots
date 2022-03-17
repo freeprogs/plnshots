@@ -2684,6 +2684,9 @@ resulthand_wrap_ok_command_to_result()
 '
 }
 
+# Wrap line from stdin to ok command result line and print it to
+# stdout
+# resulthand_wrap_proxy_ok_command_to_result()
 resulthand_wrap_proxy_ok_command_to_result()
 {
     awk '
