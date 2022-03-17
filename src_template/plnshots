@@ -2970,6 +2970,9 @@ lowloader_clean_reloaded_files()
     return 0
 }
 
+# Take a line from stdin and get directory from line and print it to
+# stdout
+# reloadlinehand_get_dir()
 reloadlinehand_get_dir()
 {
     awk '
