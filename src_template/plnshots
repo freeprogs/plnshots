@@ -2817,6 +2817,8 @@ sitefpo_make_reload_dir()
     echo "$out"
 }
 
+# Take url and translate it to reloaded url and print it to stdout
+# sitefpo_make_reload_url(url)
 sitefpo_make_reload_url()
 {
     local ifname="$1"
