@@ -2793,6 +2793,9 @@ sitefpo_file_needs_reload()
     return 0
 }
 
+# Take file name and translate it to reloaded file name and print it
+# to stdout
+# sitefpo_make_reload_file(filename)
 sitefpo_make_reload_file()
 {
     local fname="$1"
