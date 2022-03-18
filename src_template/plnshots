@@ -3109,6 +3109,8 @@ reporter_wrap_imageload_start()
 '
 }
 
+# Wrap line from stdin to image load line and print it to stdout
+# reporter_wrap_proxy_imageload_start()
 reporter_wrap_proxy_imageload_start()
 {
     local maxdname=15
