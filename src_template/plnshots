@@ -3044,6 +3044,8 @@ loader_clean_all()
     return 0
 }
 
+# Wrap line from stdin to topic load line and print it to stdout
+# reporter_wrap_topicload_start()
 reporter_wrap_topicload_start()
 {
     local url="$(cat)"
