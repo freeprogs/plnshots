@@ -3310,6 +3310,9 @@ reporter_wrap_reload_total_urls()
 '
 }
 
+# Wrap line from stdin to broken url with date line and print it to
+# stdout
+# logger_wrap_broken_url()
 logger_wrap_broken_url()
 {
     local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
