@@ -3053,6 +3053,8 @@ reporter_wrap_topicload_start()
     echo "Loading ${url} ..."
 }
 
+# Wrap line from stdin to topic proxy on line and print it to stdout
+# reporter_wrap_topic_proxy_on()
 reporter_wrap_topic_proxy_on()
 {
     awk '
