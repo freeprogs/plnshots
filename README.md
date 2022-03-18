@@ -6,17 +6,9 @@ https://pornolab.net
 
 ---
 
-This is a __PORN SITE__, so remove children from the screen.
+Today it loads only screenshots located on http://fastpic.org
 
-__This project is under construction:__
-
-- It loads only screenshots located on http://fastpic.org
-
-  Usually, there are over three active sites with screenshots.
-
-- The code is not commented at all.
-
-I made this script in period started at 10 Dec 2021 till 16 Jan 2022. So in the next period I will complete the first version and remove the "under construction" tag.
+Usually, there are over three active sites with screenshots.
 
 ---
 
