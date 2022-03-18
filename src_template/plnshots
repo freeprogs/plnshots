@@ -3343,6 +3343,9 @@ logger_wrap_proxy_broken_url()
 '
 }
 
+# Wrap line from stdin to broken reload url with date line and print
+# it to stdout
+# logger_wrap_reload_broken_url()
 logger_wrap_reload_broken_url()
 {
     local datetime="$(date '+%Y-%m-%d %H:%M:%S')"
