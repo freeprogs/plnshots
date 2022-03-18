@@ -3075,6 +3075,8 @@ reporter_wrap_image_proxy_on()
 '
 }
 
+# Wrap line from stdin to topic loaded line and print it to stdout
+# reporter_wrap_topicload_end()
 reporter_wrap_topicload_end()
 {
     local url="$(cat)"
