@@ -102,6 +102,11 @@ load_configuration()
     local icf_image_proxy_user
     local icf_image_proxy_password
 
+    [ -d "$odir" ] || mkdir "$odir" 2>/dev/null || {
+        error "Can't create directory $odir."
+        return 1
+    }
+
     icf_topic_proxy=$(multiconfigfiles_get_topic_proxy \
         "$ifname_config_general" "$ifname_config_user")
     icf_topic_proxy_host=$(multiconfigfiles_get_topic_proxy_host \
