@@ -3189,6 +3189,9 @@ reporter_wrap_numoftrees_totalurls()
 '
 }
 
+# Wrap line from stdin to number of tree and number of urls in the
+# tree line and print it to stdout
+# reporter_wrap_treenumber_treeurls()
 reporter_wrap_treenumber_treeurls()
 {
     awk '
