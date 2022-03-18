@@ -3376,6 +3376,9 @@ logger_wrap_proxy_reload_broken_url()
 '
 }
 
+# Take configuration and load screenshots from the topic page to a
+# directory
+# main(topicpageurl[, output_directory])
 main()
 {
     case $# in
