@@ -3172,6 +3172,9 @@ reporter_wrap_proxy_imageload_broken_url()
 '
 }
 
+# Wrap line from stdin to number of trees and number of urls line and
+# print it to stdout
+# reporter_wrap_numoftrees_totalurls()
 reporter_wrap_numoftrees_totalurls()
 {
     awk '
