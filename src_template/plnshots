@@ -3295,6 +3295,9 @@ reporter_wrap_reload_imageload_broken_url()
 '
 }
 
+# Wrap line from stdin to number of reload urls line and print it to
+# stdout
+# reporter_wrap_reload_total_urls()
 reporter_wrap_reload_total_urls()
 {
     awk '
