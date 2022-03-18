@@ -3134,6 +3134,8 @@ reporter_wrap_proxy_imageload_start()
 '
 }
 
+# Wrap line from stdin to image broken url line and print it to stdout
+# reporter_wrap_imageload_broken_url()
 reporter_wrap_imageload_broken_url()
 {
     local maxfname=40
